@@ -1,0 +1,22 @@
+<md-autocomplete flex
+    md-input-name="contact"
+    md-input-minlength="0"
+    md-selected-item-change="$ctrl.selectedContactChanged(contact)"
+    md-selected-item="$ctrl.contact"
+    md-search-text="$ctrl.contactSearchText"
+    md-select-on-match="true"
+    md-match-case-insensitive="true"
+    md-items="contact in $ctrl.searchContact($ctrl.contactSearchText)"
+    md-item-text="contact.name"
+    md-min-length="0"
+    md-require-match
+    md-delay="100"
+    md-no-cache="true"
+    placeholder="{{ $ctrl.placeholder || 'Contact' | translate }}">
+    <md-item-template>
+        <span md-highlight-text="$ctrl.contactSearchText">{{contact.name }}</span>
+    </md-item-template>
+    <md-not-found>
+        <translate>A valid contact is required</translate>
+    </md-not-found>
+</md-autocomplete>

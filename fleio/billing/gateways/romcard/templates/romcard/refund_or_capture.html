@@ -1,0 +1,19 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ page_title }}</title>
+</head>
+<body>
+<div style="text-align:center">
+    {{ redirect_message }}
+    <form method="post" action="{{ form_action }}" id="romcard_form" target="_top">
+        {{ form }}
+    </form>
+</div>
+<script type="text/javascript">
+    document.getElementById('romcard_form').submit();
+</script>
+</body>
+</html>

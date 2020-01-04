@@ -1,0 +1,196 @@
+<div layout="row" layout-align="center start">
+    <md-card class="fl-card-fixed-md fl-margin-bottom">
+        <md-card-title class="object-detail-title">
+            <md-card-title-text>
+                <div layout="row" layout-align="space-between center" flex>
+                    <div layout="column" class="toolbar-title-container">
+                        <span class="toolbar-title-lg">
+                            <translate>Create department</translate>
+                        </span>
+                    </div>
+                    <span flex></span>
+                    <div layout="row" layout-align="start center">
+
+                    </div>
+                </div>
+            </md-card-title-text>
+        </md-card-title>
+        <md-divider></md-divider>
+        <md-card-content class="min-height-content fl-content">
+
+            <fl-form-errors ng-model="$ctrl.backendErrors" form="$ctrl.editDepartment"></fl-form-errors>
+            <form ng-submit="$ctrl.saveDepartment()" name="$ctrl.editDepartment" novalidate
+                  fl-messages="$ctrl.backendErrors">
+                <div layout="row" layout-xs="column" layout-sm="column" flex="100">
+                    <div layout="column" flex="50" flex-xs="100" flex-sm="100">
+                        <md-input-container class="fl-required-group md-block" flex>
+                            <label for="name" translate>Name</label>
+                            <input id="name" maxlength="1024" name="name" type="text"
+                                   ng-model="$ctrl.department.name" required>
+                            <fl-validate for="name"></fl-validate>
+                        </md-input-container>
+                    </div>
+                    <div layout="column" flex="50" flex-xs="100" flex-sm="100">
+                        <md-input-container class="fl-required-group md-block" flex>
+                            <label for="email" translate>Email</label>
+                            <input id="email" maxlength="1024" name="email" type="text"
+                                   ng-model="$ctrl.department.email" required>
+                            <fl-validate for="email"></fl-validate>
+                        </md-input-container>
+                    </div>
+                </div>
+
+                <md-button class="tickets-id-short-keys fl-no-margin"
+                           fl-tooltip="{{::'Full year (e.g. 2019)' | translate}}"
+                           ng-click="$ctrl.addTicketIdShortKey('%Y')">
+                    %Y
+                </md-button>
+                <md-button class="tickets-id-short-keys fl-no-margin"
+                           fl-tooltip="{{::'Year (e.g. 19)' | translate}}"
+                           ng-click="$ctrl.addTicketIdShortKey('%y')">
+                    %y
+                </md-button>
+                <md-button class="tickets-id-short-keys fl-no-margin"
+                           fl-tooltip="{{::'Month' | translate}}"
+                           ng-click="$ctrl.addTicketIdShortKey('%M')">
+                    %M
+                </md-button>
+                <md-button class="tickets-id-short-keys fl-no-margin"
+                           fl-tooltip="{{::'Day' | translate}}"
+                           ng-click="$ctrl.addTicketIdShortKey('%D')">
+                    %D
+                </md-button>
+                <md-button class="tickets-id-short-keys fl-no-margin"
+                           fl-tooltip="{{::'Hour' | translate}}"
+                           ng-click="$ctrl.addTicketIdShortKey('%h')">
+                    %h
+                </md-button>
+                <md-button class="tickets-id-short-keys fl-no-margin"
+                           fl-tooltip="{{::'Minute' | translate}}"
+                           ng-click="$ctrl.addTicketIdShortKey('%m')">
+                    %m
+                </md-button>
+                <md-button class="tickets-id-short-keys fl-no-margin"
+                           fl-tooltip="{{::'Random uppercase letter' | translate}}"
+                           ng-click="$ctrl.addTicketIdShortKey('%L')">
+                    %L
+                </md-button>
+                <md-button class="tickets-id-short-keys fl-no-margin"
+                           fl-tooltip="{{::'Random lowercase letter' | translate}}"
+                           ng-click="$ctrl.addTicketIdShortKey('%l')">
+                    %l
+                </md-button>
+                <md-button class="tickets-id-short-keys fl-no-margin"
+                           fl-tooltip="{{::'Random number (between 0 and 9)' | translate}}"
+                           ng-click="$ctrl.addTicketIdShortKey('%n')">
+                    %n
+                </md-button>
+
+                <md-input-container class="fl-required-group md-block" flex>
+                    <label for="ticket_id_format" translate>Ticket id format</label>
+                    <input id="ticket_id_format" maxlength="64" name="ticket_id_format" type="text"
+                           ng-model="$ctrl.department.ticket_id_format" required>
+                    <fl-validate for="ticket_id_format"></fl-validate>
+                </md-input-container>
+
+                <label class="fl-subheader-md" translate>Notifications to staff users</label>
+
+                <md-input-container class="fl-required-group md-block" flex>
+                    <md-checkbox ng-model="$ctrl.department.notification_on_ticket_open_to_staff"
+                                 name="notification_on_ticket_open_to_staff" id="notification_on_ticket_open_to_staff"
+                                 class="md-primary fl-permissions-checkboxes"
+                                 aria-label="{{ 'Department notification on ticket open to staff' | translate}}">
+                        <span translate>Send notifications on ticket open to staff users</span>
+                    </md-checkbox>
+                    <fl-validate for="notification_on_ticket_open_to_staff"></fl-validate>
+                </md-input-container>
+                <md-input-container class="fl-required-group md-block" flex>
+                    <md-checkbox ng-model="$ctrl.department.notification_on_staff_user_reply_to_staff"
+                                 name="notification_on_staff_user_reply_to_staff" id="notification_on_staff_user_reply_to_staff"
+                                 class="md-primary fl-permissions-checkboxes"
+                                 aria-label="{{ 'Department notification on ticket staff user reply to all users' | translate}}">
+                        <span translate>Send notifications when staff user replies to a ticket to staff users</span>
+                    </md-checkbox>
+                    <fl-validate for="notification_on_staff_user_reply_to_staff"></fl-validate>
+                </md-input-container>
+                <md-input-container class="fl-required-group md-block" flex>
+                    <md-checkbox ng-model="$ctrl.department.notification_on_user_reply_to_staff"
+                                 name="notification_on_user_reply_to_staff" id="notification_on_user_reply_to_staff"
+                                 class="md-primary fl-permissions-checkboxes"
+                                 aria-label="{{ 'Send notifications when user replies to a ticket to staff users' | translate}}">
+                        <span translate>Send notifications when end user replies to a ticket to staff users</span>
+                    </md-checkbox>
+                    <fl-validate for="notification_on_user_reply_to_staff"></fl-validate>
+                </md-input-container>
+
+                <label class="fl-subheader-md" translate>Notifications to end users ( ticket owner )</label>
+                <md-input-container class="fl-required-group md-block" flex>
+                    <md-checkbox ng-model="$ctrl.department.notification_to_user_on_ticket_opened"
+                                 name="notification_to_user_on_ticket_opened" id="notification_to_user_on_ticket_opened"
+                                 class="md-primary fl-permissions-checkboxes"
+                                 aria-label="{{ 'Send notifications to end users when a ticket is opened' | translate}}">
+                        <span translate>Send notifications to end users when a ticket is opened</span>
+                    </md-checkbox>
+                    <fl-validate for="notification_to_user_on_ticket_opened"></fl-validate>
+                </md-input-container>
+                <md-input-container class="fl-required-group md-block" flex>
+                    <md-checkbox ng-model="$ctrl.department.notification_to_user_on_ticket_closed"
+                                 name="notification_to_user_on_ticket_closed" id="notification_to_user_on_ticket_closed"
+                                 class="md-primary fl-permissions-checkboxes"
+                                 aria-label="{{ 'Send notifications to end users when a ticket is closed' | translate}}">
+                        <span translate>Send notifications to end users when a ticket is closed</span>
+                    </md-checkbox>
+                    <fl-validate for="notification_to_user_on_ticket_closed"></fl-validate>
+                </md-input-container>
+                <md-input-container class="fl-required-group md-block" flex>
+                    <md-checkbox ng-model="$ctrl.department.notification_on_staff_user_reply_to_user"
+                                 name="notification_on_staff_user_reply_to_user" id="notification_on_staff_user_reply_to_user"
+                                 class="md-primary fl-permissions-checkboxes"
+                                 aria-label="{{ 'Send notifications to users when a staff user replies to ticket' | translate}}">
+                        <span translate>Send notifications to end users when a staff user replies to ticket</span>
+                    </md-checkbox>
+                    <fl-validate for="notification_on_staff_user_reply_to_user"></fl-validate>
+                </md-input-container>
+                <label class="fl-subheader-md" translate>Notifications to ticket cc recipients</label>
+                <md-input-container class="fl-required-group md-block" flex>
+                    <md-checkbox ng-model="$ctrl.department.notify_cc_recipients_on_ticket_open"
+                                 name="notify_cc_recipients_on_ticket_open" id="notify_cc_recipients_on_ticket_open"
+                                 class="md-primary fl-permissions-checkboxes"
+                                 aria-label="{{ 'Send notifications to cc recipients when ticket is opened' | translate}}">
+                        <span translate>Send notifications to cc recipients when ticket is opened</span>
+                    </md-checkbox>
+                    <fl-validate for="notify_cc_recipients_on_ticket_open"></fl-validate>
+                </md-input-container>
+                <md-input-container class="fl-required-group md-block" flex>
+                    <md-checkbox ng-model="$ctrl.department.notify_cc_recipients_on_ticket_close"
+                                 name="notify_cc_recipients_on_ticket_close" id="notify_cc_recipients_on_ticket_close"
+                                 class="md-primary fl-permissions-checkboxes"
+                                 aria-label="{{ 'Send notifications to cc recipients when ticket is closed' | translate}}">
+                        <span translate>Send notifications to cc recipients when ticket is closed</span>
+                    </md-checkbox>
+                    <fl-validate for="notify_cc_recipients_on_ticket_close"></fl-validate>
+                </md-input-container>
+                <md-input-container class="fl-required-group md-block" flex>
+                    <md-checkbox ng-model="$ctrl.department.notify_cc_recipients_on_ticket_reply"
+                                 name="notify_cc_recipients_on_ticket_reply" id="notify_cc_recipients_on_ticket_reply"
+                                 class="md-primary fl-permissions-checkboxes"
+                                 aria-label="{{ 'Send notifications to cc recipients when a reply is added to a ticket' | translate}}">
+                        <span translate>Send notifications to cc recipients when a reply is added to a ticket</span>
+                    </md-checkbox>
+                    <fl-validate for="notify_cc_recipients_on_ticket_reply"></fl-validate>
+                </md-input-container>
+            </form>
+
+            <md-card-actions class="fl-margin-top" layout="row">
+                <md-button class="md-primary md-raised" ng-click="$ctrl.saveDepartment()" type="button">
+                    <translate>Create department</translate>
+                </md-button>
+                <md-button ng-click="$ctrl.goBackOrToState('pluginsTicketsDepartments')"
+                           type="button">
+                    <translate>Cancel</translate>
+                </md-button>
+            </md-card-actions>
+
+        </md-card-content>
+    </md-card>
+</div>

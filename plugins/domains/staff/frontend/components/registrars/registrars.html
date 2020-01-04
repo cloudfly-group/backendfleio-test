@@ -1,0 +1,95 @@
+<fl-subheader ng-model="$ctrl.registrars" objects-name="'Registrar' | translate"
+              objects-name-plural="'Registrars'" cardview="cardview"></fl-subheader>
+<fl-back-drop ng-if="$ctrl.loading" class="list-backdrop"></fl-back-drop>
+<img class="fl-arrow" ng-if="$ctrl.registrars.totalItems == 0 && !$ctrl.hoverOn" src="images/arrow.png">
+<div class="alert-danger" ng-show="action_error"> {{ action_error }}</div>
+<div ng-if="cardview === true" class="stack stack-card" layout="column"
+     layout-align="center center" id="id_registrars_cards_container">
+    <fl-infinite-scroll ng-model="$ctrl.registrars" threshold="150" container-name="'id_registrars_cards_container'">
+        <div layout="row" class="cardlist-container">
+            <div ng-repeat="registrar in $ctrl.registrars.objects track by registrar.id">
+                <md-card class="fl-object-card">
+                    <div fl-sref="pluginsDomainsRegistrarDetails({id:registrar.id})">
+                        <md-card-title>
+                          <div title="{{ registrar.name}}" class="fl-ellipsis-text md-headline">
+                              {{ registrar.name}}
+                          </div>
+                        </md-card-title>
+                        <md-card-content class="fl-object-card-content">
+                            <div><translate>Created at</translate>:&nbsp;{{ registrar.created_at | date:'medium' }}</div>
+                            <div>
+                                <translate>Registrar connector</translate>: {{ registrar.registrar_connector_display }}
+                            </div>
+                        </md-card-content>
+                    </div>
+                    <span flex></span>
+                    <div class="card-actions">
+                        <div layout="row" layout-align="start center">
+                            <plugins-domains-registrars-actions on-registrar-deleted="$ctrl.refreshRegistrars()"
+                                                          on-registrar-changed="$ctrl.refreshRegistrars()"
+                                                          registrar="registrar" add-button="false">
+                            </plugins-domains-registrars-actions>
+                        </div>
+                    </div>
+                </md-card>
+            </div>
+        </div>
+    </fl-infinite-scroll>
+</div>
+<div layout-wrap layout="row" ng-if="cardview === false" class="stack stack-list"
+     layout-align="center center" id="id_registrars_table_container">
+    <table class="fl-table fl-card-fixed fl-list-view-table fl-table-shadow" ng-if="$ctrl.registrars.totalItems">
+        <tbody>
+        <fl-infinite-scroll ng-model="$ctrl.registrars" threshold="150" container-name="'id_registrars_table_container'">
+            <tr ng-repeat="registrar in $ctrl.registrars.objects track by registrar.id"
+                class="v-middle object-list-elem">
+                <td fl-sref="pluginsDomainsRegistrarDetails({id:registrar.id})">
+                    <div class="fl-ellipsis-text" layout="column" layout-wrap>{{ registrar.name }}</div>
+                </td>
+                <td fl-sref="pluginsDomainsRegistrarDetails({id:registrar.id})" hide-xs hide-sm>
+                    <div layout="row" class="fl-ellipsis-text">
+                        <div class="fl-ellipsis-text" layout="column" layout-wrap>
+                            {{ registrar.registrar_connector_display }}
+                        </div>
+                    </div>
+                </td>
+                <td fl-sref="pluginsDomainsRegistrarDetails({id:registrar.id})" hide-xs hide-sm>
+                    <div layout="row" class="fl-ellipsis-text">{{ registrar.created_at | date:'medium' }}</div>
+                </td>
+                <td fl-sref="pluginsDomainsRegistrarDetails({id:registrar.id})">
+                    {{ registrar.updated_at | date:'medium' }}
+                </td>
+                <td hide-xs class="fl-flex-100 fl-flex-right-align no-overflow-hidden">
+                    <div class="list-actions">
+                        <div layout="row" layout-align="end center">
+                            <plugins-domains-registrars-actions on-registrar-deleted="$ctrl.refreshRegistrars()"
+                                                          on-registrar-changed="$ctrl.refreshRegistrars()"
+                                                          registrar="registrar" add-button="false">
+                            </plugins-domains-registrars-actions>
+                        </div>
+                    </div>
+                </td>
+                <td hide-gt-xs class="fl-flex-50 no-overflow-hidden">
+                    <plugins-domains-registrars-actions on-registrar-deleted="$ctrl.refreshRegistrars()"
+                                                  registrar="registrar">
+                    </plugins-domains-registrars-actions>
+                </td>
+            </tr>
+        </fl-infinite-scroll>
+        </tbody>
+    </table>
+    <div hide-gt-md class="fl-add-button-separator"></div>
+</div>
+
+<div class="fl-fab" layout="row" ng-cloak="">
+    <md-fab-speed-dial fl-tooltip="{{ 'Add registrar' | translate }}" fl-direction="left" md-direction="up"
+                       ng-class="'md-scale'" ng-mouseover="$ctrl.hoverOn = true"
+                       ng-mouseleave="$ctrl.hoverOn = false">
+        <md-fab-trigger>
+            <plugins-domains-registrars-actions on-registrar-added="$ctrl.refreshRegistrars()"
+                                          registrar="registrar"
+                                          add-button="true">
+            </plugins-domains-registrars-actions>
+        </md-fab-trigger>
+    </md-fab-speed-dial>
+</div>

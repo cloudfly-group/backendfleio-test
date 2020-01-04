@@ -1,0 +1,42 @@
+<div class="fl-indent" layout="row">
+    <div flex="20">
+        <p class="fl-no-margin" ng-if="$ctrl.displayText==='currency'" translate>
+            {{ $ctrl.priceCycles.currency.code }}
+            <translate ng-if="$ctrl.priceCycles.currency.is_default">(default)</translate>
+        </p>
+        <p class="fl-no-margin" ng-if="$ctrl.displayText==='type'" translate>
+            {{ $ctrl.priceCycles.price_type_display }}
+        </p>
+        <div class="fl-indent fl-margin-top-small">
+          <md-checkbox class="md-primary"
+                       ng-model="$ctrl.priceCycles.relative_prices"
+                       ng-disabled="$ctrl.priceCycles.currency.is_default"
+                       fl-tooltip="{{ $ctrl.getUseRelativePricesTooltip() }}" fl-direction="right"
+                       ng-change="$ctrl.relativePricesChanged()">
+              <translate>Use relative prices</translate>
+          </md-checkbox>
+        </div>
+    </div>
+    <div>
+        <md-input-container ng-repeat="price in $ctrl.priceCycles.prices_per_years track by $index"
+                            class="fl-price-container fl-inde">
+            <label for="years_{{ $index + 1 }}">{{ $ctrl.getYearsText($index + 1) }}</label>
+            <input id="years_{{ $index + 1 }}"
+                   type="number"
+                   min="0"
+                   step="0.01"
+                   ng-model="$ctrl.priceCycles.prices_per_years[$index]"
+                   ng-disabled="$ctrl.priceCycles.relative_prices"
+                   ng-change="$ctrl.onPriceChanged()"
+                   class="no-spinner">
+        </md-input-container>
+        <md-button class="fl-no-margin"
+                   style="vertical-align: bottom"
+                   ng-disabled="$ctrl.priceCycles.relative_prices"
+                   fl-tooltip="{{ 'Autofill prices from 2 to 10 years based on 1 year price' | translate }}"
+                   fl-direction="left"
+                   ng-click="$ctrl.autofillPrices()">
+            <translate>Autofill</translate>
+        </md-button>
+    </div>
+</div>

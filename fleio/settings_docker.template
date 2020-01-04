@@ -1,0 +1,215 @@
+"""
+Local settings file
+
+Add any changes to this file.
+
+For more information on this file, see:
+
+https://fleio.com/docs/configuring/settings-file.html
+http://www.django-rest-framework.org/api-guide/settings/
+https://docs.djangoproject.com/en/2.0/topics/settings/
+https://docs.djangoproject.com/en/2.0/ref/settings/
+"""
+
+from .base_settings import *  # noqa
+
+if 'FLEIO_ENABLE_DEBUG' in os.environ and os.environ['FLEIO_ENABLE_DEBUG'] == 'true':
+    DEBUG = True
+
+URL_PREFIX = os.environ.get('FLEIO_DJANGO_URL_PREFIX', '')
+
+# Django secret key
+SECRET_KEY = os.environ['FLEIO_DJANGO_SECRET_KEY']
+SSO_SALT = os.environ['FLEIO_DJANGO_SSO_SALT']
+TIME_ZONE = os.environ.get('FLEIO_TIMEZONE', 'Europe/Bucharest')
+ADMINS = (
+    (os.environ.get('SUPERNAME', 'Administrator'),
+     os.environ.get('SUPEREMAIL', 'your_email@example.com')),
+)
+
+# Enable staticfiles ? (for admin and drf interfaces, not required for production)
+if os.environ.get('FLEIO_DJANGO_STATICFILES', False):
+    INSTALLED_APPS += ('django.contrib.staticfiles',)
+
+# CORS and CSRF settings
+# You need the Cors Middleware settings only if backend and frontend hosts or ports are different
+INSTALLED_APPS += (
+    'corsheaders',  # you need this only if backend and frontend hosts are different
+)
+NEW_MIDDLEWARE = list(MIDDLEWARE)
+NEW_MIDDLEWARE.insert(1, 'corsheaders.middleware.CorsMiddleware')
+MIDDLEWARE = tuple(NEW_MIDDLEWARE)
+CORS_ALLOW_CREDENTIALS = True
+if 'FLEIO_FRONTEND_HOST' in os.environ and os.environ['FLEIO_FRONTEND_HOST']:
+    defined_frontend_port = os.environ.get('FLEIO_FRONTEND_PORT', None)
+    if defined_frontend_port == '443':
+        FRONTEND_URL = 'https://{}'.format(os.environ.get('FLEIO_FRONTEND_HOST'))
+    elif defined_frontend_port == '80':
+        FRONTEND_URL = 'http://{}'.format(os.environ.get('FLEIO_FRONTEND_HOST'))
+    elif defined_frontend_port:
+        FRONTEND_URL = 'http://{}:{}'.format(os.environ.get('FLEIO_FRONTEND_HOST'), defined_frontend_port)
+    else:
+        FRONTEND_URL = 'http://{}'.format(os.environ.get('FLEIO_FRONTEND_HOST'))
+
+    if defined_frontend_port is not None and defined_frontend_port not in ('80', '443'):
+        CORS_ORIGIN_WHITELIST = (
+            'http://{}:{}'.format(os.environ.get('FLEIO_FRONTEND_HOST'), defined_frontend_port),
+        )
+    elif defined_frontend_port == '443':
+        CORS_ORIGIN_WHITELIST = (
+            'https://{}'.format(os.environ.get('FLEIO_FRONTEND_HOST')),
+        )
+    else:
+        CORS_ORIGIN_WHITELIST = (
+            'http://{}'.format(os.environ.get('FLEIO_FRONTEND_HOST')),
+        )
+    CSRF_TRUSTED_ORIGINS = [os.environ['FLEIO_FRONTEND_HOST']]
+else:
+    FRONTEND_URL = 'http://localhost'
+    CORS_ORIGIN_WHITELIST = ('http://localhost', )
+    CSRF_TRUSTED_ORIGINS = ['localhost']
+
+if 'FLEIO_CSRF_COOKIE_DOMAIN' in os.environ and os.environ['FLEIO_CSRF_COOKIE_DOMAIN']:
+    CSRF_COOKIE_DOMAIN = '{}'.format(os.environ['FLEIO_CSRF_COOKIE_DOMAIN'])
+
+# Database settings
+if 'FLEIO_MYSQL_HOST' in os.environ and os.environ['FLEIO_MYSQL_HOST']:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.environ.get('FLEIO_DATABASE', 'fleio'),
+            'USER': os.environ.get('FLEIO_MYSQL_USER', 'root'),
+            'PASSWORD': os.environ.get('FLEIO_MYSQL_PASSWORD', ''),
+            'HOST': os.environ['FLEIO_MYSQL_HOST'],
+            'PORT': os.environ.get('FLEIO_MYSQL_PORT', '3306'),
+            'CONN_MAX_AGE': 500,
+            'OPTIONS': {
+                'init_command': "SET sql_mode='STRICT_ALL_TABLES'"
+            }
+        },
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
+
+if 'FLEIO_EMAIL_HOST' in os.environ and os.environ['FLEIO_EMAIL_HOST']:
+    EMAIL_HOST = os.environ['FLEIO_EMAIL_HOST']
+else:
+    EMAIL_HOST = 'localhost'
+
+if 'DEFAULT_FROM_EMAIL' in os.environ and os.environ['DEFAULT_FROM_EMAIL']:
+    DEFAULT_FROM_EMAIL = os.environ['DEFAULT_FROM_EMAIL']
+else:
+    DEFAULT_FROM_EMAIL = 'webmaster@localhost'
+
+if 'FLEIO_ALLOWED_HOSTS' in os.environ and os.environ['FLEIO_ALLOWED_HOSTS']:
+    ALLOWED_HOSTS = [os.environ['FLEIO_ALLOWED_HOSTS']]
+else:
+    ALLOWED_HOSTS = ['*']
+
+
+# Celery and broker settings
+if os.environ.get('FLEIO_CELERY_BROKER_URL', False):
+    CELERY_BROKER_URL = os.environ.get('FLEIO_CELERY_BROKER_URL')
+    if os.environ.get('FLEIO_CELERY_RESULT_BACKEND', False):
+        CELERY_RESULT_BACKEND = os.environ.get('FLEIO_CELERY_RESULT_BACKEND')
+    else:
+        CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+else:
+    CELERY_TASK_ALWAYS_EAGER = True
+
+# Throttle request rate for login and payment gateways callbacks to avoid abuse
+REST_FRAMEWORK['DEFAULT_THROTTLE_RATES'] = {
+    'login': '10000/hour',
+    'signup': '5/day',
+    'password_reset': '10/hour',
+    'gateway_callback': '1000/hour'
+}
+
+# Custom Fleio test runner
+if os.environ.get('FLEIO_TEST_RUNNER', False) == 'true':
+    TEST_RUNNER = 'fleio.utils.testrunner.FleioTestRunner'
+    FEATURES['openstack.floatingips'] = True
+    STAFF_FEATURES['openstack.floatingips'] = True
+
+# Leave empty to use the default add credit URL of Fleio
+# fill in 'client_group_name': 'http://url...' pairs when using an external billing
+# when the dictionary has a single entry it will be used regardless of the 'client_group_name'
+ADD_CREDIT_URLS = {}
+
+# The mapping consists of key-value pairs where the key stands for the client_group and the value will be its
+# corresponding frontend URL; each client account will be associated with a group or multiple groups through ClientGroup
+# For two frontend urls using the same backend the setting will look like:
+# FRONTEND_URL_MAPPING = {'client_group1' : 'http://urlexample1.com/', 'client_group2': 'http://urlexample2.com/'}
+
+
+# Proxy settings used for licensing check, only HTTPS is used
+# PROXY_SETTINGS = {'https': '10.10.1.11:1080', }
+
+# To enable/disable a payment gateway uncomment the gateway configuration below.
+# Settings for each gateway needs to be entered in order for the gateway to function properly.
+# Once a gateway is enabled/disabled and the settings file is saved restart your web server and visit the
+# gateways page in order for the settings to take effect.
+
+# >>> bank gateway configuration
+# bank gateway does not need additional settings and will be enabled by default
+# >>> end of bank gateway configuration
+
+'''
+# >>> paypal gateway configuration
+INSTALLED_APPS += ('fleio.billing.gateways.paypal', )
+
+# paypal gateway settings - fill with the correct values
+PAYPAL_SETTINGS = {
+    'mode': 'sandbox',  # sandbox or live - set to live for production environment
+    'client_id': '',
+    'client_secret': '',
+    'url_base': 'http://fleio_backend/api/billing/gateway/paypal/'  # replace 'fleio_backend' with correct value
+}
+# >>> end of paypal gateway configuration
+'''
+
+'''
+# >>> romcard gateway configuration
+INSTALLED_APPS += ('fleio.billing.gateways.romcard', )
+
+# romcard gateway settings - fill with the correct values
+ROMCARD_SETTINGS = {
+    "merchant_name": "Company",
+    "merchant_url": "http://www.site.com",
+    "merchant_no": "",
+    "terminal": "",
+    "email": "",
+    "callback_url":
+        "http://fleio_backend/api/billing/gateway/romcard/callback", # replace 'fleio_backend' with correct value
+    "encryption_key": "",
+    "test_mode": True  # True or False, use False for production environment
+
+}
+
+# >>> end of romcard gateway configuration
+'''
+
+'''
+# >>> stripe gateway configuration
+INSTALLED_APPS += ('fleio.billing.gateways.stripe', )
+
+# stripe gateway settings - fill with the correct values
+STRIPE_SETTINGS = {
+    'public_key': '',
+    'secret_key': '',
+    'signing_secret': '',
+    'name': 'Fleio',
+    'image_url': 'https://stripe.com/img/documentation/checkout/marketplace.png',
+    'locale': 'auto',
+    'zipcode': True
+}
+# >>> end of stripe gateway configuration
+'''
+
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)

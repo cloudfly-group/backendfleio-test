@@ -1,0 +1,42 @@
+<div layout="row" layout-align="center start">
+  <md-card class="fl-card-fixed fl-card-fixed-md fl-margin-bottom">
+    <md-card-title class="object-detail-title">
+      <md-card-title-text>
+        <div layout="row" layout-align="space-between center" flex>
+          <div layout="column" class="toolbar-title-container">
+            <span class="toolbar-title-lg">{{ $ctrl.registrar.name }}</span>
+            <span class="toolbar-title-sm">
+              {{ $ctrl.registrar.name }}
+            </span>
+          </div>
+          <div layout-align="start center">
+            <plugins-domains-registrars-actions
+                    on-registrar-deleted="$ctrl.onRegistrarDeleted()"
+                    on-registrar-changed="$ctrl.refreshRegistrar()"
+                    registrar="$ctrl.registrar">
+            </plugins-domains-registrars-actions>
+          </div>
+        </div>
+      </md-card-title-text>
+    </md-card-title>
+    <md-divider></md-divider>
+    <md-card-content class="min-height-content fl-content">
+      <div layout="row" layout-align="space-between start">
+        <div class="detail-block fl-row">
+          <div class="fl-col">
+            <p>
+              <translate>Name</translate>:
+            </p>
+            <pre>{{$ctrl.registrar.name}}</pre>
+          </div>
+          <div class="fl-col">
+            <p>
+              <translate>Connector</translate>:
+            </p>
+            <pre>{{ $ctrl.registrar.registrar_connector_display }}</pre>
+          </div>
+        </div>
+      </div>
+    </md-card-content>
+  </md-card>
+</div>

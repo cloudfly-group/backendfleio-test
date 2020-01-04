@@ -1,0 +1,24 @@
+{
+  "custom_fields":[
+    {
+      "tld":".ro",
+      "fields": {
+        "cnp": {
+          "label":"CNP",
+          "type":"text",
+          "required": true
+        }
+      }
+    },
+    {
+      "tld":".com",
+      "fields": {
+        "code": {
+          "label":"Code",
+          "type":"text",
+          "required": true
+        }
+      }
+    }
+  ]
+}

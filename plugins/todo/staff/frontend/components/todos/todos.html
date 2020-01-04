@@ -1,0 +1,108 @@
+<fl-subheader ng-model="$ctrl.todos" objects-name="'TODO' | translate" objects-name-plural="'TODOs'" cardview="cardview"></fl-subheader>
+<fl-back-drop ng-if="$ctrl.loading" class="list-backdrop"></fl-back-drop>
+<img class="fl-arrow" ng-if="$ctrl.todos.totalItems == 0 && !$ctrl.hoverOn" src="images/arrow.png">
+<div class="alert-danger" ng-show="action_error"> {{ action_error }}</div>
+<div ng-if="cardview === true" class="stack stack-card" layout="column"
+     layout-align="center center" id="id_todos_cards_container">
+  <fl-infinite-scroll ng-model="$ctrl.todos" threshold="150" container-name="'id_todos_cards_container'">
+    <div layout="row" class="cardlist-container">
+      <div ng-repeat="todo in $ctrl.todos.objects track by todo.id">
+        <md-card class="fl-object-card">
+          <hr class="status-line-horizontal fl-light-green" ng-if="todo.status == 'in progress'">
+          <hr class="status-line-horizontal fl-yellow" ng-if="todo.status == 'open'">
+          <hr class="status-line-horizontal fl-gray" ng-if="todo.status == 'done'">
+          <a ui-sref="pluginsTodoTodoDetails({id:todo.id})">
+            <md-card-title>
+              <md-card-title-text>
+                <div title="{{ todo.title }}" class="fl-ellipsis-text md-headline">
+                  {{ todo.title}}
+                </div>
+              </md-card-title-text>
+            </md-card-title>
+            <md-card-content class="fl-object-card-content">
+              <div><translate>Created at</translate>:&nbsp;{{ todo.created_at | date:'medium' }}</div>
+              <div class="fl-ellipsis-text"><translate>Assigned to</translate>:&nbsp;{{ todo.assigned_to_display }}</div>
+              <div><translate>Status</translate>:&nbsp;{{ todo.status_display }}</div>
+              <div class="fl-ellipsis-text"><translate>Description</translate>:&nbsp;{{ todo.description }}</div>
+            </md-card-content>
+          </a>
+          <span flex></span>
+          <div class="card-actions">
+            <div layout="row" layout-align="start center">
+              <plugins-todo-todo-actions on-todo-deleted="$ctrl.refreshTODOs()" create-options="$ctrl.createOptions"
+                                         on-todo-changed="$ctrl.refreshTODOs()" todo="todo" add-button="false">
+              </plugins-todo-todo-actions>
+            </div>
+          </div>
+        </md-card>
+      </div>
+    </div>
+  </fl-infinite-scroll>
+</div>
+<div layout-wrap layout="row" ng-if="cardview === false" class="stack stack-list"
+     layout-align="center center" id="id_todos_table_container">
+  <table class="fl-table fl-card-fixed fl-list-view-table fl-table-shadow" ng-if="$ctrl.todos.totalItems">
+    <tbody>
+      <fl-infinite-scroll ng-model="$ctrl.todos" threshold="150" container-name="'id_todos_table_container'">
+        <tr ng-repeat="todo in $ctrl.todos.objects track by todo.id"
+            class="v-middle object-list-elem">
+          <td class="fl-status-line" fl-sref="pluginsTodoTodoDetails({id:todo.id})">
+            <hr class="status-line-vertical fl-light-green" ng-if="todo.status == 'in progress'">
+            <hr class="status-line-vertical fl-yellow" ng-if="todo.status == 'open'">
+            <hr class="status-line-vertical fl-gray" ng-if="todo.status == 'done'">
+          </td>
+          <td>
+            <a ui-sref="pluginsTodoTodoDetails({id:todo.id})" class="fl-table-link fl-ellipsis-text">
+              {{ todo.title }}
+            </a>
+          </td>
+          <td hide-xs hide-sm>
+            <a ui-sref="pluginsTodoTodoDetails({id:todo.id})" class="fl-table-link fl-ellipsis-text">
+              {{ todo.created_at | date:'medium' }}
+            </a>
+          </td>
+          <td hide-xs hide-sm>
+            <a ui-sref="pluginsTodoTodoDetails({id:todo.id})" class="fl-table-link fl-ellipsis-text">
+              {{ todo.assigned_to_display}}
+            </a>
+          </td>
+          <td hide-xs hide-sm>
+            <a ui-sref="pluginsTodoTodoDetails({id:todo.id})" class="fl-table-link fl-ellipsis-text">
+              {{ todo.status_display}}
+            </a>
+          </td>
+          <td>
+            <a ui-sref="pluginsTodoTodoDetails({id:todo.id})" class="fl-table-link fl-ellipsis-text">
+              {{ todo.created_at | date:'medium' }}
+            </a>
+          </td>
+          <td hide-xs class="fl-flex-100 fl-flex-right-align no-overflow-hidden">
+            <div class="list-actions">
+              <div layout="row" layout-align="end center">
+                <plugins-todo-todo-actions on-todo-deleted="$ctrl.onTODODeleted()"
+                                           todo="todo" create-options="$ctrl.createOptions">
+                </plugins-todo-todo-actions>
+              </div>
+            </div>
+          </td>
+          <td hide-gt-xs class="fl-flex-50 no-overflow-hidden">
+            <plugins-todo-todo-actions on-todo-deleted="$ctrl.onTODODeleted()" todo="todo" create-options="$ctrl.createOptions">
+            </plugins-todo-todo-actions>
+          </td>
+        </tr>
+      </fl-infinite-scroll>
+    </tbody>
+  </table>
+  <div hide-gt-md class="fl-add-button-separator"></div>
+</div>
+
+<div class="fl-fab" layout="row" ng-cloak="">
+  <md-fab-speed-dial fl-tooltip="{{ 'Add TODO' | translate }}" fl-direction="left" md-direction="up" ng-class="'md-scale'" ng-mouseover="$ctrl.hoverOn = true"
+                     ng-mouseleave="$ctrl.hoverOn = false">
+    <md-fab-trigger>
+        <plugins-todo-todo-actions on-todo-added="$ctrl.refreshTODOs()"
+                                   todo="todo" create-options="$ctrl.createOptions" add-button="true">
+        </plugins-todo-todo-actions>
+    </md-fab-trigger>
+  </md-fab-speed-dial>
+</div>

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment processing error</title>
+</head>
+<body>
+<div style="color: red; text-align: center;">
+    {{ error_message }}
+    <form action="{{ redirect_url }}" method="get">
+        <input type="submit" value="Go Back"/>
+    </form>
+</div>
+</body>
+</html>

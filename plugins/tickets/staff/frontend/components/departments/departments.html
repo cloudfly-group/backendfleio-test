@@ -1,0 +1,98 @@
+<fl-subheader ng-model="$ctrl.departments" objects-name="'Department' | translate" objects-name-plural="'Departments'" cardview="cardview"></fl-subheader>
+<fl-back-drop ng-if="$ctrl.loading" class="list-backdrop"></fl-back-drop>
+<img class="fl-arrow" ng-if="$ctrl.departments.totalItems == 0 && !$ctrl.hoverOn" src="images/arrow.png">
+<div class="alert-danger" ng-show="action_error"> {{ action_error }}</div>
+<div ng-if="cardview === true" class="stack stack-card" layout="column"
+     layout-align="center center" id="id_departments_cards_container">
+    <fl-infinite-scroll ng-model="$ctrl.departments" threshold="150" container-name="'id_departments_cards_container'">
+        <div layout="row" class="cardlist-container">
+            <div ng-repeat="department in $ctrl.departments.objects track by department.id">
+                <md-card class="fl-object-card">
+                    <div>
+                        <a ui-sref="pluginsTicketsDepartmentDetails({id: department.id})">
+                            <md-card-title class="fl-position-relative">
+                                <md-card-title-text>
+                                    <div title="{{ department.name }}" class="fl-ellipsis-text md-headline">
+                                        {{ department.name }}
+                                    </div>
+                                </md-card-title-text>
+                            </md-card-title>
+                            <md-card-content class="fl-object-card-content">
+                                <div><translate>ID</translate>: {{ department.id }}</div>
+                                <div><translate>Created at</translate>:&nbsp;{{ department.created_at | date:'medium' }}</div>
+                                <div><translate>Email</translate>:&nbsp; {{ department.email }}</div>
+                            </md-card-content>
+                        </a>
+                    </div>
+                    <span flex></span>
+                    <div class="card-actions">
+                        <div layout="row" layout-align="start center">
+                            <plugins-tickets-departments-actions on-department-deleted="$ctrl.refreshDepartments()" create-options="$ctrl.createOptions"
+                                                                 edit-button="true"
+                                                             on-department-changed="$ctrl.refreshDepartments()" department="department" add-button="false">
+                            </plugins-tickets-departments-actions>
+                        </div>
+                    </div>
+                </md-card>
+            </div>
+        </div>
+    </fl-infinite-scroll>
+</div>
+<div layout-wrap layout="row" ng-if="cardview === false" class="stack stack-list"
+     layout-align="center center" id="id_departments_table_container">
+    <table class="fl-table fl-card-fixed fl-list-view-table fl-table-shadow" ng-if="$ctrl.departments.totalItems">
+        <thead>
+            <th flex="20" translate>Name</th>
+            <th flex="20" hide-xs hide-sm translate>Created at</th>
+            <th translate>Email</th>
+            <th class="fl-flex-right-align" translate>Actions</th>
+        </thead>
+        <tbody>
+        <fl-infinite-scroll ng-model="$ctrl.departments" threshold="150" container-name="'id_departments_table_container'">
+            <tr ng-repeat="department in $ctrl.departments.objects track by department.id"
+                class="v-middle object-list-elem">
+                <td flex="20">
+                    <a ui-sref="pluginsTicketsDepartmentDetails({id: department.id})" class="fl-table-link fl-ellipsis-text">
+                        {{ department.name }}
+                    </a>
+                </td>
+                <td flex="20" hide-xs hide-sm>
+                    <a ui-sref="pluginsTicketsDepartmentDetails({id: department.id})" class="fl-table-link fl-ellipsis-text">
+                        {{ department.created_at | date:'medium' }}
+                    </a>
+                </td>
+                <td>
+                    <a ui-sref="pluginsTicketsDepartmentDetails({id: department.id})" class="fl-table-link fl-ellipsis-text">
+                        {{ department.email }}
+                    </a>
+                </td>
+                <td hide-xs class="fl-flex-100 fl-flex-right-align no-overflow-hidden">
+                    <div class="list-actions">
+                        <div layout="row" layout-align="end center">
+                            <plugins-tickets-departments-actions on-department-deleted="$ctrl.refreshDepartments()" create-options="$ctrl.createOptions"
+                                                             on-department-changed="$ctrl.refreshDepartments()" department="department" add-button="false">
+                            </plugins-tickets-departments-actions>
+                        </div>
+                    </div>
+                </td>
+                <td hide-gt-xs class="fl-flex-50 no-overflow-hidden">
+                    <plugins-tickets-departments-actions on-department-deleted="$ctrl.refreshDepartments()" department="department" create-options="$ctrl.createOptions">
+                    </plugins-tickets-departments-actions>
+                </td>
+            </tr>
+        </fl-infinite-scroll>
+        </tbody>
+    </table>
+    <div hide-gt-md class="fl-add-button-separator"></div>
+</div>
+
+<div class="fl-fab" layout="row" ng-cloak="">
+    <md-fab-speed-dial fl-tooltip="{{ 'Add department' | translate }}" fl-direction="left" md-direction="up" ng-class="'md-scale'" ng-mouseover="$ctrl.hoverOn = true"
+                       ng-mouseleave="$ctrl.hoverOn = false">
+        <md-fab-trigger>
+            <plugins-tickets-departments-actions on-department-added="$ctrl.refreshDepartments()" create-options="$ctrl.createOptions"
+                                             department="department" add-button="true">
+            </plugins-tickets-departments-actions>
+        </md-fab-trigger>
+    </md-fab-speed-dial>
+</div>

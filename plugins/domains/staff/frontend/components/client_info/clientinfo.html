@@ -1,0 +1,73 @@
+<fl-back-drop ng-if="$ctrl.loading === true"></fl-back-drop>
+<table class="fl-table fl-grid fl-list-view-table" ng-if="$ctrl.domains">
+    <thead>
+        <th>ID</th>
+        <th translate>Domain name</th>
+        <th hide-xs hide-sm translate>Created at</th>
+        <th hide-xs hide-sm translate>Registration date</th>
+        <th translate>Expiry date</th>
+        <th translate>Status</th>
+        <th translate>Assigned to</th>
+    </thead>
+    <tbody>
+        <tr ng-repeat="domain in $ctrl.domains track by $index">
+            <td>
+                <a ui-sref="pluginsDomainsDomainDetails({id:domain.id})" class="fl-table-link">
+                    {{domain.id}}
+                </a>
+            </td>
+            <td>
+                <a class="fl-ellipsis-text fl-table-link" ui-sref="pluginsDomainsDomainDetails({id:domain.id})">
+                    {{domain.name}}
+                </a>
+            </td>
+            <td hide-xs hide-sm class="no-overflow-hidden">
+                <a class="fl-ellipsis-text fl-table-link no-overflow-hidden"
+                   ui-sref="pluginsDomainsDomainDetails({id:domain.id})">
+                    <span fl-tooltip="{{domain.created_at | date:'medium'}}">{{domain.created_at | date:'shortDate'}}</span>
+                </a>
+            </td>
+            <td hide-xs hide-sm class="no-overflow-hidden">
+                <a class="fl-ellipsis-text fl-table-link no-overflow-hidden"
+                   ui-sref="pluginsDomainsDomainDetails({id:domain.id})">
+                    <span ng-if="domain.registration_date" fl-tooltip="{{domain.registration_date | date:'medium'}}">
+                        {{domain.registration_date | date:'shortDate'}}
+                    </span>
+                    <translate ng-if="!domain.registration_date">n/a</translate>
+                </a>
+            </td>
+            <td class="no-overflow-hidden">
+                <a class="fl-ellipsis-text fl-table-link no-overflow-hidden"
+                   ui-sref="pluginsDomainsDomainDetails({id:domain.id})">
+                    <span ng-if="domain.expiry_date" fl-tooltip="{{domain.expiry_date | date:'medium'}}">
+                        {{domain.expiry_date | date:'shortDate'}}
+                    </span>
+                    <translate ng-if="!domain.expiry_date">n/a</translate>
+                </a>
+            </td>
+            <td>
+                <a class="fl-ellipsis-text fl-table-link" ui-sref="pluginsDomainsDomainDetails({id:domain.id})">
+                    {{domain.status_display}}
+                </a>
+            </td>
+            <td>
+                <a class="fl-ellipsis-text fl-table-link" ng-if="domain.assigned_to_service">
+                   ui-sref="billingServicesDetails({id:domain.assigned_to_service})">
+                    {{domain.assigned_to_service}}
+                </a>
+                <translate ng-if="!domain.assigned_to_service">n/a</translate>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div ng-if="!$ctrl.domains && $ctrl.loading === false">
+    <span translate>No domains were found.</span>
+</div>
+<div ng-if="$ctrl.previousPage || $ctrl.nextPage">
+  <md-button ng-click="$ctrl.changePage('previous')" ng-disabled="$ctrl.previousPage === false || $ctrl.loading === true" class="md-primary">
+    <translate>Previous page</translate> <span ng-if="$ctrl.previousPage && $ctrl.loading !== true">({{$ctrl.currentPage - 1}})</span>
+  </md-button>
+  <md-button ng-click="$ctrl.changePage('next')" ng-disabled="$ctrl.nextPage === false || $ctrl.loading === true" class="md-primary">
+    <translate>Next page</translate> <span ng-if="$ctrl.nextPage && $ctrl.loading !== true">({{$ctrl.currentPage + 1}})</span>
+  </md-button>
+</div>

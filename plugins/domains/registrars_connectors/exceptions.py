@@ -1,0 +1,2 @@
+class RegistrarConnectorException(Exception):
+    pass

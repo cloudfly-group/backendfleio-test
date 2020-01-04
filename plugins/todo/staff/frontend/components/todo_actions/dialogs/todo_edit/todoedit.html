@@ -1,0 +1,43 @@
+<md-dialog class="fl-dialog">
+  <fl-back-drop ng-if="$ctrl.submitPending"></fl-back-drop>
+  <h2 ng-if="$ctrl.isEdit" class="md-title ng-binding" translate>Edit {{::$ctrl.todo.title}}</h2>
+  <h2 ng-if="!$ctrl.isEdit" class="md-title ng-binding" translate>Add TODO</h2>
+  <fl-form-errors ng-model="$ctrl.backendErrors" form="$ctrl.editTODO"></fl-form-errors>
+  <form ng-submit="$ctrl.saveTODO()" name="$ctrl.editTODO" novalidate fl-messages="$ctrl.backendErrors">
+    <md-dialog-content>
+      <md-content class="md-dialog-content">
+        <md-input-container class="fl-required-group md-block" flex>
+          <label for="todo_title" translate>Title</label>
+          <input id="todo_title" maxlength="1024" name="title" type="text"
+                 ng-model="$ctrl.todo.title" required>
+          <fl-validate for="title"></fl-validate>
+        </md-input-container>
+        <md-input-container class="md-block">
+          <label translate>Status</label>
+          <md-select ng-model="$ctrl.todo.status" name="status" required>
+            <md-option ng-value="status" ng-repeat="status in $ctrl.statusesKeys">
+              {{$ctrl.createOptions.statuses[status]}}
+            </md-option>
+          </md-select>
+          <fl-validate for="status"></fl-validate>
+        </md-input-container>
+        <fl-autocomplete-user staff-only="true"
+                              user-id="$ctrl.todo.assigned_to">
+        </fl-autocomplete-user>
+        <md-input-container class="fl-required-group md-block" flex>
+          <label for="todo_description" translate>Description</label>
+          <textarea id="todo_description" rows="5" maxlength="10240" name="description"
+                    ng-model="$ctrl.todo.description"></textarea>
+          <fl-validate for="description"></fl-validate>
+        </md-input-container>
+        </md-content>
+    </md-dialog-content>
+    <md-dialog-actions>
+      <md-button class="md-primary" ng-click="$ctrl.close()">
+        <translate>Cancel</translate>
+      </md-button>
+      <md-button ng-if="!$ctrl.isEdit" class="md-primary" type="submit"><translate>Add TODO</translate></md-button>
+      <md-button ng-if="$ctrl.isEdit" class="md-primary" type="submit"><translate>Save TODO</translate></md-button>
+    </md-dialog-actions>
+  </form>
+</md-dialog>

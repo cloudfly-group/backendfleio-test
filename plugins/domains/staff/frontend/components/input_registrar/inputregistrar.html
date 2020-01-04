@@ -1,0 +1,22 @@
+<md-autocomplete flex
+    md-input-name="registrar"
+    md-input-minlength="0"
+    md-selected-item-change="$ctrl.selectedRegistrarChanged(registrar)"
+    md-selected-item="$ctrl.registrar"
+    md-search-text="$ctrl.registrarSearchText"
+    md-select-on-match="true"
+    md-match-case-insensitive="true"
+    md-items="registrar in $ctrl.searchRegistrar($ctrl.registrarSearchText)"
+    md-item-text="registrar.display_name"
+    md-min-length="0"
+    md-require-match
+    md-delay="100"
+    md-no-cache="true"
+    placeholder="{{'Registrar'|translate}}">
+    <md-item-template>
+        <span md-highlight-text="$ctrl.registrarSearchText">{{registrar.display_name }}</span>
+    </md-item-template>
+    <md-not-found>
+        <translate>A valid registrar is required</translate>
+    </md-not-found>
+</md-autocomplete>

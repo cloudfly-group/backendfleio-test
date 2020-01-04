@@ -1,0 +1,22 @@
+<md-button fl-tooltip="{{ 'Edit' | translate }}" fl-direction="down"
+           ng-click="$ctrl.editTicket()" class="md-icon-button" ng-if="!$ctrl.addButton">
+    <md-icon class="fl-icons fl-icon-grey">edit</md-icon>
+</md-button>
+<md-button fl-tooltip="{{ 'Reopen ticket' | translate }}" fl-direction="down"
+           ng-click="$ctrl.reopenTicket()" class="md-icon-button" ng-if="!$ctrl.addButton && $ctrl.ticket.status==='done'">
+    <md-icon class="material-icons fl-icon-grey">lock_open</md-icon>
+</md-button>
+<md-button fl-tooltip="{{ 'Close ticket' | translate }}" fl-direction="down"
+           ng-click="$ctrl.closeTicket()" class="md-icon-button" ng-if="!$ctrl.addButton && $ctrl.ticket.status!=='done'">
+    <md-icon class="material-icons fl-icon-grey">lock</md-icon>
+</md-button>
+<md-fab-speed-dial ng-if="$ctrl.addButton" fl-tooltip="{{ 'Open new ticket' | translate }}" fl-direction="left" md-direction="up" ng-class="'md-scale'" ng-mouseover="$ctrl.hoverOn = true"
+                   ng-mouseleave="$ctrl.hoverOn = false">
+    <md-fab-trigger>
+        <md-button aria-label="{{'Open new ticket'|translate}}" class="md-fab md-accent fl-fab-rotate"
+                   ui-sref="pluginsTicketsTicketsCreate()"
+                   id="ticket_button_add">
+            <md-icon class="material-icons">add</md-icon>
+        </md-button>
+    </md-fab-trigger>
+</md-fab-speed-dial>

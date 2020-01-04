@@ -1,0 +1,399 @@
+<div layout="row" layout-align="center start">
+    <md-card class="fl-card-fixed-md fl-margin-bottom">
+        <fl-back-drop ng-if="$ctrl.submitPending">
+            <div ng-if="$ctrl.uploadInProgress" class="fl-upload-in-progress-msg" translate>
+                Attachments upload in progress...
+            </div>
+        </fl-back-drop>
+        <hr class="status-line-horizontal fl-light-green" ng-if="$ctrl.ticket.status == 'open'">
+        <hr class="status-line-horizontal fl-yellow" ng-if="$ctrl.ticket.status == 'on hold'">
+        <hr class="status-line-horizontal fl-red" ng-if="$ctrl.ticket.status == 'in progress'">
+        <hr class="status-line-horizontal fl-gray" ng-if="$ctrl.ticket.status == 'done'">
+        <hr class="status-line-horizontal fl-light-green" ng-if="$ctrl.ticket.status == 'answered'">
+        <hr class="status-line-horizontal fl-orange" ng-if="$ctrl.ticket.status == 'customer reply'">
+        <md-card-title class="object-detail-title">
+            <md-card-title-text>
+                <div layout="row" layout-align="space-between center" flex>
+                    <div layout="column" class="toolbar-title-container tickets-toolbar-title no-overflow-hidden">
+                        <span class="toolbar-title-lg toolbar-title-md"
+                              title="{{$ctrl.ticket.title}}" translate>
+                            #{{ $ctrl.ticket.id }} - {{ $ctrl.ticket.title }}
+                        </span>
+                        <span class="toolbar-title-xs fl-margin-top-small">
+                          Status: {{ $ctrl.ticket.status_display }} -
+                          <span ng-if="$ctrl.ticket.assigned_to">
+                            <translate>assigned to</translate>
+                            <a class="md-primary" fl-sref="user({id:$ctrl.ticket.assigned_to})">
+                              {{$ctrl.ticket.assigned_to_display}}
+                            </a>
+                          </span>
+                          <span ng-if="!$ctrl.ticket.assigned_to">
+                              <translate>unassigned</translate>
+                          </span>
+                        </span>
+                        <div ng-if="$ctrl.ticket.linked_tickets.length > 0" class="fl-margin-top-small">Linked tickets:
+                            <span ng-repeat="ticket in $ctrl.ticket.linked_tickets track by $index">
+                                <a ui-sref="pluginsTicketsTicketsDetails({'id': ticket})" class="md-primary">#{{ticket}}</a>
+                                <a fl-tooltip="{{'Remove #' + ticket | translate}}" fl-direction="up"
+                                           ng-click="$ctrl.removeLinking(ticket)">
+                                    <md-icon class="fl-icons fl-small-icon fl-icon-grey">delete</md-icon>
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                    <span flex></span>
+                    <div layout="row" layout-align="start center" class="ticket-details-action-btns">
+                        <plugins-tickets-tickets-actions on-ticket-deleted="$ctrl.onTicketsDeleted()" ticket="$ctrl.ticket">
+                        </plugins-tickets-tickets-actions>
+                    </div>
+                </div>
+            </md-card-title-text>
+        </md-card-title>
+        <md-divider></md-divider>
+        <md-card-content class="min-height-content fl-content fl-no-padding-top fl-no-padding-bottom ticket-details hide-tinymce-textarea">
+            <div layout="row" layout-align="space-between start">
+                <div class="detail-block fl-row">
+                    <div class="fl-col">
+                        <p class="fl-margin-left-small">
+                            <translate>Created by</translate>
+                            <a class="md-primary" ng-href="{{::$ctrl.getUrlForUser($ctrl.ticket.created_by, $ctrl.ticket.created_by_email);}}">
+                                {{$ctrl.ticket.created_by_display}}
+                            </a>
+                            <translate>on</translate>&nbsp;{{$ctrl.ticket.created_at | date:'medium'}}
+                        </p>
+                        <p class="fl-margin-left-small" translate>
+                            Department: <a ui-sref="pluginsTicketsDepartments({search: $ctrl.ticket.department_display})"
+                                           class="md-primary">{{$ctrl.ticket.department_display}}</a>
+                        </p>
+                        <p class="fl-margin-left-small" translate>Client:
+                            <a ng-if="$ctrl.ticket.client"
+                               class="md-primary" ui-sref="client({id: $ctrl.ticket.client})">
+                                {{$ctrl.ticket.client_display}}
+                            </a>
+                            <span ng-if="!$ctrl.ticket.client">{{$ctrl.ticket.client_display}}</span>
+                        </p>
+                        <p class="fl-margin-left-small" translate ng-if="$ctrl.ticket.service">
+                            Related service: <a ui-sref="billingServicesDetails({'id': $ctrl.ticket.service})"
+                                                class="md-primary">{{$ctrl.ticket.service}}</a>
+                        </p>
+                        <p ng-if="$ctrl.ticket.cc_recipients" class="fl-margin-left-small" translate>
+                            CC recipients: {{$ctrl.ticket.cc_recipients}}
+                        </p>
+                        <p class="fl-margin-left-small" translate>Internal status: {{$ctrl.ticket.internal_status_display}}
+                            <md-menu>
+                                <a class="md-primary" ng-click="$mdMenu.open($event)">
+                                    <md-icon fl-tooltip="{{'Quick edit' | translate}}" class="fl-icons">edit</md-icon>
+                                </a>
+                                <md-menu-content>
+                                    <md-menu-item>
+                                        <md-button ng-click="$ctrl.changeInternalStatus(null)" translate>Set to "N/A"</md-button>
+                                    </md-menu-item>
+                                    <md-menu-item>
+                                        <md-button ng-click="$ctrl.changeInternalStatus('open')" translate>Set to "open"</md-button>
+                                    </md-menu-item>
+                                    <md-menu-item>
+                                        <md-button ng-click="$ctrl.changeInternalStatus('done')" translate>Set to "done"</md-button>
+                                    </md-menu-item>
+                                    <md-menu-item>
+                                        <md-button ng-click="$ctrl.changeInternalStatus('in progress')" translate>Set to "in progress"</md-button>
+                                    </md-menu-item>
+                                </md-menu-content>
+                            </md-menu>
+                        </p>
+                        <p ng-if="!$ctrl.ticket.description && $ctrl.ticket.main_attachments.length"
+                           class="fl-margin-left-small">
+                            <span translate>Attachments:</span>
+                            <md-menu ng-repeat="attachment in $ctrl.ticket.main_attachments">
+                                <a class="md-primary" ng-click="$mdMenu.open($event)">
+                                    <md-icon class="fl-icons">attachment</md-icon>
+                                    {{attachment.file_name}}
+                                </a>
+                                <md-menu-content>
+                                    <md-menu-item>
+                                        <md-button ng-click="$ctrl.downloadAttachment(attachment.id)" translate>
+                                            Download attachment
+                                        </md-button>
+                                    </md-menu-item>
+                                    <md-menu-item>
+                                        <md-button ng-click="$ctrl.openAttachment(attachment.id)" translate>
+                                            Open attachment
+                                        </md-button>
+                                    </md-menu-item>
+                                    <md-menu-item>
+                                        <md-button ng-click="$ctrl.deleteAttachment(attachment.id)">
+                                            Remove attachment
+                                        </md-button>
+                                    </md-menu-item>
+                                </md-menu-content>
+                            </md-menu>
+                        </p>
+
+                        <div layout="row"
+                             ng-if="$ctrl.ticket.description"
+                             ng-mouseover="$ctrl.hover['mainMessage'] = true"
+                             ng-mouseleave="$ctrl.hover['mainMessage'] = false"
+                             ng-class="{
+                                'fl-flex-right-align': $ctrl.ticket.is_staff_generated === true
+                             }">
+                            <div class="ticket-message-owner-info" layout="column" flex="5">
+                                <div>
+                                    <a ng-href="{{::$ctrl.getUrlForUser($ctrl.ticket.created_by, $ctrl.ticket.created_by_email);}}">
+                                        <img aria-label="{{ 'User image'|translate }}" class="ticket-gravatar" gravatar-src="$ctrl.ticket.ticket_owner_email"
+                                             gravatar-default="identicon"
+                                             title="{{ $ctrl.ticket.created_by_display + ' on ' +  ($ctrl.ticket.created_at | date:'medium') }}">
+                                    </a>
+                                </div>
+                            </div>
+                            <div layout="column" flex="95">
+                                <div class="ticket-message"
+                                     layout="column"
+                                     ng-class="{
+                                        'foreign-ticket-message': $ctrl.ticket.is_staff_generated === true
+                                     }">
+                                    <div ng-show="$ctrl.hover['mainMessage']===true" class="ticket-message-actions">
+                                        <md-button fl-tooltip="{{ 'Reply' | translate }}" fl-direction="down"
+                                                   ng-click="$ctrl.replyToReply($ctrl.ticket.description, $ctrl.ticket.created_by)" class="md-icon-button fl-float-right">
+                                            <md-icon class="fl-icons fl-icon-grey">reply</md-icon>
+                                        </md-button>
+                                    </div>
+                                    <div ng-if="$ctrl.ticket.description" ng-bind-html="$ctrl.trustAsHtml($ctrl.ticket.description)"></div>
+                                    <span ng-if="$ctrl.ticket.main_attachments.length" translate>Attachments:</span>
+                                    <md-menu ng-repeat="attachment in $ctrl.ticket.main_attachments"
+                                             ng-if="$ctrl.ticket.main_attachments.length">
+                                        <a class="md-primary" ng-click="$mdMenu.open($event)">
+                                            <md-icon class="fl-icons">attachment</md-icon>
+                                            {{attachment.file_name}}
+                                        </a>
+                                        <md-menu-content>
+                                            <md-menu-item>
+                                                <md-button ng-click="$ctrl.downloadAttachment(attachment.id)" translate>
+                                                    Download attachment
+                                                </md-button>
+                                            </md-menu-item>
+                                            <md-menu-item>
+                                                <md-button ng-click="$ctrl.openAttachment(attachment.id)" translate>
+                                                    Open attachment
+                                                </md-button>
+                                            </md-menu-item>
+                                            <md-menu-item>
+                                                <md-button ng-click="$ctrl.deleteAttachment(attachment.id)">
+                                                    Remove attachment
+                                                </md-button>
+                                            </md-menu-item>
+                                        </md-menu-content>
+                                    </md-menu>
+                                    <div class="cma-container">
+                                        <div class="chat-message-arrow">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="under-message"
+                                     ng-class="{
+                                        'fl-margin-left': $ctrl.ticket.is_staff_generated === false
+                                    }">
+                                    <a ng-href="{{::$ctrl.getUrlForUser($ctrl.ticket.created_by, $ctrl.ticket.created_by_email);}}"
+                                       class="md-primary">{{$ctrl.ticket.created_by_display}}</a>
+                                    •
+                                    <span>{{$ctrl.ticket.created_at | date:'medium'}}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div ng-repeat="item in $ctrl.ticket.replies_and_notes"
+                             ng-mouseover="$ctrl.hover[item.message_type + item.id] = true"
+                             ng-mouseleave="$ctrl.hover[item.message_type + item.id] = false"
+                             layout="row"
+                             ng-class="{
+                                'fl-flex-right-align': item.is_staff_generated === true && !item.ticket_activity,
+                                'fl-margin-top-small': !item.ticket_activity
+                             }">
+                            <div ng-if="item.ticket_activity === false" class="ticket-message-owner-info" layout="column" flex="5">
+                                <div>
+                                    <a ng-href="{{::$ctrl.getUrlForUser(item.created_by, item.message_owner_email);}}">
+                                        <img aria-label="{{ 'User image'|translate }}"
+                                             class="ticket-gravatar" gravatar-src="item.message_owner_email"
+                                             gravatar-default="identicon"
+                                             title="{{ item.created_by_display + ' on ' +  (item.created_at | date:'medium') }}">
+                                    </a>
+                                </div>
+                            </div>
+                            <div ng-if="item.ticket_activity === false" layout="column" flex="95">
+                                <div class="ticket-message" layout="column"
+                                     ng-class="{
+                                         'foreign-ticket-message': item.is_staff_generated === true,
+                                         'ticket-note-message': item.message_type === 'ticketnote'
+                                     }">
+                                    <div ng-show="$ctrl.hover[item.message_type + item.id] === true" class="ticket-message-actions">
+                                        <md-menu>
+                                            <a ng-click="$mdMenu.open($event)">
+                                                <md-icon fl-tooltip="{{'Actions' | translate}}" fl-direction="down" class="fl-icons">more</md-icon>
+                                            </a>
+                                            <md-menu-content>
+                                                <md-menu-item>
+                                                    <md-button ng-click="$ctrl.replyToReply(item.message, item.created_by)">
+                                                        <md-icon class="fl-icons fl-icon-grey">reply</md-icon>
+                                                        Reply
+                                                    </md-button>
+                                                </md-menu-item>
+                                                <md-menu-item>
+                                                    <md-button ng-click="$ctrl.editReply(item)">
+                                                        <md-icon class="fl-icons fl-icon-grey">edit</md-icon>
+                                                        Edit message
+                                                    </md-button>
+                                                </md-menu-item>
+                                                <md-menu-item>
+                                                    <md-button ng-click="$ctrl.deleteMessage(item)">
+                                                        <md-icon class="fl-icons fl-icon-grey">delete</md-icon>
+                                                        Delete message
+                                                    </md-button>
+                                                </md-menu-item>
+                                            </md-menu-content>
+                                        </md-menu>
+                                    </div>
+                                    <div ng-if="item.message" ng-if="item.message" ng-bind-html="$ctrl.trustAsHtml(item.message)"></div>
+                                    <span translate ng-if="item.attachments.length">Attachments:</span>
+                                    <md-menu ng-repeat="attachment in item.attachments"
+                                             ng-if="item.attachments.length > 0">
+                                        <a class="md-primary" ng-click="$mdMenu.open($event)">
+                                            <md-icon class="fl-icons">attachment</md-icon>
+                                            {{attachment['file_name']}}
+                                        </a>
+                                        <md-menu-content>
+                                            <md-menu-item>
+                                                <md-button ng-click="$ctrl.downloadAttachment(attachment['id'])" translate>Download attachment</md-button>
+                                            </md-menu-item>
+                                            <md-menu-item>
+                                                <md-button ng-click="$ctrl.openAttachment(attachment['id'])" translate>Open attachment</md-button>
+                                            </md-menu-item>
+                                            <md-menu-item>
+                                                <md-button ng-click="$ctrl.deleteAttachment(attachment['id'])">Remove attachment</md-button>
+                                            </md-menu-item>
+                                        </md-menu-content>
+                                    </md-menu>
+                                    <div ng-if="item.last_edited" class="fl-detail" translate>
+                                        - Last edited by
+                                        <a class="md-primary" ui-sref="user({id: item.last_edited_by.id})">
+                                        {{item.last_edited_by.full_name}}
+                                        </a>
+                                        on {{item.last_edited | date:'medium'}}
+                                    </div>
+                                    <div class="cma-container">
+                                        <div class="chat-message-arrow">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="under-message"
+                                     ng-if="!item.ticket_activity"
+                                     ng-class="{
+                                        'fl-margin-left': item.is_staff_generated === false
+                                     }">
+                                    <a ng-href="{{::$ctrl.getUrlForUser(item.created_by, item.message_owner_email);}}" class="md-primary">{{item.created_by_display}}</a>
+                                    •
+                                    <span ng-if="item.message_type === 'ticketnote'"><translate>note from</translate></span>
+                                    <span>{{item.created_at | date:'medium'}}</span>
+                                </div>
+                            </div>
+                            <div ng-if="item.ticket_activity" class="ticket-activity">
+                                <div ng-if="item.new_status && item.email_generated === false">
+                                    <p class="fl-detail">
+                                        <a class="md-primary" ui-sref="user({id:item.created_by.id})">{{item.created_by_display}}</a>&nbsp;<translate>changed status to</translate>
+                                        {{item.new_status}}&nbsp;<translate>on</translate>&nbsp;
+                                        {{item.created_at | date:'medium'}}
+                                    </p>
+                                </div>
+                                <div ng-if="item.new_internal_status && item.email_generated === false">
+                                    <p class="fl-detail">
+                                        <a class="md-primary" ui-sref="user({id:item.created_by.id})">{{item.created_by_display}}</a>&nbsp;<translate>changed internal status to {{item.new_internal_status}}</translate>&nbsp;<translate>on</translate>
+                                        {{item.created_at | date:'medium'}}
+                                    </p>
+                                </div>
+                                <div ng-if="item.email_generated === true && (item.new_status || item.new_internal_status)">
+                                    <p class="fl-detail">
+                                        <a ng-if="item.created_by" class="md-primary" fl-sref="user({id:item.created_by.id})">{{item.created_by_display}}</a>
+                                        <span ng-if="!item.created_by"><b>{{item.created_by_display}}</b></span>
+                                        &nbsp;<translate>reopened ticket because of email reply on</translate>&nbsp;
+                                        {{item.created_at | date:'medium'}}
+                                    </p>
+                                </div>
+                                <div ng-if="item.new_priority">
+                                    <p class="fl-detail">
+                                        <a class="md-primary" ui-sref="user({id:item.created_by.id})">{{item.created_by_display}}</a>&nbsp;<translate>changed priority to</translate>
+                                        {{item.new_priority}}&nbsp;<translate>on</translate>&nbsp;
+                                        {{item.created_at | date:'medium'}}
+                                    </p>
+                                </div>
+                                <div ng-if="item.new_assignee">
+                                    <p class="fl-detail">
+                                        <a class="md-primary" ui-sref="user({id:item.created_by.id})">{{item.created_by_display}}</a>&nbsp;<translate>changed assignee to</translate>
+                                        <a class="md-primary" ui-sref="user({id: item.new_assignee.id})">{{item.new_assignee.display}}</a>&nbsp;<translate>on</translate>&nbsp;
+                                        {{item.created_at | date:'medium'}}
+                                    </p>
+                                </div>
+                                <div ng-if="item.new_department">
+                                    <p class="fl-detail">
+                                        <a class="md-primary" ui-sref="user({id:item.created_by.id})">{{item.created_by_display}}</a>&nbsp;<translate>changed department to</translate>
+                                        {{item.new_department}}&nbsp;<translate>on</translate>&nbsp;
+                                        {{item.created_at | date:'medium'}}
+                                    </p>
+                                </div>
+                                <div ng-if="item.new_cc">
+                                    <p class="fl-detail">
+                                        <a class="md-primary" ui-sref="user({id:item.created_by.id})">{{item.created_by_display}}</a>&nbsp;<translate>added the following CC recipients</translate>:
+                                        {{item.new_cc}}&nbsp;<translate>on</translate>&nbsp;
+                                        {{item.created_at | date:'medium'}}
+                                    </p>
+                                </div>
+                                <div ng-if="item.new_client">
+                                    <p class="fl-detail">
+                                        <a class="md-primary" ui-sref="user({id:item.created_by.id})">{{item.created_by_display}}</a>&nbsp;<translate>changed client to</translate>
+                                        {{item.new_client}}&nbsp;<translate>on</translate>&nbsp;
+                                        {{item.created_at | date:'medium'}}
+                                    </p>
+                                </div>
+                                <div ng-if="item.title_changed">
+                                    <p class="fl-detail">
+                                        <a class="md-primary" ui-sref="user({id:item.created_by.id})">{{item.created_by_display}}</a>&nbsp;<translate>changed title on</translate>
+                                        {{item.created_at | date:'medium'}}
+                                    </p>
+                                </div>
+                                <div ng-if="item.description_changed">
+                                    <p class="fl-detail">
+                                        <a class="md-primary" ui-sref="user({id:item.created_by.id})">{{item.created_by_display}}</a>&nbsp;<translate>changed description on</translate>
+                                        {{item.created_at | date:'medium'}}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="reply-box" class="tinymce-placeholder fl-clear-both fl-margin-top">
+                            <textarea ng-change="$ctrl.onReplyInputChange()" ui-tinymce="$ctrl.tinymceOptions" ng-model="$ctrl.replyText"></textarea>
+                        </div>
+                        <div class="fl-margin-top fl-margin-bottom-small">
+                            <md-button type="button" ng-click="$ctrl.reply('ticket_reply_file')" ng-disabled="$ctrl.replyText.length < 1" class="md-raised md-primary">
+                                <translate>Reply</translate>
+                            </md-button>
+                            <md-button type="button" ng-click="$ctrl.addNote('ticket_reply_file')" ng-disabled="$ctrl.replyText.length < 1" class="md-primary">
+                                <translate>Add note</translate>
+                            </md-button>
+                            <md-button type="button" ng-click="$ctrl.closeTicket()" ng-if="$ctrl.ticket.status!=='done'" class="md-primary">
+                                <translate>Close ticket</translate>
+                            </md-button>
+                            <md-button type="button" ng-click="$ctrl.reopenTicket()" ng-if="$ctrl.ticket.status==='done'" class="md-primary">
+                                <translate>Reopen ticket</translate>
+                            </md-button>
+                            <div hide-gt-sm flex="100"></div>
+                            <fl-upload max-file-size="$ctrl.maxFileSizeReadable"
+                                       class="fl-margin-top"
+                                       file-input-id="ticket_reply_file"
+                                       upload-button-id="ticket_reply_upload_button"
+                                       text-input-id="ticket_reply_text_input"
+                                       upload-was-submitted="$ctrl.uploadWasSubmitted"
+                                       allow-multiple-files="true">
+                            </fl-upload>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </md-card-content>
+    </md-card>
+</div>

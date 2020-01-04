@@ -1,0 +1,22 @@
+<ng-form name="tickets_user_settings" novalidate fl-messages="$ctrl.parentForm.$backendErrors.tickets_user_settings[0]">
+    <div class="fl-margin-top">
+        <span class="fl-card-fixed toolbar-title-md" translate>Tickets settings</span>
+    </div>
+    <div layout-gt-xs="row" flex="100">
+        <md-input-container flex class="md-block">
+            <md-checkbox name="notify_on_ticket_opened" ng-checked
+                         ng-model="$ctrl.data.tickets_user_settings.notify_on_ticket_opened" class="md-primary"
+                         aria-label="{{ 'Receive notifications on ticket opened'|translate }}" flex="50">
+                <span translate>Notify on ticket opened</span>
+
+            </md-checkbox>
+        </md-input-container>
+        <md-input-container flex class="md-block">
+            <md-checkbox name="notify_on_ticket_closed" ng-checked
+                         ng-model="$ctrl.data.tickets_user_settings.notify_on_ticket_closed" class="md-primary"
+                         aria-label="{{ 'Receive notifications on ticket closed'|translate }}" flex="50">
+                <span translate>Notify on ticket closed</span>
+            </md-checkbox>
+        </md-input-container>
+    </div>
+</ng-form>

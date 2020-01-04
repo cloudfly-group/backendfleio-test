@@ -1,0 +1,15 @@
+<!--
+<md-button fl-tooltip="{{ 'Edit' | translate }}" fl-direction="down"
+           ng-click="$ctrl.editTLD($event, true)" class="md-icon-button" ng-if="!$ctrl.addButton">
+    <md-icon class="fl-icons fl-icon-grey">edit</md-icon>
+</md-button>
+-->
+<md-button fl-tooltip="{{ 'Delete' | translate }}" fl-direction="down"
+           ng-click="$ctrl.deleteTLD()" class="md-icon-button" ng-if="!$ctrl.addButton">
+    <md-icon class="fl-icons fl-icon-grey">delete</md-icon>
+</md-button>
+<md-button aria-label="{{'Add TLD'|translate}}" class="md-fab md-accent fl-fab-rotate"
+           ng-click="$ctrl.editTLD($event, false)"
+           id="tld_button_add" ng-if="$ctrl.addButton">
+    <md-icon class="material-icons">add</md-icon>
+</md-button>

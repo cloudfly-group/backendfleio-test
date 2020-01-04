@@ -1,0 +1,23 @@
+<div layout="row">
+    <md-autocomplete flex
+        md-input-name="domain"
+        md-input-minlength="0"
+        md-input-maxlength="64"
+        md-selected-item-change="$ctrl.selectedDomainChanged(domain)"
+        md-selected-item="$ctrl.domain"
+        md-search-text="$ctrl.domainSearchText"
+        md-select-on-match="true"
+        md-match-case-insensitive="true"
+        md-items="domain in $ctrl.searchDomain($ctrl.domainSearchText)"
+        md-item-text="domain.name"
+        md-min-length="0"
+        md-require-match
+        placeholder="{{'Domain'|translate}}">
+        <md-item-template>
+            <span md-highlight-text="$ctrl.domainSearchText">{{ domain.name }}</span>
+        </md-item-template>
+        <md-not-found>
+            <translate>A valid domain in required</translate>
+        </md-not-found>
+    </md-autocomplete>
+</div>

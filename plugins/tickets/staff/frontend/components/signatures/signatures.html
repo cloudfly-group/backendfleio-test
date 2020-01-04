@@ -1,0 +1,73 @@
+<div layout="row" layout-align="center start">
+  <md-card class="fl-card-fixed-md fl-margin-bottom">
+    <fl-back-drop ng-if="$ctrl.savingSignatures"></fl-back-drop>
+    <md-card-title class="object-detail-title">
+      <md-card-title-text>
+        <div layout="row" layout-align="space-between center" flex>
+          <div layout="column" class="toolbar-title-container">
+            <span class="toolbar-title-lg fl-ellipsis-text" translate>Edit signatures</span>
+          </div>
+          <span flex></span>
+        </div>
+      </md-card-title-text>
+    </md-card-title>
+    <md-divider></md-divider>
+    <fl-form-errors ng-model="$ctrl.backendErrors" form="$ctrl.userProfileForm"></fl-form-errors>
+    <fl-back-drop ng-if="$ctrl.submitPending"></fl-back-drop>
+    <form ng-submit="$ctrl.saveUser()" name="$ctrl.userProfileForm" novalidate fl-messages="$ctrl.backendErrors">
+      <md-card-content class="min-height-content fl-content hide-tinymce-textarea">
+        <div layout="column">
+          <div layout-gt-sm="row">
+              <div ng-if="$ctrl.signatures.objects.length === 0">
+                  <h2 class="fl-margin-left-small">No signatures</h2>
+                  <p class="fl-detail fl-margin-left-small" translate>Add the default signature. This will be used for the departments that don't have a custom signature.</p>
+                  <p class="fl-detail fl-margin-left-small">Custom signatures can be added only after you add the default signature.</p>
+                  <md-button class="md-primary md-raised" ng-click="$ctrl.addGlobalSignature()" type="button"><translate>Add global signature</translate></md-button>
+              </div>
+              <div ng-if="$ctrl.signatures.objects.length > 0">
+                  <div ng-repeat="signature in $ctrl.signatures.objects track by $index" class="fl-margin-bottom">
+                    <div ng-if="!signature.department">
+                        <h3>Global signature</h3>
+                        <p class="fl-detail fl-margin-bottom-small" translate>This signature will be used if the signature for a specific department is not set.</p>
+                        <div class="tinymce-placeholder">
+                            <textarea ui-tinymce="$ctrl.tinymceOptions" ng-model="signature.content"></textarea>
+                        </div>
+                    </div>
+                      <div ng-if="signature.department">
+                        <h3>Signature for {{signature.department_display}} department</h3>
+                        <p class="fl-detail fl-margin-bottom-small" translate>This signature will be used for the {{signature.department_display}} department.</p>
+                        <div class="tinymce-placeholder">
+                            <textarea ui-tinymce="$ctrl.tinymceOptions" ng-model="signature.content"></textarea>
+                        </div>
+                    </div>
+                    <md-card-actions>
+                      <md-button ng-click="$ctrl.deleteSignature(signature)" class="md-primary fl-margin-top" type="button">
+                        <translate>Delete signature</translate>
+                      </md-button>
+                    </md-card-actions>
+                    <hr class="fl-margin-top fl-medium-opacity full-width">
+                  </div>
+              </div>
+          </div>
+        </div>
+        <div layout="column">
+            <md-card-actions ng-if="$ctrl.signatures.objects.length > 0">
+                <div layout="row" class="fl-margin-top-small" flex="100">
+                    <md-input-container class="md-block fl-no-margin" flex="20">
+                        <label><translate>Select department</translate></label>
+                        <md-select class="fl-no-margin" flex ng-model="$ctrl.selectedDepartment" name="department">
+                          <md-option ng-value="department.id" ng-repeat="department in $ctrl.departments.objects track by department.id">
+                            {{::department.name }}
+                          </md-option>
+                        </md-select>
+                    </md-input-container>
+                    <md-button ng-click="$ctrl.addNewDepartmentSignature()" class="md-raised md-primary fl-margin-left"><translate>Add signature for department</translate></md-button>
+                    <md-button ng-click="$ctrl.saveSignatures()" class="md-primary"><translate>Save signatures</translate></md-button>
+                    <md-button md-no-ink ui-sref="userprofile" type="button"><translate>Cancel</translate></md-button>
+                </div>
+            </md-card-actions>
+        </div>
+      </md-card-content>
+    </form>
+  </md-card>
+</div>

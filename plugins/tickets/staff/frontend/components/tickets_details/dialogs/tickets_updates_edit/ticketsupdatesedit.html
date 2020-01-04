@@ -1,0 +1,20 @@
+<md-dialog aria-label="Edit reply dialog" class="fl-dialog fl-dialog-large hide-tinymce-textarea">
+    <fl-back-drop ng-if="$ctrl.submitPending"></fl-back-drop>
+    <h2 class="md-title ng-binding" translate>Edit message</h2>
+    <fl-form-errors ng-model="$ctrl.backendErrors" form="$ctrl.editReply"></fl-form-errors>
+    <form ng-submit="$ctrl.saveReply()" name="$ctrl.editReply" novalidate fl-messages="$ctrl.backendErrors">
+        <md-dialog-content>
+            <md-content class="md-dialog-content">
+                <textarea ui-tinymce="$ctrl.tinymceOptions" ng-model="$ctrl.message.message"></textarea>
+            </md-content>
+        </md-dialog-content>
+        <md-dialog-actions>
+            <md-button class="md-primary" ng-click="$ctrl.close()">
+                <translate>Cancel</translate>
+            </md-button>
+            <md-button class="md-primary" type="submit">
+                <translate>Save message</translate>
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

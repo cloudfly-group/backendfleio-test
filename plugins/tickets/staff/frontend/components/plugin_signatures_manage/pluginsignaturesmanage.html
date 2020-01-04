@@ -1,0 +1,22 @@
+<div layout="row" layout-align="center start">
+  <div layout="column" flex="80">
+    <md-card class="fl-card-fixed">
+      <fl-back-drop ng-if="$ctrl.loading"></fl-back-drop>
+      <md-card-title>
+        <div class="toolbar-title-md fl-card-header-title"><translate>My signatures</translate></div>
+      </md-card-title>
+      <md-card-content class="fl-flex-display">
+        <div id="user_signatures" class="fl-margin-bottom">
+          <div class="fl-margin-left">
+            <span class="fl-detail" translate>Signatures used when responding to a ticket.</span><br>
+          </div>
+        </div>
+      </md-card-content>
+      <hr class="fl-medium-opacity full-width fl-no-margin">
+      <md-card-actions layout="row" layout-align="end center">
+        <md-button ui-sref="staffSignaturesEdit()" type="button"><translate>Edit signatures</translate>
+        </md-button>
+      </md-card-actions>
+    </md-card>
+  </div>
+</div>

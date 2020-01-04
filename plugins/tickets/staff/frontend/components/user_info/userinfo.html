@@ -1,0 +1,44 @@
+<fl-back-drop ng-if="$ctrl.loading === true"></fl-back-drop>
+<table class="fl-table fl-grid fl-list-view-table" ng-if="$ctrl.tickets">
+    <span class="fl-detail" translate>Shows tickets created by the user or tickets related to one of the user's clients.</span>
+    <thead>
+        <th>ID</th>
+        <th translate>Title</th>
+        <th translate>Created at</th>
+    </thead>
+    <tbody>
+        <tr ng-repeat="ticket in $ctrl.tickets track by $index">
+            <td class="fl-status-line">
+                <hr class="status-line-vertical fl-yellow" ng-if="ticket.status==='open'">
+                <hr class="status-line-vertical fl-light-green" ng-if="ticket.status==='in progress'">
+                <hr class="status-line-vertical fl-gray" ng-if="ticket.status == 'done'">
+            </td>
+            <td>
+                <a ui-sref="pluginsTicketsTicketsDetails({'id': ticket.id})" class="fl-table-link">
+                    {{ticket.id}}
+                </a>
+            </td>
+            <td>
+                <a class="fl-ellipsis-text fl-table-link" ui-sref="pluginsTicketsTicketsDetails({'id': ticket.id})">
+                    {{ticket.title}}
+                </a>
+            </td>
+            <td>
+                <a class="fl-ellipsis-text fl-table-link" ui-sref="pluginsTicketsTicketsDetails({'id': ticket.id})">
+                    {{ticket.created_at | date:'medium'}}
+                </a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div ng-if="!$ctrl.tickets && $ctrl.loading === false">
+    <span translate>No related tickets were found.</span>
+</div>
+<div ng-if="$ctrl.previousPage || $ctrl.nextPage">
+    <md-button ng-click="$ctrl.changePage('previous')" ng-disabled="$ctrl.previousPage === false || $ctrl.loading === true" class="md-primary">
+        <translate>Previous page</translate> <span ng-if="$ctrl.previousPage && $ctrl.loading !== true">({{$ctrl.currentPage - 1}})</span>
+    </md-button>
+    <md-button ng-click="$ctrl.changePage('next')" ng-disabled="$ctrl.nextPage === false || $ctrl.loading === true" class="md-primary">
+        <translate>Next page</translate> <span ng-if="$ctrl.nextPage && $ctrl.loading !== true">({{$ctrl.currentPage + 1}})</span>
+    </md-button>
+</div>

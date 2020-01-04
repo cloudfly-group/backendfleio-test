@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ page_title }}</title>
+</head>
+<body>
+<div style="text-align:center">
+    {{ redirect_message }}
+    <form method="post" action="{{ form_action }}" id="payuro_form" target="_top">
+        <input name="MERCHANT" value="{{ MERCHANT }}" type="hidden">
+        <input name="ORDER_REF" value="{{ ORDER_REF }}" type="hidden">
+        <input name="ORDER_DATE" value="{{ ORDER_DATE }}" type="hidden">
+        {% if MULTI_ITEMS == True %}
+            {% for pname in ORDER_PNAME %}
+                <input name="ORDER_PNAME[]" value="{{ pname }}" type="hidden">
+            {% endfor %}
+            {% for pcode in ORDER_PCODE %}
+                <input name="ORDER_PCODE[]" value="{{ pcode }}" type="hidden">
+            {% endfor %}
+            {% for pinfo in ORDER_PINFO %}
+                <input name="ORDER_PINFO[]" value="{{ pinfo }}" type="hidden">
+            {% endfor %}
+            {% for pprice in ORDER_PRICE %}
+                <input name="ORDER_PRICE[]" value="{{ pprice }}" type="hidden">
+            {% endfor %}
+            {% for ppricetype in ORDER_PRICE_TYPE %}
+                <input name="ORDER_PRICE_TYPE[]" value="{{ ppricetype }}" type="hidden">
+            {% endfor %}
+            {% for oqty in ORDER_QTY %}
+                <input name="ORDER_QTY[]" value="{{ oqty }}" type="hidden">
+            {% endfor %}
+            {% for ovat in ORDER_VAT %}
+                <input name="ORDER_VAT[]" value="{{ ovat }}" type="hidden">
+            {% endfor %}
+        {% endif %}
+        {% if MULTI_ITEMS == False %}
+            <input name="ORDER_PNAME[]" value="{{ ORDER_PNAME }}" type="hidden">
+            <input name="ORDER_PCODE[]" value="{{ ORDER_PCODE }}" type="hidden">
+            <input name="ORDER_PINFO[]" value="{{ ORDER_PINFO }}" type="hidden">
+            <input name="ORDER_PRICE[]" value="{{ ORDER_PRICE }}" type="hidden">
+            <input name="ORDER_PRICE_TYPE[]" value="{{ ORDER_PRICE_TYPE }}" type="hidden">
+            <input name="ORDER_QTY[]" value="{{ ORDER_QTY }}" type="hidden">
+            <input name="ORDER_VAT[]" value="{{ ORDER_VAT }}" type="hidden">
+        {% endif %}
+        <input name="PRICES_CURRENCY" value="{{ PRICES_CURRENCY }}" type="hidden">
+        <input name="PAY_METHOD" value="{{ PAY_METHOD }}" type="hidden">
+        <input name="ORDER_SHIPPING" value="{{ ORDER_SHIPPING }}" type="hidden">
+        <input name="LANGUAGE" value="{{ LANGUAGE }}" type="hidden">
+        <input name="DISCOUNT" value="{{ DISCOUNT }}" type="hidden">
+        <input name="BILL_FNAME" value="{{ BILL_FNAME }}" type="hidden">
+        <input name="BILL_LNAME" value="{{ BILL_LNAME }}" type="hidden">
+        <input name="BILL_EMAIL" value="{{ BILL_EMAIL }}" type="hidden">
+        <input name="BILL_PHONE" value="{{ BILL_PHONE }}" type="hidden">
+        <input name="BILL_COUNTRYCODE" value="{{ BILL_COUNTRYCODE }}" type="hidden">
+        <input name="TESTORDER" value="{{ TESTORDER }}" type="hidden">
+        <input name="BACK_REF" value="{{ BACK_REF }}" type="hidden">
+        {% if RECURRING == True %}
+            <input name="LU_ENABLE_TOKEN" value="1" type="hidden">
+            <input name="LU_TOKEN_TYPE" value="PAY_ON_TIME" type="hidden">
+        {% endif %}
+        <input name="ORDER_HASH" value="{{ ORDER_HASH }}" type="hidden">
+    </form>
+</div>
+<script type="text/javascript">
+    document.getElementById('payuro_form').submit();
+</script>
+</body>
+</html>

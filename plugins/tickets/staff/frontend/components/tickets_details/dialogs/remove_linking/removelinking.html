@@ -1,0 +1,28 @@
+<md-dialog aria-label="{{'Ticket linking dialog' | translate}}" class="fl-dialog">
+    <h2 class="md-title ng-binding" translate>Remove ticket linking</h2>
+    <fl-back-drop ng-if="$ctrl.loadingLink === true || $ctrl.submitPending === true"></fl-back-drop>
+    <fl-form-errors ng-model="$ctrl.backendErrors" form="$ctrl.editNote"></fl-form-errors>
+    <form ng-submit="$ctrl.removeLink()" name="$ctrl.removeLinkForm" novalidate fl-messages="$ctrl.backendErrors">
+        <md-dialog-content>
+            <md-content class="md-dialog-content">
+                <md-input-container class="fl-required-group md-block" flex>
+                    <md-checkbox ng-model="$ctrl.isSymmetrical"
+                                 name="symmetrical" id="symmetrical"
+                                 class="md-primary"
+                                 aria-label="{{ 'Remove reversed link if it exists' | translate}}">
+                        <span translate>Remove reverse link if it exists</span>
+                    </md-checkbox>
+                    <fl-validate for="symmetrical"></fl-validate>
+                </md-input-container>
+            </md-content>
+        </md-dialog-content>
+        <md-dialog-actions>
+            <md-button class="md-primary" ng-click="$ctrl.close()">
+                <translate>Cancel</translate>
+            </md-button>
+            <md-button class="md-primary" type="submit">
+                <translate>Remove link</translate>
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

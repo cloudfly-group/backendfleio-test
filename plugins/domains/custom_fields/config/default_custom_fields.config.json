@@ -1,0 +1,975 @@
+[
+  {
+    "tlds":".us",
+    "fields": {
+      "ustldapppurpose": {
+        "label":"Application Purpose",
+        "type":"select",
+        "optional": true,
+        "choices": [
+          ["Business use for profit","Business use for profit"],
+          ["Non-profit business","Non-profit business"],
+          ["Club","Club"],
+          ["Association","Association"],
+          ["Religious Organization","Religious Organization"],
+          ["Personal Use","Personal Use"],
+          ["Educational purposes","Educational purposes"],
+          ["Government purposes","Government purposes"]
+        ]
+      },
+      "ustldnexuscat": {
+        "label":"Nexus Category",
+        "type":"select",
+        "optional": true,
+        "choices": [
+          ["C11","C11"],
+          ["C12","C12"],
+          ["C21","C21"],
+          ["C31","C31"],
+          ["C32","C32"]
+        ]
+      },
+      "ustldnexuscountry": {
+        "label":"Nexus Country",
+        "type":"text",
+        "required_for_domain": true,
+        "optional": true
+      }
+    }
+  },
+  {
+    "tlds":".uk, .co.uk, .ltd.uk, .me.uk, .net.uk, .org.uk, .plc.uk",
+    "fields": {
+      "uktldlegaltype": {
+        "label":"Legal Type",
+        "type":"select",
+        "choices": [
+            ["UK Limited Company", "UK Limited Company"],
+            ["UK Public Limited Company", "UK Public Limited Company"],
+            ["UK Partnership", "UK Partnership"],
+            ["UK Limited Liability Partnership", "UK Limited Liability Partnership"],
+            ["Sole Trader", "UK Sole Trader"],
+            ["UK Industrial/Provident Registered Company", "UK Industrial/Provident Registered Company"],
+            ["Individual", "UK Individual (representing self)"],
+            ["UK School", "UK School"],
+            ["UK Registered Charity", "UK Registered Charity"],
+            ["UK Government Body", "UK Government Body"],
+            ["UK Corporation by Royal Charter", "UK Corporation by Royal Charter"],
+            ["UK Statutory Body", "UK Statutory Body"],
+            ["UK Entity (other)", "UK Entity that does not fit into any of the above (e.g. clubs, associations, many universities)"],
+            ["Non-UK Individual", "Non-UK Individual (representing self)"],
+            ["Foreign Organization", "Non-UK Corporation"],
+            ["Other foreign organizations", "Non-UK Entity that does not fit into any of the above (e.g. charities, schools, clubs, associations)"]
+        ],
+        "required_for_domain": true,
+        "optional": true
+      },
+      "uktldcompanyid": {
+        "label": "Company ID Number",
+        "type": "text",
+        "optional": true
+      },
+      "uktldregname": {
+        "label": "Registrant Name",
+        "type": "text",
+        "required_for_domain": true,
+        "optional": true
+      },
+      "uktldwhoisoptout": {
+        "label": "WHOIS Opt-out",
+        "type": "text",
+        "optional": true
+      }
+    }
+  },
+  {
+    "tlds":".ca",
+    "fields": {
+      "catldlegaltype": {
+        "label":"Legal Type",
+        "type":"select",
+        "choices": [
+          ["Corporation","Corporation"],
+          ["Canadian Citizen","Canadian Citizen"],
+          ["Permanent Resident of Canada","Permanent Resident of Canada"],
+          ["Government","Government"],
+          ["Canadian Educational Institution","Canadian Educational Institution"],
+          ["Canadian Unincorporated Association","Canadian Unincorporated Association"],
+          ["Canadian Hospital","Canadian Hospital"],
+          ["Partnership Registered in Canada","Partnership Registered in Canada"],
+          ["Trade-mark registered in Canada","Trade-mark registered in Canada"],
+          ["Canadian Trade Union","Canadian Trade Union"],
+          ["Canadian Political Party","Canadian Political Party"],
+          ["Canadian Library Archive or Museum","Canadian Library Archive or Museum"],
+          ["Trust established in Canada","Trust established in Canada"],
+          ["Aboriginal Peoples","Aboriginal Peoples"],
+          ["Legal Representative of a Canadian Citizen","Legal Representative of a Canadian Citizen"],
+          ["Official mark registered in Canada","Official mark registered in Canada"]
+        ],
+        "required_for_domain": true,
+        "optional": true
+      },
+      "catldciraagreement": {
+        "label": "CIRA Agreement",
+        "type": "check",
+        "required_for_domain": true,
+        "optional": true
+      },
+      "catldwhoisoptout": {
+        "label": "WHOIS Opt-out",
+        "type": "check",
+        "optional": true
+      }
+    }
+  },
+  {
+    "tlds":".es",
+    "fields": {
+      "estldlegalform": {
+        "label":"Legal Form",
+        "type":"select",
+        "choices": [
+            ["1","Individual"],
+            ["39","Economic Interest Grouping"],
+            ["47","Association"],
+            ["59","Sports Association"],
+            ["68","Professional Association"],
+            ["124","Savings Bank"],
+            ["150","Community Property"],
+            ["152","Community of Owners"],
+            ["164","Order or Religious Institution"],
+            ["181","Consulate"],
+            ["197","Public Law Association"],
+            ["203","Embassy"],
+            ["229","Local Authority"],
+            ["269","Sports Federation"],
+            ["286","Foundation"],
+            ["365","Mutual Insurance Company"],
+            ["434","Regional Government Body"],
+            ["436","Central Government Body"],
+            ["439","Political Party"],
+            ["476","Trade Union"],
+            ["510","Farm Partnership"],
+            ["524","Public Limited Company"],
+            ["554","Civil Society"],
+            ["560","General Partnership"],
+            ["562","General and Limited Partnership"],
+            ["566","Cooperative"],
+            ["608","Worker-owned Company"],
+            ["612","Limited Company"],
+            ["713","Spanish Office"],
+            ["717","Temporary Alliance of Enterprises"],
+            ["744","Worker-owned Limited Company"],
+            ["745","Regional Public Entity"],
+            ["746","National Public Entity"],
+            ["747","Local Public Entity"],
+            ["877","Others"],
+            ["878","Designation of Origin Supervisory Council"],
+            ["879","Entity Managing Natural Areas"]
+        ],
+        "optional": true
+      },
+      "estldidformtype": {
+        "label": "ID Form Type",
+        "type": "text",
+        "optional": true
+      },
+      "estldidformnum": {
+        "label": "ID Form Number",
+        "type": "text",
+        "optional": true
+      }
+    }
+  },
+  {
+    "tlds":".sg, .com.sg, .edu.sg, .net.sg, .org.sg, .per.sg",
+    "fields": {
+      "sgtldregtype": {
+        "label":"Registrant Type",
+        "type":"select",
+        "choices": [
+            ["Individual","Individual"],
+            ["Organisation","Organisation"]
+        ],
+        "optional": true
+      },
+      "sgtldrcbid": {
+        "label": "RCB/Singapore ID",
+        "type": "text",
+        "optional": true
+      }
+    }
+  },
+  {
+    "tlds":".tel",
+    "fields": {
+      "teltldlegaltype": {
+        "label":"Legal Type",
+        "type":"select",
+        "optional": true,
+        "choices": [
+          ["Natural Person", "Natural Person"],
+          ["Legal Person", "Legal Person"]
+        ]
+      },
+      "teltldwhoisoptout": {
+        "label":"WHOIS Opt-out",
+        "type":"check",
+        "optional": true
+      }
+    }
+  },
+  {
+    "tlds":".it",
+    "fields": {
+      "ittldlegaltype": {
+        "label":"Legal Type",
+        "type":"select",
+        "optional": true,
+        "choices": [
+          ["Italian and foreign natural persons","Italian and foreign natural persons"],
+          ["Companies/one man companies","Companies/one man companies"],
+          ["Freelance workers/professionals","Freelance workers/professionals"],
+          ["Non-profit organizations","Non-profit organizations"],
+          ["Public organizations","Public organizations"],
+          ["Other subjects","Other subjects"],
+          ["Non natural foreigners","Non natural foreigners"]
+        ]
+      },
+      "ittldtaxid": {
+        "label":"Tax ID",
+        "type":"text",
+        "required_for_domain": true,
+        "optional": true
+      },
+      "ittlddata": {
+        "label":"Publish Personal Data",
+        "type":"check",
+        "optional": true
+      },
+      "ittldsec3": {
+        "label":"Accept Section 3 of .IT registrar contract",
+        "type":"check",
+        "optional": true
+      },
+      "ittldsec5": {
+        "label":"Accept Section 5 of .IT registrar contract",
+        "type":"check",
+        "optional": true
+      },
+      "ittldsec6": {
+        "label":"Accept Section 6 of .IT registrar contract",
+        "type":"check",
+        "optional": true
+      },
+      "ittldsec7": {
+        "label":"Accept Section 7 of .IT registrar contract",
+        "type":"check",
+        "optional": true
+      }
+    }
+  },
+  {
+    "tlds":".de",
+    "fields": {
+      "detldtaxid": {
+        "label":"Tax ID",
+        "type":"text",
+        "required_for_domain": true,
+        "optional": true
+      },
+      "detldaddressconfirm": {
+        "label":"Address Confirmation",
+        "type":"check",
+        "optional": true
+      },
+      "deTLDTermsAgree": {
+        "label":"Agree to DE Terms",
+        "type":"check",
+        "required_for_domain": true,
+        "optional": true
+      }
+    }
+  },
+  {
+    "tlds":".com.au, .net.au, .org.au, .asn.au, .id.au",
+    "fields": {
+      "autldregname": {
+        "label":"Registrant Name",
+        "type":"text",
+        "required_for_domain": true,
+        "optional": true
+      },
+      "autldregid": {
+        "label":"Registrant ID",
+        "type":"text",
+        "required_for_domain": true,
+        "optional": true
+      },
+      "autldregidtype": {
+        "label":"Registrant ID Type",
+        "type":"select",
+        "optional": true,
+        "choices": [
+          ["ABN","ABN"],
+          ["ACN","ACN"],
+          ["Business Registration Number","Business Registration Number"]
+        ]
+      },
+      "autldeligname": {
+        "label":"Eligibility Name",
+        "type":"text",
+        "optional": true
+      },
+      "autldeligid": {
+        "label":"Eligibility ID",
+        "type":"text",
+        "optional": true
+      },
+
+      "autldeligidtype": {
+        "label":"Eligibility ID Type",
+        "type":"select",
+        "optional": true,
+        "choices": [
+          ["", ""],
+          ["Australian Company Number (ACN)","Australian Company Number (ACN)"],
+          ["ACT Business Number","ACT Business Number"],
+          ["NSW Business Number","NSW Business Number"],
+          ["NT Business Number","NT Business Number"],
+          ["QLD Business Number","QLD Business Number"],
+          ["SA Business Number","SA Business Number"],
+          ["TAS Business Number","TAS Business Number"],
+          ["VIC Business Number","VIC Business Number"],
+          ["WA Business Number","WA Business Number"],
+          ["Trademark (TM)","Trademark (TM)"],
+          ["Other - Used to record an Incorporated Association number","Other - Used to record an Incorporated Association number"],
+          ["Australian Business Number (ABN)","Australian Business Number (ABN)"]
+        ]
+      },
+      "autldeligtype": {
+        "label":"Eligibility Type",
+        "type":"select",
+        "optional": true,
+        "choices": [
+          ["Charity","Charity"],
+          ["Citizen/Resident","Citizen/Resident"],
+          ["Club","Club"],
+          ["Commercial Statutory Body","Commercial Statutory Body"],
+          ["Company","Company"],
+          ["Incorporated Association","Incorporated Association"],
+          ["Industry Body","Industry Body"],
+          ["Non-profit Organisation","Non-profit Organisation"],
+          ["Other","Other"],
+          ["Partnership","Partnership"],
+          ["Pending TM Owner","Pending TM Owner"],
+          ["Political Party","Political Party"],
+          ["Registered Business","Registered Business"],
+          ["Religious/Church Group","Religious/Church Group"],
+          ["Sole Trader","Sole Trader"],
+          ["Trade Union","Trade Union"],
+          ["Trademark Owner","Trademark Owner"],
+          ["Child Care Centre","Child Care Centre"],
+          ["Government School","Government School"],
+          ["Higher Education Institution","Higher Education Institution"],
+          ["National Body","National Body"],
+          ["Non-Government School","Non-Government School"],
+          ["Pre-school","Pre-school"],
+          ["Research Organisation","Research Organisation"],
+          ["Training Organisation","Training Organisation"]
+        ]
+      },
+      "autldeligreason": {
+        "label":"Eligibility Reason",
+        "type":"select",
+        "optional": true,
+        "choices": [
+          [
+            "Domain name is an Exact Match Abbreviation or Acronym of your Entity or Trading Name.",
+            "Domain name is an Exact Match Abbreviation or Acronym of your Entity or Trading Name."
+          ],
+          [
+            "Close and substantial connection between the domain name and the operations of your Entity.",
+            "Close and substantial connection between the domain name and the operations of your Entity."
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "tlds":".asia",
+    "fields": {
+      "asialegaltype": {
+        "label":"Legal Type",
+        "type":"select",
+        "optional": true,
+        "choices": [
+          ["naturalPerson","Natural Person"],
+          ["corporation","Corporation"],
+          ["cooperative","Cooperative"],
+          ["partnership","Partnership"],
+          ["government","Government"],
+          ["politicalParty","Political Party"],
+          ["society","Society"],
+          ["institution","Institution"]
+        ]
+      },
+      "asiaidentityform": {
+        "label":"Identity Form",
+        "type":"select",
+        "optional": true,
+        "choices": [
+          ["passport","Passport"],
+          ["certificate","Certificate"],
+          ["legislation","Legislation"],
+          ["societyRegistry","Society Registry"],
+          ["politicalPartyRegistry","Political Party Registry"]
+        ]
+      },
+      "asiaidentitynumber": {
+        "label":"Identity Number",
+        "type":"text",
+        "required_for_domain": true,
+        "optional": true
+      }
+    }
+  },
+  {
+    "tlds":".pro",
+    "fields": {
+      "proprofession": {
+        "label":"Profession",
+        "type":"text",
+        "required_for_domain": true,
+        "optional": true
+      },
+      "prolicensenumber": {
+        "label":"License number",
+        "type":"text",
+        "optional": true
+      },
+      "proauthority": {
+        "label":"Authority",
+        "type":"text",
+        "optional": true
+      },
+      "proauthoritywebsite": {
+        "label":"Authority Website",
+        "type":"text",
+        "optional": true
+      }
+    }
+  },
+  {
+    "tlds":".coop",
+    "fields": {
+      "coopcontactname": {
+        "label":"Contact Name",
+        "type":"text",
+        "required_for_domain": true,
+        "optional": true
+      },
+      "cooopcontactcompany": {
+        "label":"Contact Company",
+        "type":"text",
+        "required_for_domain": true,
+        "optional": true
+      },
+      "coopcontactemail": {
+        "label":"Contact Email",
+        "type":"text",
+        "required_for_domain": true,
+        "optional": true
+      },
+      "coopaddress1": {
+        "label":"Address 1",
+        "type":"text",
+        "required_for_domain": true,
+        "optional": true
+      },
+      "coopaddress2": {
+        "label":"Address 2",
+        "type":"text",
+        "optional": true
+      },
+      "coopcity": {
+        "label":"City",
+        "type":"text",
+        "required_for_domain": true,
+        "optional": true
+      },
+      "coopstate": {
+        "label":"State",
+        "type":"text",
+        "optional": true
+      },
+      "coopzip": {
+        "label":"ZIP Code",
+        "type":"text",
+        "required_for_domain": true,
+        "optional": true
+      },
+      "coopcountry": {
+        "label":"Country",
+        "type":"text",
+        "required_for_domain": true,
+        "optional": true
+      },
+      "coopphonecc": {
+        "label":"Phone CC",
+        "type":"text",
+        "required_for_domain": true,
+        "optional": true
+      },
+      "coopphone": {
+        "label":"Phone",
+        "type":"text",
+        "required_for_domain": true,
+        "optional": true
+      }
+    }
+  },
+  {
+    "tlds":".cn",
+    "fields": {
+      "cnhosting": {
+        "label":"Hosted in China?",
+        "type":"check",
+        "optional": true
+      },
+      "cnhregisterclause": {
+        "label":"Agree to the .CN <a href=\"http://www1.cnnic.cn/PublicS/fwzxxgzcfg/201208/t20120830_35735.htm\" target=\"_blank\">Register Agreement</a>",
+        "type":"check",
+        "required_for_domain": true,
+        "optional": true
+      }
+    }
+  },
+  {
+    "tlds":".fr, .re, .pm, .tf, .wf, .yt",
+    "fields": {
+      "fr_legaltype": {
+        "label":"Legal Type",
+        "type":"select",
+        "choices": [
+          ["Individual","Individual"],
+          ["Company","Company"]
+        ],
+        "optional": true
+      },
+      "fr_indbirthdate": {
+        "label":"Birth date",
+        "type":"text",
+        "optional": true
+      },
+      "fr_indbirthcity": {
+        "label":"Birthplace City",
+        "type":"text",
+        "optional": true
+      },
+      "fr_indbirthcountry": {
+        "label":"Birthplace Country",
+        "type":"text",
+        "optional": true
+      },
+      "fr_indbirthpostcode": {
+        "label":"Birthplace Postcode",
+        "type":"text",
+        "optional": true
+      },
+      "fr_cosiret": {
+        "label":"SIRET Number",
+        "type":"text",
+        "optional": true
+      },
+      "fr_coduns": {
+        "label":"DUNS Number",
+        "type":"text",
+        "optional": true
+      },
+      "fr_vat": {
+        "label":"VAT Number",
+        "type":"text",
+        "optional": true
+      },
+      "fr_trademarknumber": {
+        "label":"Trademark Number",
+        "type":"text",
+        "optional": true
+      }
+    }
+  },
+  {
+    "tlds":".nu",
+    "fields": {
+      "nu_iis_orgno": {
+        "label":"Identification Number",
+        "type":"text",
+        "required_for_domain": true,
+        "optional": true
+      },
+      "nu_iis_vatno": {
+        "label":"VAT Number",
+        "type":"text",
+        "optional": true
+      }
+    }
+  },
+  {
+    "tlds":".quebec",
+    "fields": {
+      "quebec_intendeduse": {
+        "label":"Intended Use",
+        "type":"text",
+        "required_for_domain": true,
+        "optional": true
+      },
+      "quebec_info": {
+        "label":"Info",
+        "type":"text",
+        "optional": true
+      }
+    }
+  },
+  {
+    "tlds":".jobs",
+    "fields": {
+      "jobswebsite": {
+        "label":"Website",
+        "type":"text",
+        "required_for_domain": true,
+        "optional": true
+      }
+    }
+  },
+  {
+    "tlds":".travel",
+    "fields": {
+      "traveltrusteeservice": {
+        "label":"Trustee Service",
+        "type":"select",
+        "required_for_domain": true,
+        "optional": true,
+        "choices": [
+          ["TRUST","Use Trustee"],
+          ["UIN","Use My Information (Requires UIN)"]
+        ]
+      },
+      "traveluincode": {
+        "label":".TRAVEL UIN Code",
+        "type":"text",
+        "required_for_domain": true,
+        "optional": true
+      },
+      "traveltrusteeserviceargeement": {
+        "label":"Trustee Service Agreement",
+        "type":"check",
+        "required_for_domain": true,
+        "optional": true
+      },
+      "travelusageagreement": {
+        "label":".TRAVEL Usage Agreement",
+        "type":"check",
+        "required_for_domain": true,
+        "optional": true
+      }
+    }
+  },
+  {
+    "tlds":".ru, .xn--p1ai",
+    "fields": {
+      "ruregistranttype": {
+        "label":"Registrant Type",
+        "type":"select",
+        "required_for_domain": true,
+        "optional": true,
+        "choices": [
+          ["ORG|Organization"],
+          ["IND|Individual"]
+        ]
+      },
+      "ruindividualsbirthday": {
+        "label":"Individuals Birthday",
+        "type":"text",
+        "optional": true
+      },
+      "ruindividualspassportnumber": {
+        "label":"Individuals Passport Number",
+        "type":"text",
+        "optional": true
+      },
+      "ruindividualspassportissuer": {
+        "label":"Individuals Passport Issuer",
+        "type":"text",
+        "optional": true
+      },
+      "ruindividualspassportissuedate": {
+        "label":"Individuals Passport Issue Date",
+        "type":"text",
+        "optional": true
+      },
+      "ruindividualswhoisprivacy": {
+        "label":"Individuals: Whois Privacy",
+        "type":"check",
+        "optional": true
+      },
+      "rurussianorganizationstaxpayernumber1": {
+        "label":"Russian Organizations Taxpayer Number 1",
+        "type":"text",
+        "optional": true
+      },
+      "rurussianorganizationsterritorylinkedtaxpayernumber2": {
+        "label":"Russian Organizations Territory-Linked Taxpayer Number 2",
+        "type":"text",
+        "optional": true
+      }
+    }
+  },
+  {
+    "tlds":".ro, .arts.ro, .co.ro, .com.ro, .firm.ro, .info.ro, .nom.ro, .nt.ro, .org.ro, .rec.ro, .ro.ro, .store.ro, .tm.ro, .www.ro",
+    "fields": {
+      "roregistranttype": {
+        "label":"Registrant Type",
+        "type":"select",
+        "required_for_domain": true,
+        "optional": true,
+        "choices": [
+          ["p","Private Person"],
+          ["ap","Authorized Person"],
+          ["nc","Non-Commercial Organization"],
+          ["c","Commercial"],
+          ["gi","Government Institute"],
+          ["pi","Public Institute"],
+          ["o","Other Juridicial"]
+        ]
+      },
+      "rocnp": {
+        "label":"CNP",
+        "type":"text",
+        "required_for_domain": true,
+        "optional": true,
+        "validator": "plugins.domains.custom_fields.config.validators.validate_cnp"
+      },
+      "roregistrationnumber": {
+        "label":"Registration Number",
+        "type":"text",
+        "required_for_domain": true,
+        "optional": true
+      }
+    }
+  },
+  {
+    "tlds":".hk, .com.hk, .edu.hk, .gov.hk, .idv.hk, .net.hk, .org.hk",
+    "fields": {
+      "hkregistranttype": {
+        "label":"Registrant Type",
+        "type":"select",
+        "required_for_domain": true,
+        "optional": true,
+        "choices": [
+          ["ind","Individual"],
+          ["org","Organization"]
+        ]
+      },
+      "hkorganizationsnameinchinese": {
+        "label":"Organizations Name in Chinese",
+        "type":"text",
+        "optional": true,
+        "validator": "plugins.domains.custom_fields.validators.validate_cnp"
+      },
+      "hkorganizationssupportingdocumentation": {
+        "label":"Organizations Supporting Documentation",
+        "type":"select",
+        "required_for_domain": true,
+        "optional": true,
+        "choices": [
+          ["BR","Business Registration Certificate"],
+          ["CI","Certificate of Incorporation"],
+          ["CRS","Certificate of Registration of a School"],
+          ["HKSARG","Hong Kong Special Administrative Region Gov't Dept."],
+          ["HKORDINANCE","Ordinance of Hong Kong"]
+        ]
+      },
+      "hkorganizationsdocumentnumber": {
+        "label":"Organizations Document Number",
+        "type":"text",
+        "optional": true
+      },
+      "hkorganizationsissuingcountry": {
+        "label":"Organizations Issuing Country",
+        "type":"text",
+        "optional": true
+      },
+      "hkorganizationsindustrytype": {
+        "label":"Organizations Industry Type",
+        "type":"select",
+        "required_for_domain": true,
+        "optional": true,
+        "choices": [
+          ["010200","Plastics / Petro-Chemicals / Chemicals - Rubber &amp; Rubber Products"],
+          ["010100","Plastics / Petro-Chemicals / Chemicals - Plastics &amp; Plastic Products"],
+          ["010300","Plastics / Petro-Chemicals / Chemicals - Fibre Materials &amp; Products"],
+          ["010400","Plastics / Petro-Chemicals / Chemicals - Petroleum / Coal &amp; Other Fuels"],
+          ["010500","Plastics / Petro-Chemicals / Chemicals - Chemicals &amp; Chemical Products"],
+          ["020100","Metals / Machinery / Equipment - Metal Materials &amp; Treatment"],
+          ["020200","Metals / Machinery / Equipment - Metal Products"],
+          ["020300","Metals / Machinery / Equipment - Industrial Machinery &amp; Supplies"],
+          ["020400","Metals / Machinery / Equipment - Precision &amp; Optical Equipment"],
+          ["020500","Metals / Machinery / Equipment - Moulds &amp; Dies"],
+          ["030100","Printing / Paper / Publishing - Printing / Photocopying / Publishing"],
+          ["030200","Printing / Paper / Publishing - Paper / Paper Products"],
+          ["040100","Construction / Decoration / Environmental Engineering - Construction Contractors"],
+          ["040200","Construction / Decoration / Environmental Engineering - Construction Materials"],
+          ["040300","Construction / Decoration / Environmental Engineering - Decoration Materials"],
+          ["040400","Construction / Decoration / Environmental Engineering - Construction / Safety Equipment &amp; Supplies"],
+          ["040500","Construction / Decoration / Environmental Engineering - Decoration / Locksmiths / Plumbing &amp; Electrical Works"],
+          ["040600","Construction / Decoration / Environmental Engineering - Fire Protection Equipment &amp; Services"],
+          ["040700","Construction / Decoration / Environmental Engineering - Environmental Engineering / Waste Reduction"],
+          ["050100","Textiles / Clothing &amp; Accessories - Textiles / Fabric"],
+          ["050200","Textiles / Clothing &amp; Accessories - Clothing"],
+          ["050300","Textiles / Clothing &amp; Accessories - Uniforms / Special Clothing"],
+          ["050400","Textiles / Clothing &amp; Accessories - Clothing Manufacturing Accessories"],
+          ["050500","Textiles / Clothing &amp; Accessories - Clothing Processing &amp; Equipment"],
+          ["050600","Textiles / Clothing &amp; Accessories - Fur / Leather &amp; Leather Goods"],
+          ["050700","Textiles / Clothing &amp; Accessories - Handbags / Footwear / Optical Goods / Personal Accessories"],
+          ["060100","Electronics / Electrical Appliances - Electronic Equipment &amp; Supplies"],
+          ["060200","Electronics / Electrical Appliances - Electronic Parts &amp; Components"],
+          ["060300","Electronics / Electrical Appliances - Electrical Appliances / Audio-Visual Equipment"],
+          ["070100","Houseware / Watches / Clocks / Jewellery / Toys / Gifts - Kitchenware / Tableware"],
+          ["070200","Houseware / Watches / Clocks / Jewellery / Toys / Gifts - Bedding"],
+          ["070300","Houseware / Watches / Clocks / Jewellery / Toys / Gifts - Bathroom / Cleaning Accessories"],
+          ["070400","Houseware / Watches / Clocks / Jewellery / Toys / Gifts - Household Goods"],
+          ["070500","Houseware / Watches / Clocks / Jewellery / Toys / Gifts - Wooden / Bamboo &amp; Rattan Goods"],
+          ["070600","Houseware / Watches / Clocks / Jewellery / Toys / Gifts - Home Furnishings / Arts &amp; Crafts"],
+          ["070700","Houseware / Watches / Clocks / Jewellery / Toys / Gifts - Watches / Clocks"],
+          ["070800","Houseware / Watches / Clocks / Jewellery / Toys / Gifts - Jewellery Accessories"],
+          ["070900","Houseware / Watches / Clocks / Jewellery / Toys / Gifts - Toys / Games / Gifts"],
+          ["080100","Business &amp; Professional Services / Finance - Accounting / Legal Services"],
+          ["080200","Business &amp; Professional Services / Finance - Advertising / Promotion Services"],
+          ["080300","Business &amp; Professional Services / Finance - Consultancy Services"],
+          ["080400","Business &amp; Professional Services / Finance - Translation / Design Services"],
+          ["080500","Business &amp; Professional Services / Finance - Cleaning / Pest Control Services"],
+          ["080600","Business &amp; Professional Services / Finance - Security Services"],
+          ["080700","Business &amp; Professional Services / Finance - Trading / Business Services"],
+          ["080800","Business &amp; Professional Services / Finance - Employment Services"],
+          ["080900","Business &amp; Professional Services / Finance - Banking / Finance / Investment"],
+          ["081000","Business &amp; Professional Services / Finance - Insurance"],
+          ["081100","Business &amp; Professional Services / Finance - Property / Real Estate"],
+          ["090100","Transportation / Logistics - Land Transport / Motorcars"],
+          ["090200","Transportation / Logistics - Sea Transport / Boats"],
+          ["090300","Transportation / Logistics - Air Transport"],
+          ["090400","Transportation / Logistics - Moving / Warehousing / Courier &amp; Logistics Services"],
+          ["090500","Transportation / Logistics - Freight Forwarding"],
+          ["100100","Office Equipment / Furniture / Stationery / Information Technology - Office / Commercial Equipment &amp; Supplies"],
+          ["100200","Office Equipment / Furniture / Stationery / Information Technology - Office &amp; Home Furniture"],
+          ["100300","Office Equipment / Furniture / Stationery / Information Technology - Stationery &amp; Educational Supplies"],
+          ["100400","Office Equipment / Furniture / Stationery / Information Technology - Telecommunication Equipment &amp; Services"],
+          ["100500","Office Equipment / Furniture / Stationery / Information Technology - Computers / Information Technology"],
+          ["110100","Food / Flowers / Fishing &amp; Agriculture - Food Products &amp; Supplies"],
+          ["110200","Food / Flowers / Fishing &amp; Agriculture - Beverages / Tobacco"],
+          ["110300","Food / Flowers / Fishing &amp; Agriculture - Restaurant Equipment &amp; Supplies"],
+          ["110400","Food / Flowers / Fishing &amp; Agriculture - Flowers / Artificial Flowers / Plants"],
+          ["110500","Food / Flowers / Fishing &amp; Agriculture - Fishing"],
+          ["110600","Food / Flowers / Fishing &amp; Agriculture - Agriculture"],
+          ["120100","Medical Services / Beauty / Social Services - Medicine &amp; Herbal Products"],
+          ["120200","Medical Services / Beauty / Social Services - Medical &amp; Therapeutic Services"],
+          ["120300","Medical Services / Beauty / Social Services - Medical Equipment &amp; Supplies"],
+          ["120400","Medical Services / Beauty / Social Services - Beauty / Health"],
+          ["120500","Medical Services / Beauty / Social Services - Personal Services"],
+          ["120600","Medical Services / Beauty / Social Services - Organizations / Associations"],
+          ["120700","Medical Services / Beauty / Social Services - Information / Media"],
+          ["120800","Medical Services / Beauty / Social Services - Public Utilities"],
+          ["120900","Medical Services / Beauty / Social Services - Religion / Astrology / Funeral Services"],
+          ["130100","Culture / Education - Music / Arts"],
+          ["130200","Culture / Education - Learning Instruction &amp; Training"],
+          ["130300","Culture / Education - Elementary Education"],
+          ["130400","Culture / Education - Tertiary Education / Other Education Services"],
+          ["130500","Culture / Education - Sporting Goods"],
+          ["130600","Culture / Education - Sporting / Recreational Facilities &amp; Venues"],
+          ["130700","Culture / Education - Hobbies / Recreational Activities"],
+          ["130800","Culture / Education - Pets / Pets Services &amp; Supplies"],
+          ["140101","Dining / Entertainment / Shopping / Travel - Restaurant Guide - Chinese"],
+          ["140102","Dining / Entertainment / Shopping / Travel - Restaurant Guide - Asian"],
+          ["140103","Dining / Entertainment / Shopping / Travel - Restaurant Guide - Western"],
+          ["140200","Dining / Entertainment / Shopping / Travel - Catering Services / Eateries"],
+          ["140300","Dining / Entertainment / Shopping / Travel - Entertainment Venues"],
+          ["140400","Dining / Entertainment / Shopping / Travel - Entertainment Production &amp; Services"],
+          ["140500","Dining / Entertainment / Shopping / Travel - Entertainment Equipment &amp; Facilities"],
+          ["140600","Dining / Entertainment / Shopping / Travel - Shopping Venues"],
+          ["140700","Dining / Entertainment / Shopping / Travel - Travel / Hotels &amp; Accommodation"]
+        ]
+      },
+      "hkindividualssupportingdocumentation": {
+        "label":"Individuals Supporting Documentation",
+        "type":"select",
+        "required_for_domain": true,
+        "optional": true,
+        "choices": [
+          ["HKID","Hong Kong Identity Number"],
+          ["OTHID","Other Country Identity Number"],
+          ["PASSNO","Passport No."],
+          ["BIRTHCERT","Birth Certificate"]
+        ]
+      },
+      "hkindividualsdocumentnumber": {
+        "label":"Individuals Document Number",
+        "type":"text",
+        "optional": true
+      },
+      "hkindividualsissuingcountry": {
+        "label":"Individuals Issuing Country",
+        "type":"text",
+        "optional": true
+      },
+      "hkindividualsunder18": {
+        "label":"Individuals Under 18",
+        "type":"check",
+        "required_for_domain": true,
+        "optional": true
+      }
+    }
+  },
+  {
+    "tlds":".aero",
+    "fields": {
+      "aeroid": {
+        "label":".AERO ID",
+        "type":"text",
+        "required_for_domain": true,
+        "optional": true
+      },
+      "aerokey": {
+        "label":".AERO Key",
+        "type":"text",
+        "optional": true
+      }
+    }
+  },
+  {
+    "tlds":".pl, .pc.pl, .miasta.pl, .atm.pl, .rel.pl, .gmina.pl, .szkola.pl, .sos.pl, .media.pl, .edu.pl, .auto.pl, .agro.pl, .turystyka.pl, .gov.pl, .aid.pl, .nieruchomosci.pl, .com.pl, .priv.pl, .tm.pl, .travel.pl, .info.pl, .org.pl, .net.pl, .sex.pl, .sklep.pl, .powiat.pl, .mail.pl, .realestate.pl, .shop.pl, .mil.pl, .nom.pl, .gsm.pl, .tourism.pl, .targi.pl, .biz.pl",
+    "fields": {
+      "plpublish": {
+        "label":"Publish Contact in .PL WHOIS",
+        "type":"check",
+        "required_for_domain": true,
+        "optional": true
+      }
+    }
+  },
+  {
+    "tlds":".se, .tm.se, .org.se, .pp.se, .parti.se, .presse.se",
+    "fields": {
+      "seidentificationnumber": {
+        "label":"Identification Number",
+        "type":"text",
+        "required_for_domain": true,
+        "optional": true
+      },
+      "sevat": {
+        "label":"VAT",
+        "type":"text",
+        "optional": true
+      }
+    }
+  }
+]

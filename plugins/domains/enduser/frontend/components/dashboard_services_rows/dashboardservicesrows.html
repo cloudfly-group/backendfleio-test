@@ -1,0 +1,22 @@
+<table ng-if="$ctrl.loaded === true" class="fl-table fade">
+    <tbody>
+        <tr>
+            <td>
+                <a ui-sref="pluginsDomainsDomains()">
+                    <span ng-if="$ctrl.summary.domains_count === 1">
+                        <translate>{{::$ctrl.summary.domains_count}} domain</translate>
+                    </span>
+                    <span ng-if="$ctrl.summary.domains_count > 1">
+                        <translate>{{::$ctrl.summary.domains_count}} domains</translate>
+                    </span>
+                    <span ng-if="$ctrl.summary.domains_count === 0"><translate>No domains</translate></span>
+                </a>
+            </td>
+            <td class="right-align">
+                <md-button ui-sref="pluginsDomainsRegisterDomain()">
+                    <translate>Register new domain</translate>
+                </md-button>
+            </td>
+        </tr>
+    </tbody>
+</table>

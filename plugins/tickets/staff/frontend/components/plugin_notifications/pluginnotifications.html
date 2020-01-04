@@ -1,0 +1,16 @@
+<md-button ng-if="!$ctrl.data.is_menu_item"
+           fl-tooltip="{{'Tickets' | translate}}"
+           aria-label="{{'Tickets' | translate}}"
+           fl-direction="down" class="md-icon-button fl-no-margin"
+           ui-sref="pluginsTicketsTickets">
+    <div ng-if="$ctrl.notificationsService.count > 0 && $ctrl.notificationsService.count < 100" class="fl-notification-circle fade">{{ $ctrl.notificationsService.count }}</div>
+    <div ng-if="$ctrl.notificationsService.count > 99" class="fl-notification-circle fade">99+</div>
+    <md-icon class="fl-icons" role="img" aria-label="">tickets</md-icon>
+</md-button>
+<md-menu-item ng-if="$ctrl.data.is_menu_item" ui-sref="pluginsTicketsTickets">
+  <md-button ng-click="$mdMenu.close()">
+    <md-icon class="fl-icons">tickets</md-icon>
+    <translate>Tickets</translate>
+    <div ng-if="$ctrl.notificationsService.count > 0" class="fl-notification-circle fl-notification-circle-menu-item fade">{{ $ctrl.notificationsService.count }}</div>
+  </md-button>
+</md-menu-item>

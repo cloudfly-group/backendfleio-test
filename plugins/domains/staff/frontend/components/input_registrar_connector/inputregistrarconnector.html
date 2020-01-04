@@ -1,0 +1,21 @@
+<md-autocomplete flex
+    md-input-name="registrarConnector"
+    md-input-minlength="0"
+    md-selected-item-change="$ctrl.selectedRegistrarConnectorChanged(registrarConnector)"
+    md-selected-item="$ctrl.registrarConnector"
+    md-search-text="$ctrl.registrarConnectorSearchText"
+    md-select-on-match="true"
+    md-match-case-insensitive="true"
+    md-items="registrarConnector in $ctrl.searchRegistrarConnector($ctrl.registrarConnectorSearchText)"
+    md-item-text="registrarConnector.name"
+    md-min-length="0"
+    md-require-match
+    md-delay="100"
+    placeholder="{{'Registrar connector'|translate}}">
+    <md-item-template>
+        <span md-highlight-text="$ctrl.registrarConnectorSearchText">{{registrarConnector.name }}</span>
+    </md-item-template>
+    <md-not-found>
+        <translate>A valid registrar connector is required</translate>
+    </md-not-found>
+</md-autocomplete>

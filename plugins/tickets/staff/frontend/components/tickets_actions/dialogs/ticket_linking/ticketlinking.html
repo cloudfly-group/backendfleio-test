@@ -1,0 +1,44 @@
+<md-dialog aria-label="{{'Ticket linking dialog' | translate}}" class="fl-dialog">
+    <fl-back-drop ng-if="$ctrl.submitPending"></fl-back-drop>
+    <h2 class="md-title ng-binding" translate>Link a ticket</h2>
+    <fl-form-errors ng-model="$ctrl.backendErrors" form="$ctrl.editNote"></fl-form-errors>
+    <form ng-submit="$ctrl.linkTickets()" name="$ctrl.linkTicketsForm" novalidate fl-messages="$ctrl.backendErrors">
+        <md-dialog-content>
+            <md-content class="md-dialog-content">
+                <md-autocomplete flex="100"
+                                 md-search-text="$ctrl.ticketSearchText"
+                                 md-selected-item="$ctrl.selectedTicket"
+                                 md-items="item in $ctrl.searchTickets($ctrl.ticketSearchText)"
+                                 md-item-text="item.title"
+                                 md-min-length="0"
+                                 placeholder="Select ticket">
+                    <md-item-template>
+                        <div layout="row" layout-align="start center">
+                            <span>{{item.title}} - {{item.id}}</span>
+                        </div>
+                    </md-item-template>
+                    <md-not-found>
+                        <translate>No tickets matching "{{$ctrl.ticketSearchText}}" found</translate>
+                    </md-not-found>
+                </md-autocomplete>
+                <md-input-container class="fl-required-group md-block" flex>
+                    <md-checkbox ng-model="$ctrl.isSymmetrical"
+                                 name="symmetrical" id="symmetrical"
+                                 class="md-primary"
+                                 aria-label="{{ 'Is symmetrical' | translate}}">
+                        <span translate>Create link both ways</span>
+                    </md-checkbox>
+                    <fl-validate for="symmetrical"></fl-validate>
+                </md-input-container>
+            </md-content>
+        </md-dialog-content>
+        <md-dialog-actions>
+            <md-button class="md-primary" ng-click="$ctrl.close()">
+                <translate>Cancel</translate>
+            </md-button>
+            <md-button class="md-primary" type="submit">
+                <translate>Link ticket</translate>
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

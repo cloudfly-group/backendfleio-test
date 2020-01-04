@@ -1,0 +1,194 @@
+<div layout="row" layout-align="center start">
+  <md-card class="fl-card-fixed fl-card-fixed-md fl-margin-bottom">
+    <md-card-title class="object-detail-title">
+      <md-card-title-text>
+        <div layout="row" layout-align="space-between center" flex>
+          <div layout="column" class="toolbar-title-container">
+            <span class="toolbar-title-lg">{{ $ctrl.domain.name }}</span>
+            <span class="toolbar-title-sm">{{ $ctrl.domain.name }}</span>
+          </div>
+          <div layout-align="start center">
+            <plugins-domains-domains-actions
+                on-domain-deleted="$ctrl.onDomainDeleted()"
+                on-domain-changed="$ctrl.refreshDomain()"
+                domain="$ctrl.domain">
+            </plugins-domains-domains-actions>
+          </div>
+        </div>
+      </md-card-title-text>
+    </md-card-title>
+    <md-divider></md-divider>
+    <md-card-content class="fl-no-padding">
+      <md-content class="min-height-content fl-content no-overflow-hidden">
+        <md-tabs md-dynamic-height class="fl-background-white">
+          <md-tab label="{{ 'General' | translate }}">
+            <div layout="row" layout-align="space-between start">
+              <div class="detail-block fl-row" flex="50">
+                <div class="fl-col">
+                  <p>
+                    <translate>Name</translate>:&nbsp;{{ $ctrl.domain.name }}
+                  </p>
+                  <p>
+                    <translate>TLD</translate>:&nbsp;
+                    <a class="md-primary" fl-sref="pluginsDomainsTldDetails({id:$ctrl.domain.tld.id})">
+                      {{ $ctrl.domain.tld.name }}
+                    </a>
+                  </p>
+                  <p>
+                    <translate>Status</translate>:&nbsp;{{ $ctrl.domain.status_display }}
+                  </p>
+                  <p>
+                    <translate>Dns management enabled</translate>:&nbsp;
+                    <span ng-if="$ctrl.domain.dns_management" translate>Yes</span>
+                    <span ng-if="!$ctrl.domain.dns_management" translate>No</span>
+                  </p>
+                  <p>
+                    <translate>Email forwarding enabled</translate>:&nbsp;
+                    <span ng-if="$ctrl.domain.email_forwarding" translate>Yes</span>
+                    <span ng-if="!$ctrl.domain.email_forwarding" translate>No</span>
+                  </p>
+                  <p>
+                    <translate>ID protection enabled</translate>:&nbsp;
+                    <span ng-if="$ctrl.domain.id_protection" translate>Yes</span>
+                    <span ng-if="!$ctrl.domain.id_protection" translate>No</span>
+                  </p>
+                  <p ng-if="$ctrl.domain.client_id">
+                    <a class="md-primary"
+                       ng-click="$ctrl.editClient($event)">
+                      <translate>Click here to edit client</translate>
+                    </a>
+                  </p>
+                  <p ng-if="$ctrl.domain.contact">
+                    <a class="md-primary"
+                       ng-click="$ctrl.editContact($event)">
+                      <translate>Click here to edit domain contact</translate>
+                    </a>
+                  </p>
+                  <p ng-if="!$ctrl.domain.contact">
+                    <translate>Domain has no contact associated</translate>
+                  </p>
+                </div>
+              </div>
+              <div class="detail-block fl-row" flex="50">
+                <div class="fl-col">
+                  <p>
+                    <translate>Registration period: {{ $ctrl.domain.registration_period }} years</translate>
+                  </p>
+                  <p>
+                    <translate>Price: {{ $ctrl.domain.price_display}}</translate>
+                  </p>
+                  <p>
+                    <translate>Registration date</translate>:
+                    <span class="fl-indent" ng-if="$ctrl.domain.registration_date">{{ $ctrl.domain.registration_date }}</span>
+                    <span class="fl-indent" ng-if="!$ctrl.domain.registration_date" translate>n/a</span>
+                  </p>
+                  <p>
+                    <translate>Expiry date</translate>:
+                    <span class="fl-indent" ng-if="$ctrl.domain.expiry_date">{{ $ctrl.domain.expiry_date }}</span>
+                    <span class="fl-indent" ng-if="!$ctrl.domain.expiry_date" translate>n/a</span>
+                  </p>
+                  <p>
+                    <translate>Registrar lock active</translate>:
+                    <span class="fl-indent" ng-if="$ctrl.domain.registrar_locked" translate>Yes</span>
+                    <span class="fl-indent" ng-if="!$ctrl.domain.registrar_locked" translate>No</span>
+                  </p>
+                  <p>
+                    <translate>Last registrar</translate>:&nbsp;{{ $ctrl.domain.last_registrar_name }}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <h3><translate>Select a registrar</translate>:</h3>
+            <div layout="row">
+              <div flex="30">
+                <plugins-domains-input-registrar registrar-id="$ctrl.domain.last_registrar"
+                                                 price-domain-id="$ctrl.domain.id"
+                                                 on-registrar-changed="$ctrl.refreshDomainInfo(registrar)">
+                </plugins-domains-input-registrar>
+              </div>
+              <md-button class="md-primary"
+                         ng-click="$ctrl.saveDomain()">
+                <translate>Save</translate>
+              </md-button>
+            </div>
+            <h3><translate>Available actions</translate>:</h3>
+            <div layout="row" layout-align="start" ng-if="$ctrl.domainActions.length >= 0">
+              <div ng-repeat="action in $ctrl.domainActions">
+                <md-button class="md-primary"
+                           ng-disabled="$ctrl.executingDomainAction"
+                           ng-click="$ctrl.executeAction(action.name, action.display_name)">
+                  {{ action.display_name }}
+                </md-button>
+              </div>
+            </div>
+            <div layout="row" layout-align="start" ng-if="$ctrl.domainActions.length == 0">
+              <translate>No actions available.</translate>
+            </div>
+            <div ng-if="$ctrl.actionStatusMessage">
+              <div ng-if="$ctrl.actionStatus">
+                <p class="fl-green-color">{{ $ctrl.actionStatusMessage }}</p>
+              </div>
+              <div ng-if="!$ctrl.actionStatus">
+                <p class="fl-message">{{ $ctrl.actionStatusMessage }}</p>
+              </div>
+            </div>
+          </md-tab>
+          <md-tab label="{{ 'Nameservers' | translate }}">
+            <h3 translate>Nameservers</h3>
+            <form name="$ctrl.editNameserversForm" ng-submit="$ctrl.saveNameservers()"
+                  fl-messages="$ctrl.backendErrors">
+              <md-input-container class="fl-no-margin-bottom"
+                                  flex="25" flex-xs="100" flex-sm="50">
+                  <input type="text" ng-model="$ctrl.nameservers.nameserver1"
+                         placeholder="{{'First nameserver'|translate}}"
+                         name="nameserver1" size="50">
+                  <fl-validate for="nameserver1"></fl-validate>
+              </md-input-container>
+              <br/>
+              <md-input-container class="fl-no-margin-bottom"
+                                  flex="25" flex-xs="100" flex-sm="50">
+                  <input type="text" ng-model="$ctrl.nameservers.nameserver2"
+                         placeholder="{{'Second nameserver'|translate}}"
+                         name="nameserver2" size="50">
+                  <fl-validate for="nameserver2"></fl-validate>
+              </md-input-container>
+              <br/>
+              <md-input-container class="fl-no-margin-bottom"
+                                  flex="25" flex-xs="100" flex-sm="50">
+                  <input type="text" ng-model="$ctrl.nameservers.nameserver3"
+                         placeholder="{{'Third nameserver'|translate}}"
+                         name="nameserver3" size="50">
+                  <fl-validate for="nameserver3"></fl-validate>
+              </md-input-container>
+              <br/>
+              <md-input-container class="fl-no-margin-bottom"
+                                  flex="25" flex-xs="100" flex-sm="50">
+                  <input type="text" ng-model="$ctrl.nameservers.nameserver4"
+                         placeholder="{{'Fourth nameserver'|translate}}"
+                         name="nameserver4" size="50">
+                  <fl-validate for="nameserver4"></fl-validate>
+              </md-input-container>
+              <div>
+                <md-button class="md-primary fl-margin-top" type="submit" ng-disabled="$ctrl.submitPending">
+                    <translate>Save nameservers</translate>
+                </md-button>
+              </div>
+            </form>
+          </md-tab>
+          <md-tab label="{{ 'Whois information' | translate }}" ng-if="$ctrl.domain.last_registrar">
+            <h3 translate>Whois information for domain</h3>
+            <form name="$ctrl.editWhoisFieldsForm" fl-messages="$ctrl.backendErrors"
+                  ng-if="$ctrl.whoisData" ng-submit="$ctrl.saveWhoisData()">
+              <fl-custom-fields form-model="$ctrl.whoisData" custom-fields-definition="$ctrl.whoisFields">
+              </fl-custom-fields>
+              <md-button class="md-primary" type="submit"><translate>Save whois information</translate></md-button>
+            </form>
+            <p ng-if="!$ctrl.whoisFields">
+              Failed to retrieve whois information for domain.
+            </p>
+          </md-tab>
+        </md-tabs>
+      </md-content>
+    </md-card-content>
+  </md-card>
+</div>

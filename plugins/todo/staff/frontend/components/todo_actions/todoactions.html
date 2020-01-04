@@ -1,0 +1,13 @@
+<md-button fl-tooltip="{{ 'Edit' | translate }}" fl-direction="down"
+           ng-click="$ctrl.editTODO($event, true)" class="md-icon-button" ng-if="!$ctrl.addButton">
+  <md-icon class="fl-icons fl-icon-grey">edit</md-icon>
+</md-button>
+<md-button fl-tooltip="{{ 'Delete' | translate }}" fl-direction="down"
+           ng-click="$ctrl.deleteTODO()" class="md-icon-button" ng-if="!$ctrl.addButton">
+  <md-icon class="fl-icons fl-icon-grey">delete</md-icon>
+</md-button>
+<md-button aria-label="{{'Add TODO'|translate}}" class="md-fab md-accent fl-fab-rotate"
+           ng-click="$ctrl.editTODO($event, false)"
+           id="todo_button_add" ng-if="$ctrl.addButton">
+  <md-icon class="material-icons">add</md-icon>
+</md-button>

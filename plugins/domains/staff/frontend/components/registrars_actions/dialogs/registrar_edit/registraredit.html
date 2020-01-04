@@ -1,0 +1,30 @@
+<md-dialog>
+    <fl-back-drop ng-if="$ctrl.submitPending"></fl-back-drop>
+    <h2 ng-if="$ctrl.isEdit" class="md-title ng-binding" translate>Edit {{::$ctrl.registrar.name}}</h2>
+    <h2 ng-if="!$ctrl.isEdit" class="md-title ng-binding" translate>Add registrar</h2>
+    <fl-form-errors ng-model="$ctrl.backendErrors" form="$ctrl.editRegistrar"></fl-form-errors>
+    <form ng-submit="$ctrl.saveRegistrar()" name="$ctrl.editRegistrar" novalidate fl-messages="$ctrl.backendErrors">
+        <md-dialog-content>
+            <md-content class="md-dialog-content">
+                <md-input-container class="fl-required-group md-block" flex>
+                    <label for="registrar_name" translate>Name</label>
+                    <input id="registrar_name" maxlength="64" name="name" type="text"
+                           ng-model="$ctrl.registrar.name" required>
+                    <fl-validate for="registrar_name"></fl-validate>
+                </md-input-container>
+                <plugins-domains-input-registrar-connector registrar-connector-id="$ctrl.registrar.connector">
+                </plugins-domains-input-registrar-connector>
+                <!-- fake input so fl-validate will work -->
+                <input type="hidden" name="connector" required ng-model="$ctrl.registrar.connector"/>
+                <fl-validate class="fl-margin-top" for="connector" backend-name="connector"><div class="fl-margin-top-small"></div></fl-validate>
+            </md-content>
+        </md-dialog-content>
+        <md-dialog-actions>
+            <md-button class="md-primary" ng-click="$ctrl.close()">
+                <translate>Cancel</translate>
+            </md-button>
+            <md-button ng-if="!$ctrl.isEdit" class="md-primary" type="submit"><translate>Add registrar</translate></md-button>
+            <md-button ng-if="$ctrl.isEdit" class="md-primary" type="submit"><translate>Save registrar</translate></md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

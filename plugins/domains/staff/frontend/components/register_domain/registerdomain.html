@@ -1,0 +1,200 @@
+<div layout="row" layout-align="center start">
+  <md-card class="fl-card-fixed fl-card-fixed-md fl-margin-bottom">
+    <md-card-title class="object-detail-title">
+      <md-card-title-text>
+        <div layout="row" layout-align="space-between center" flex>
+          <div layout="column" class="toolbar-title-container">
+            <span class="toolbar-title-lg">Register domain</span>
+            <span class="toolbar-title-sm"></span>
+          </div>
+        </div>
+      </md-card-title-text>
+    </md-card-title>
+    <md-divider></md-divider>
+    <md-card-content class="min-height-content fl-content">
+        <form name="$ctrl.registerDomainForm" ng-submit="$ctrl.registerDomain()" novalidate fl-messages="$ctrl.backendErrors">
+            <fl-autocomplete-client floating-label="{{ 'Select client' | translate }}"
+                                    on-client-changed="$ctrl.onClientChanged(client)"
+                                    client-id="$ctrl.domain.client">
+            </fl-autocomplete-client>
+            <div ng-if="$ctrl.domain.client > 0">
+              <md-input-container class="fl-no-margin-bottom"
+                                  flex="25" flex-xs="60" flex-sm="50">
+                  <input type="text" ng-model="$ctrl.domain.name"
+                         placeholder="{{'Domain name'|translate}}"
+                         ng-keyup="$ctrl.domainNameKeyUp($event)"
+                         size="50">
+                  <fl-validate for="name"></fl-validate>
+              </md-input-container>
+              <md-input-container class="fl-no-margin-bottom"
+                                  flex="25">
+                  <md-button class="md-primary"
+                             ng-disabled="$ctrl.checkAvailabilityInProgress"
+                             fl-tooltip="{{::'Check if domain is available' | translate }}"
+                             ng-click="$ctrl.checkIfDomainIsAvailable()">
+                      <translate>Check</translate>
+                  </md-button>
+              </md-input-container>
+            </div>
+            <div ng-if="!$ctrl.checkResults.available" class="fl-message">
+                <p>{{ $ctrl.checkResults.error }}</p>
+            </div>
+            <div ng-if="$ctrl.checkResults.available">
+                <p translate>Domain is available for registration</p>
+                <translate>Select registration period</translate>:
+                <md-input-container>
+                    <label translate>Choose period</label>
+                    <md-select ng-model="$ctrl.domain.years" ng-change="$ctrl.updateOptionPrices()" name="years">
+                      <md-option ng-repeat="year_price in $ctrl.checkResults.prices.prices_per_years track by $index"
+                                 ng-if="year_price"
+                                 value="{{ $index }}">
+                        {{ $ctrl.getYearsText($index) }} - {{ year_price }} {{ $ctrl.checkResults.prices.currency.code }}
+                      </md-option>
+                    </md-select>
+                    <fl-validate for="years"></fl-validate>
+                </md-input-container>
+                <p translate>Select additional options</p>
+                <md-checkbox name="dns_management"
+                             ng-disabled="!$ctrl.dns_management_available"
+                             ng-model="$ctrl.domain.dns_management"
+                             class="md-primary"
+                             area-label="{{::'Enable dns management for this domain' | translate }}">
+                  <translate>Dns management</translate>
+                  <span ng-if="$ctrl.dns_management_available">&nbsp;({{ $ctrl.dns_management_price }})</span>
+                </md-checkbox>
+                <md-checkbox name="email_forwarding"
+                             ng-disabled="!$ctrl.email_forwarding_available"
+                             ng-model="$ctrl.domain.email_forwarding"
+                             class="md-primary"
+                             area-label="{{::'Enable email forwarding for this domain' | translate }}">
+                  <translate>Email forwarding</translate>
+                  <span ng-if="$ctrl.email_forwarding_available">&nbsp;({{ $ctrl.email_forwarding_price }})</span>
+                </md-checkbox>
+                <md-checkbox name="id_protection"
+                             ng-disabled="!$ctrl.id_protection_available"
+                             ng-model="$ctrl.domain.id_protection"
+                             class="md-primary"
+                             area-label="{{::'Enable ID protection for this domain' | translate }}">
+                  <translate>ID protection</translate>
+                  <span ng-if="$ctrl.id_protection_available">&nbsp;({{ $ctrl.id_protection_price }})</span>
+                </md-checkbox>
+                <p>Select nameservers</p>
+                <md-checkbox name="use_default_nameservers"
+                             ng-model="$ctrl.domain.use_default_nameservers"
+                             class="md-primary"
+                             ng-change="$ctrl.setDefaultNameservers()"
+                             ng-disabled="!$ctrl.checkResults.config.enable_default_nameservers"
+                             area-label="{{::'Use default nameservers' | translate }}">
+                  <translate>Use default nameservers</translate>
+                </md-checkbox>
+                <br/>
+                <div>
+                  <md-input-container class="fl-no-margin-bottom"
+                                      flex="25" flex-xs="50" flex-sm="50">
+                      <input type="text" ng-model="$ctrl.domain.nameserver1"
+                             ng-disabled="$ctrl.domain.use_default_nameservers"
+                             placeholder="{{::'First nameserver'|translate}}"
+                             name="nameserver1" size="50" required>
+                      <fl-validate for="nameserver1"></fl-validate>
+                  </md-input-container>
+                  <br/>
+                  <md-input-container class="fl-no-margin-bottom"
+                                      flex="25" flex-xs="50" flex-sm="50">
+                      <input type="text" ng-model="$ctrl.domain.nameserver2"
+                             ng-disabled="$ctrl.domain.use_default_nameservers"
+                             placeholder="{{::'Second nameserver'|translate}}"
+                             name="nameserver2" size="50">
+                      <fl-validate for="nameserver2"></fl-validate>
+                  </md-input-container>
+                  <br/>
+                  <md-input-container class="fl-no-margin-bottom"
+                                      flex="25" flex-xs="50" flex-sm="50">
+                      <input type="text" ng-model="$ctrl.domain.nameserver3"
+                             ng-disabled="$ctrl.domain.use_default_nameservers"
+                             placeholder="{{::'Third nameserver'|translate}}"
+                             name="nameserver3" size="50">
+                      <fl-validate for="nameserver3"></fl-validate>
+                  </md-input-container>
+                  <br/>
+                  <md-input-container class="fl-no-margin-bottom"
+                                      flex="25" flex-xs="50" flex-sm="50">
+                      <input type="text" ng-model="$ctrl.domain.nameserver4"
+                             ng-disabled="$ctrl.domain.use_default_nameservers"
+                             placeholder="{{::'Fourth nameserver'|translate}}"
+                             name="nameserver4" size="50">
+                      <fl-validate for="nameserver4"></fl-validate>
+                  </md-input-container>
+                </div>
+                <p>Register domain on</p>
+                <md-radio-group ng-model="$ctrl.domain_contact_type" name="domain_contact_type" layout="row"
+                                ng-change="$ctrl.contactTypeChanged()"
+                                class="fl-margin-top" ng-init="$ctrl.domain_contact_type='client'">
+                  <md-radio-button ng-value="'client'" class="md-primary"
+                                   fl-tooltip="Clients are used for invoicing, accounting and as domain registration details">
+                    <translate>Use client as a contact</translate>
+                  </md-radio-button>
+                  <md-radio-button ng-value="'contact'" class="md-primary"
+                                   fl-tooltip="Contacts are only used for domain registration details">
+                    <translate>Select a domain contact</translate>
+                  </md-radio-button>
+                </md-radio-group>
+                <div ng-if="$ctrl.domain_contact_type == 'client'" class="fl-margin-top">
+                  <p translate>Data from client profile will be used when registering the domain:</p>
+                  <p><pre class="fl-detail">{{ $ctrl.checkResults.client_details }}</pre></p>
+                </div>
+                <div ng-if="$ctrl.domain_contact_type == 'contact'">
+                  <p>
+                    <translate>Please select a domain contact</translate>
+                  </p>
+                  <div layout="row" ng-if="$ctrl.domain_contact_type == 'contact'">
+                    <div ng-if="$ctrl.domain_contact_type == 'contact'" flex="50">
+                      <plugins-domains-input-contact contact-id="$ctrl.contactId"
+                                                     on-contact-changed="$ctrl.onContactSelected(contact)"
+                                                     client-id="$ctrl.domain.client"
+                                                     placeholder="Select contact">
+                      </plugins-domains-input-contact>
+                    </div>
+                    <div>
+                      <md-button class="md-primary" ng-if="$ctrl.contactId"
+                                 fl-tooltip="{{::'Edit domain contact' | translate }}"
+                                 ng-click="$ctrl.editDomainContact($event)">
+                        <translate>Edit domain contact</translate>
+                      </md-button>
+                      <md-button class="md-primary"
+                                 fl-tooltip="{{::'Add a new domain contact' | translate }}"
+                                 ng-click="$ctrl.createDomainContact()">
+                        <translate>Add new domain contact</translate>
+                      </md-button>
+                    </div>
+                  </div>
+                  <p translate>Data from domain contact will be used when registering the domain:</p>
+                  <p><pre class="fl-detail">{{ $ctrl.contact.details }}</pre></p>
+                </div>
+                <div ng-if="$ctrl.customFieldsResults.missing_fields">
+                  <p class="fl-message">
+                    <translate>You need to fill the following custom fields in order to register the domain</translate>:
+                  </p>
+                  <p class="fl-message">
+                    <span ng-repeat-start="label in $ctrl.customFieldsResults.missing_fields_labels">{{ label }}</span>
+                    <span ng-repeat-end ng-if="!$last">,&nbsp;</span>
+                  </p>
+                  <a ng-if="$ctrl.domain_contact_type == 'client'" class="md-primary"
+                     ng-click="$ctrl.editClient($event)">
+                    <translate>Click here to edit client</translate>
+                  </a>
+                  <a ng-if="$ctrl.domain_contact_type == 'contact'" class="md-primary"
+                     ng-click="$ctrl.editDomainContact($event)">
+                    <translate>Click here to edit domain contact</translate>
+                  </a>
+                </div>
+                <div>
+                  <md-button ng-disabled="!$ctrl.canAddToCart()"
+                             class="md-primary fl-margin-top" type="submit">
+                      <translate>Place order</translate>
+                  </md-button>
+                </div>
+            </div>
+        </form>
+    </md-card-content>
+  </md-card>
+</div>

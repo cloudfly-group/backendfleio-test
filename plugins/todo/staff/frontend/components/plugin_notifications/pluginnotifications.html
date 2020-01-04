@@ -1,0 +1,12 @@
+<md-button ng-if="!$ctrl.data.is_menu_item" fl-tooltip="{{'TODOs' | translate}}" aria-label="{{'TODOs' | translate}}" fl-direction="down" class="md-icon-button fl-no-margin" ui-sref="pluginsTodoTodos">
+    <div ng-if="$ctrl.notificationsService.count > 0 && $ctrl.notificationsService.count < 100" class="fl-notification-circle fade">{{ $ctrl.notificationsService.count }}</div>
+    <div ng-if="$ctrl.notificationsService.count > 99" class="fl-notification-circle fade">99+</div>
+    <md-icon class="fl-icons" role="img" aria-label="">todo</md-icon>
+</md-button>
+<md-menu-item ng-if="$ctrl.data.is_menu_item" ui-sref="pluginsTodoTodos">
+  <md-button ng-click="$mdMenu.close()">
+    <md-icon class="fl-icons">todo</md-icon>
+    <translate>TODOs</translate>
+    <div ng-if="$ctrl.notificationsService.count > 0" class="fl-notification-circle fl-notification-circle-menu-item fade">{{ $ctrl.notificationsService.count }}</div>
+  </md-button>
+</md-menu-item>

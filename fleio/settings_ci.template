@@ -1,0 +1,146 @@
+"""
+Local settings file
+
+Add any changes to this file.
+
+For more information on this file, see:
+
+https://fleio.com/docs/configuring/settings-file.html
+http://www.django-rest-framework.org/api-guide/settings/
+https://docs.djangoproject.com/en/2.0/topics/settings/
+https://docs.djangoproject.com/en/2.0/ref/settings/
+"""
+
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+from .base_settings import *  # noqa
+
+URL_PREFIX = ''
+DEBUG = True
+EMAIL_HOST = 'no_email_host'
+CELERY_TASK_ALWAYS_EAGER = True
+
+# Django secret key & sso salt - this template will only be used in CI pipelines so values do not really matter
+SECRET_KEY = 'test_secret_key'
+SSO_SALT = 'test_sso_salt'
+
+TIME_ZONE = os.environ.get('FLEIO_TIMEZONE', 'Europe/Bucharest')
+ADMINS = (
+    (os.environ.get('SUPERNAME', 'Administrator'),
+     os.environ.get('SUPEREMAIL', 'your_email@example.com')),
+)
+
+# CORS and CSRF settings
+# You need the Cors Middleware settings only if backend and frontend hosts or ports are different
+INSTALLED_APPS += (
+    'corsheaders',  # you need this only if backend and frontend hosts are different
+)
+NEW_MIDDLEWARE = list(MIDDLEWARE)
+NEW_MIDDLEWARE.insert(1, 'corsheaders.middleware.CorsMiddleware')
+MIDDLEWARE = tuple(NEW_MIDDLEWARE)
+FRONTEND_URL = 'http://localhost:9001'
+
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:9000',
+    'http://localhost:9001',
+    'http://127.0.0.1:9000',
+    'http://127.0.0.1:9001',
+    'http://localhost:5151',  # ngfrontend tests run on 5151 port
+    'http://127.0.0.1:5151',
+)
+
+CSRF_TRUSTED_ORIGINS = ['localhost', '127.0.0.1']
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'fleio',
+        'USER': os.environ.get('DJANGO_MYSQL_USER', 'root'),
+        'PASSWORD': os.environ.get('DJANGO_MYSQL_PASSWORD', ''),
+        'HOST': 'localhost',
+        'PORT': '3306',
+        'CONN_MAX_AGE': 500,
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_ALL_TABLES'"
+        },
+        'TEST': {
+            'CHARSET': 'utf8',
+        }
+    },
+}
+
+
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+
+
+# Throttle request rate for login and payment gateways callbacks to avoid abuse
+REST_FRAMEWORK['DEFAULT_THROTTLE_RATES'] = {
+    'login': '10000/hour',
+    'signup': '5/day',
+    'password_reset': '10/hour',
+    'gateway_callback': '1000/hour'
+}
+
+TEST_RUNNER = 'fleio.utils.testrunner.FleioTestRunner'
+
+# Leave empty to use the default add credit URL of Fleio
+# fill in 'client_group_name': 'http://url...' pairs when using an external billing
+# when the dictionary has a single entry it will be used regardless of the 'client_group_name'
+ADD_CREDIT_URLS = {}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'detailed': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(funcName)s %(message)s'
+        },
+        'simple': {
+            'format': '##### %(levelname)s %(message)s'
+        },
+    },
+    'handlers': {
+        'stdout': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'stream': sys.stdout,
+            'formatter': 'detailed'
+        },
+        'stderr': {
+            'level': 'ERROR',
+            'class': 'logging.StreamHandler',
+            'stream': sys.stderr,
+            'formatter': 'detailed'
+        }
+    },
+    'loggers': {
+        '': {
+            'handlers': ['stdout', 'stderr'],
+            'propagate': True,
+            'level': 'ERROR'
+        },
+        'django': {
+            'handlers': ['stdout', 'stderr'],
+            'propagate': True,
+            'level': 'ERROR',
+        },
+        'celery': {
+            'handlers': ['stdout', 'stderr'],
+            'propagate': True,
+            'level': 'ERROR',
+        },
+        'cron': {
+            'handlers': ['stdout', 'stderr'],
+            'propagate': False,
+            'level': 'INFO',
+        }
+    }
+}
+
+REST_FRAMEWORK['DEFAULT_THROTTLE_RATES']['login'] = '10000/hour'
+REST_FRAMEWORK['DEFAULT_THROTTLE_RATES']['signup'] = '10000/hour'

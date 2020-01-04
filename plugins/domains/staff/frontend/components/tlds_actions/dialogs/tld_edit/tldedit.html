@@ -1,0 +1,25 @@
+<md-dialog>
+    <fl-back-drop ng-if="$ctrl.submitPending"></fl-back-drop>
+    <h2 ng-if="$ctrl.isEdit" class="md-title ng-binding" translate>Edit {{::$ctrl.tld.name}}</h2>
+    <h2 ng-if="!$ctrl.isEdit" class="md-title ng-binding" translate>Add tld</h2>
+    <fl-form-errors ng-model="$ctrl.backendErrors" form="$ctrl.editTLD"></fl-form-errors>
+    <form ng-submit="$ctrl.saveTLD()" name="$ctrl.editTLD" novalidate fl-messages="$ctrl.backendErrors">
+        <md-dialog-content>
+            <md-content class="md-dialog-content">
+                <md-input-container class="fl-required-group md-block" flex>
+                    <label for="tld_name" translate>Name</label>
+                    <input id="tld_name" maxlength="64" name="name" type="text"
+                           ng-model="$ctrl.tld.name" required>
+                    <fl-validate for="name"></fl-validate>
+                </md-input-container>
+            </md-content>
+        </md-dialog-content>
+        <md-dialog-actions>
+            <md-button class="md-primary" ng-click="$ctrl.close()">
+                <translate>Cancel</translate>
+            </md-button>
+            <md-button ng-if="!$ctrl.isEdit" class="md-primary" type="submit"><translate>Add TLD</translate></md-button>
+            <md-button ng-if="$ctrl.isEdit" class="md-primary" type="submit"><translate>Save TLD</translate></md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

@@ -1,0 +1,39 @@
+<div layout="row" layout-align="start center">
+    <md-button fl-tooltip="{{ 'Edit' | translate }}" fl-direction="down"
+               ng-click="$ctrl.editDomain($event, true)" class="md-icon-button" ng-if="!$ctrl.addButton">
+        <md-icon class="fl-icons fl-icon-grey">edit</md-icon>
+    </md-button>
+
+    <md-button fl-tooltip="{{ 'Delete' | translate }}" fl-direction="down"
+               ng-click="$ctrl.deleteDomain()" class="md-icon-button" ng-if="!$ctrl.addButton">
+        <md-icon class="fl-icons fl-icon-grey">delete</md-icon>
+    </md-button>
+  <span flex></span>
+  <!--<div fl-tooltip="{{ 'More' | translate }}" fl-direction="down" ng-if="!$ctrl.addButton">
+    <md-menu>
+      <md-button class="md-icon-button" ng-click="$mdMenu.open($event);">
+        <md-icon class="fl-icons fl-icon-grey">more</md-icon>
+      </md-button>
+      <md-menu-content class="fl-menu-content fl-max-height">
+          <md-menu-item>
+            <md-button ng-click="$ctrl.registerDomain()">
+              <md-icon class="material-icons fl-icon-grey">check</md-icon>
+              <translate>Register domain</translate>
+            </md-button>
+          </md-menu-item>
+          <md-menu-item>
+            <md-button ng-click="$ctrl.transferDomain()">
+              <md-icon class="material-icons fl-icon-grey">compare_arrows</md-icon>
+              <translate>Transfer domain</translate>
+            </md-button>
+          </md-menu-item>
+          <md-menu-item>
+            <md-button ng-click="$ctrl.renewDomain()">
+              <md-icon class="material-icons fl-icon-grey">refresh</md-icon>
+              <translate>Renew domain</translate>
+            </md-button>
+          </md-menu-item>
+      </md-menu-content>
+    </md-menu>
+  </div>--!>
+</div>

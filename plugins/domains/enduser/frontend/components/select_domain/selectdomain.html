@@ -1,0 +1,110 @@
+<form ng-submit="$ctrl.formSubmit()" name="$ctrl.selectDomainForm">
+    <div layout="row">
+        <div flex="50">
+            <md-radio-group ng-model="$ctrl.domainOperation" name="domain_operation" layout="column"
+                            class="fl-margin-top" ng-change="$ctrl.typeChanged()">
+                <md-radio-button ng-if="$ctrl.selectDomainOptions.has_existing_domains"
+                                 ng-value="'use_existing'" class="md-primary">
+                    <translate>Use existing domain</translate>
+                </md-radio-button>
+                <div class="fl-margin-left fl-margin-bottom" layout="row" layout-align="start"
+                     ng-if="$ctrl.domainOperation === 'use_existing'">
+                    <plugins-domains-select-existing-domain-form domains="$ctrl.selectDomainOptions.existing_domains"
+                                                                 selected-domain-name="$ctrl.selectedDomainName">
+                    </plugins-domains-select-existing-domain-form>
+                </div>
+                <md-radio-button ng-if="$ctrl.selectDomainOptions.has_domains_in_cart"
+                                 ng-value="'use_in_cart'" class="md-primary">
+                    <translate>Use domain in cart</translate>
+                </md-radio-button>
+                <div class="fl-margin-left fl-margin-bottom" layout="row" layout-align="start"
+                     ng-if="$ctrl.domainOperation === 'use_in_cart'">
+                    <plugins-domains-select-existing-domain-form domains="$ctrl.selectDomainOptions.domains_in_cart"
+                                                                 selected-domain-name="$ctrl.selectedDomainName">
+                    </plugins-domains-select-existing-domain-form>
+                </div>
+                <md-radio-button ng-if="$ctrl.selectDomainOptions.allow_domain_registration"
+                                 ng-value="'order_new'" class="md-primary">
+                    <translate>Order new domain</translate>
+                </md-radio-button>
+                <div class="fl-margin-left" layout="row" layout-align="start"
+                     ng-if="$ctrl.domainOperation === 'order_new'">
+                    <md-input-container>
+                        <input name="domainName" type="text" ng-model="$ctrl.selectedDomainName"
+                               aria-label="{{ 'Enter domain name' | translate }}"/>
+                        <label for="domainName" translate>Enter domain name</label>
+                    </md-input-container>
+                </div>
+                <md-radio-button ng-if="$ctrl.selectDomainOptions.allow_domain_transfer"
+                                 ng-value="'transfer'" class="md-primary">
+                    <translate>Transfer domain from another provider</translate>
+                </md-radio-button>
+                <div class="fl-margin-left" layout="row" layout-align="start"
+                     ng-if="$ctrl.domainOperation === 'transfer'">
+                    <md-input-container>
+                        <input name="domainName" type="text" ng-model="$ctrl.selectedDomainName"
+                               aria-label="{{ 'Enter domain name' | translate }}"/>
+                        <label for="domainName" translate>Enter domain name</label>
+                    </md-input-container>
+                </div>
+                <md-radio-button ng-value="'use_external'" class="md-primary">
+                    <translate>Use an external domain</translate>
+                </md-radio-button>
+                <div class="fl-margin-left" layout="row" layout-align="start"
+                     ng-if="$ctrl.domainOperation === 'use_external'">
+                    <md-input-container>
+                        <input name="domainName" type="text" ng-model="$ctrl.selectedDomainName"
+                               aria-label="{{ 'Enter domain name' | translate }}"/>
+                        <label for="domainName" translate>Enter domain name</label>
+                    </md-input-container>
+                </div>
+            </md-radio-group>
+        </div>
+        <div class="fl-help-text fl-no-padding-top">
+            <h3 translate>Use an existing domain</h3>
+            <p translate>
+                Select this option if you want to use a domain you already registered.
+            </p>
+            <h3 translate>Use domain in cart</h3>
+            <p translate>
+                Select this option to use a domain you already placed in cart.
+            </p>
+            <h3 translate>Order new domain</h3>
+            <p translate>
+                Select this option to order a new domain.
+            </p>
+            <h3 translate>Transfer domain from another provider</h3>
+            <p translate>
+                Select this option to use transfer a domain from another provider.
+            </p>
+            <h3 translate>Use an external domain</h3>
+            <p translate>
+                Select this option to use an external domain registered with another provider.
+                You will have to configure nameservers manually.
+            </p>
+        </div>
+    </div>
+    <div layout="row" layout-align="center" ng-if="$ctrl.domainNameOk">
+        <p class="fl-text-green">
+            <translate ng-if="$ctrl.domainOperation === 'order_new'">Domain is available for registration</translate>
+            <translate ng-if="$ctrl.domainOperation === 'transfer'">Domain is available for transfer</translate>
+            <translate ng-if="$ctrl.domainOperation === 'use_external'">Domain name is valid</translate>
+            <translate ng-if="$ctrl.price_per_year"> - {{ $ctrl.price_per_year }} {{ $ctrl.currency }} / year</translate>
+
+        </p>
+    </div>
+    <div layout="row" layout-align="center" ng-if="$ctrl.hasErrors">
+        <p class="fl-message">{{$ctrl.errorText}}</p>
+    </div>
+    <div layout="row" layout-align="center start">
+        <md-button class="md-primary" type="submit"
+                   ng-disabled="!$ctrl.canSubmit()">
+            <translate ng-if="$ctrl.shouldCheckDomain()">
+                Check domain
+            </translate>
+            <translate ng-if="!$ctrl.shouldCheckDomain()">
+                Continue
+            </translate>
+        </md-button>
+    </div>
+</form>

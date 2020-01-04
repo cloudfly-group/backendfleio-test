@@ -1,0 +1,71 @@
+<div layout="row" layout-align="center start">
+  <md-card class="fl-card-fixed fl-card-fixed-md fl-margin-bottom">
+    <md-card-title class="object-detail-title">
+      <md-card-title-text>
+        <div layout="row" layout-align="space-between center" flex>
+          <div layout="column" class="toolbar-title-container">
+            <span class="toolbar-title-lg">Transfer domain</span>
+            <span class="toolbar-title-sm">
+            </span>
+          </div>
+        </div>
+      </md-card-title-text>
+    </md-card-title>
+    <md-divider></md-divider>
+    <md-card-content class="min-height-content fl-content">
+        <form ng-submit="$ctrl.transferDomain()" name="$ctrl.transferDomainForm">
+            <fl-autocomplete-client floating-label="{{ 'Select client' | translate }}"
+                                    on-client-changed="$ctrl.onClientChanged(client)"
+                                    client-id="$ctrl.domain.client">
+            </fl-autocomplete-client>
+            <div ng-if="$ctrl.domain.client > 0">
+              <md-input-container class="fl-no-margin-bottom"
+                                  flex="25" flex-xs="60" flex-sm="50">
+                  <input type="text" ng-model="$ctrl.domain.name"
+                         placeholder="{{'Domain name'|translate}}" size="50">
+                  <fl-validate for="name"></fl-validate>
+              </md-input-container>
+              <md-input-container class="fl-no-margin-bottom"
+                                  flex="25">
+                  <md-button class="md-primary"
+                             ng-disabled="$ctrl.checkAvailabilityInProgress"
+                             fl-tooltip="{{ 'Check if domain is available' | translate }}"
+                             ng-click="$ctrl.checkIfDomainIsAvailable()">
+                      <translate>Check</translate>
+                  </md-button>
+              </md-input-container>
+            </div>
+            <div ng-if="!$ctrl.checkResults.available" class="fl-message">
+              <p>{{ $ctrl.checkResults.error }}</p>
+            </div>
+            <div ng-if="$ctrl.checkResults.available">
+              <p translate>Domain is available for transfer</p>
+              <md-input-container class="fl-no-margin-bottom"
+                                  flex="25">
+                <input type="text" ng-model="$ctrl.domain.epp"
+                       ng-if="$ctrl.checkResults.tld.requires_epp_for_transfer"
+                       placeholder="{{'EPP code'|translate}}" size="50" required>
+                <fl-validate for="name"></fl-validate>
+              </md-input-container>
+              <br/>
+              <translate>Select period</translate>:
+              <md-input-container>
+                <md-select ng-model="$ctrl.domain.years" name="period">
+                  <md-option ng-repeat="year_price in $ctrl.checkResults.prices.prices_per_years track by $index"
+                             ng-init="$ctrl.domain.years=0"
+                             ng-if="year_price"
+                             value="{{ $index }}">
+                    {{ $ctrl.getYearsText($index) }} - {{ year_price }} {{ $ctrl.checkResults.prices.currency.code }}
+                  </md-option>
+                </md-select>
+                <fl-validate for="period"></fl-validate>
+              </md-input-container>
+              <br/>
+              <md-button class="md-primary" type="submit">
+                <translate>Place order</translate>
+              </md-button>
+            </div>
+        </form>
+    </md-card-content>
+  </md-card>
+</div>

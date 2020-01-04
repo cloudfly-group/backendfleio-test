@@ -1,0 +1,209 @@
+<div layout="row" layout-align="center start">
+  <md-card class="fl-card-fixed">
+    <md-card-title class="object-detail-title">
+      <md-card-title-text>
+        <div layout="row" layout-align="space-between center" flex>
+          <div layout="column" class="toolbar-title-container">
+            <span class="toolbar-title-lg">{{ $ctrl.tld.name }} details</span>
+            <span class="toolbar-title-sm fl-detail" translate>{{ $ctrl.tld.name }} pricing and details</span>
+          </div>
+        </div>
+      </md-card-title-text>
+    </md-card-title>
+    <md-card-content class="fl-no-padding">
+      <md-content class="min-height-content fl-content no-overflow-hidden">
+        <md-tabs md-dynamic-height class="fl-background-white">
+          <md-tab label="{{ 'Pricing' | translate }}">
+            <form name="domain_prices" ng-submit="$ctrl.savePrices()">
+              <md-radio-group ng-model="$ctrl.group_by" name="group_by" layout="row"
+                              class="fl-margin-top">
+                <md-radio-button ng-value="'currency'" class="md-primary">
+                  <translate>Group by currency</translate>
+                </md-radio-button>
+                <md-radio-button ng-value="'price_type'" class="md-primary">
+                  <translate>Group by price type</translate>
+                </md-radio-button>
+              </md-radio-group>
+              <p class="fl-margin-top-small" translate>
+                Fill in the selling prices. Leave price empty if you want to disable price for a number of years.
+              </p>
+              <div ng-show="$ctrl.group_by=='currency'">
+                <div ng-repeat="(currency_code, type_cycles) in ::$ctrl.domainPrices.price_cycles_by_currency">
+                  <h3 class="fl-margin-bottom-small"
+                      ng-if="::$ctrl.domainPrices.default_currency.code === currency_code"
+                      translate>
+                    {{ currency_code }}(default) prices
+                  </h3>
+                  <h3 class="fl-margin-bottom-small"
+                      ng-if="::$ctrl.domainPrices.default_currency.code !== currency_code"
+                      translate>
+                    {{ currency_code }} prices
+                  </h3>
+                  <div ng-repeat="(price_type, cycles_idx) in type_cycles">
+                    <plugins-domains-pricing-cycles price-cycles="$ctrl.domainPrices.price_cycles_list[cycles_idx]"
+                                                    display-text="type"
+                                                    set-relative-prices="$ctrl.setRelativePrices(cycles_idx)"
+                                                    price-changed="$ctrl.priceChanged(cycles_idx)">
+                    </plugins-domains-pricing-cycles>
+                  </div>
+                </div>
+              </div>
+              <div ng-show="$ctrl.group_by=='price_type'">
+                <div ng-repeat="(price_type, currency_cycles) in ::$ctrl.domainPrices.price_cycles_by_type">
+                  <h3 class="fl-margin-bottom-small" translate>
+                    {{ $ctrl.domainPrices.price_types[price_type] }} prices
+                  </h3>
+                  <div ng-repeat="(currency, cycles_idx) in currency_cycles">
+                    <plugins-domains-pricing-cycles price-cycles="$ctrl.domainPrices.price_cycles_list[cycles_idx]"
+                                                    display-text="currency"
+                                                    set-relative_prices="$ctrl.setRelativePrices(cycles_idx)"
+                                                    price-changed="$ctrl.priceChanged(cycles_idx)">
+                    </plugins-domains-pricing-cycles>
+                  </div>
+                </div>
+              </div>
+              <md-button class="md-primary md-raised"
+                         ng-disabled="$ctrl.submitPending"
+                         type="submit">
+                <translate>Save prices</translate>
+              </md-button>
+            </form>
+          </md-tab>
+          <md-tab label="{{ 'Addons pricing' | translate }}">
+            <form name="domain_addon_prices" ng-submit="$ctrl.saveAddonPrices()">
+              <md-radio-group ng-model="$ctrl.group_by" name="group_by" layout="row"
+                              class="fl-margin-top">
+                <md-radio-button ng-value="'currency'" class="md-primary">
+                  <translate>Group by currency</translate>
+                </md-radio-button>
+                <md-radio-button ng-value="'price_type'" class="md-primary">
+                  <translate>Group by price type</translate>
+                </md-radio-button>
+              </md-radio-group>
+              <p class="fl-margin-top-small" translate>
+                Fill in the addon selling prices. Leave price empty if you want to disable price for a number of years.
+              </p>
+              <div ng-show="$ctrl.group_by=='currency'">
+                <div ng-repeat="(currency_code, type_cycles) in $ctrl.domainAddonPrices.price_cycles_by_currency">
+                  <h3 class="fl-margin-bottom-small"
+                      ng-if="$ctrl.domainAddonPrices.default_currency.code === currency_code"
+                      translate>
+                    {{ currency_code }}(default) prices
+                  </h3>
+                  <h3 class="fl-margin-bottom-small"
+                      ng-if="$ctrl.domainAddonPrices.default_currency.code !== currency_code"
+                      translate>
+                    {{ currency_code }} prices
+                  </h3>
+                  <div ng-repeat="(price_type, cycles_idx) in type_cycles">
+                    <plugins-domains-pricing-cycles price-cycles="$ctrl.domainAddonPrices.price_cycles_list[cycles_idx]"
+                                                    display-text="type"
+                                                    set-relative-prices="$ctrl.setAddonRelativePrices(cycles_idx)"
+                                                    price-changed="$ctrl.addonPriceChanged(cycles_idx)">
+                    </plugins-domains-pricing-cycles>
+                  </div>
+                </div>
+              </div>
+              <div ng-show="$ctrl.group_by=='price_type'">
+                <div ng-repeat="(price_type, currency_cycles) in $ctrl.domainAddonPrices.price_cycles_by_type">
+                  <h3 class="fl-margin-bottom-small" translate>
+                    {{ $ctrl.domainAddonPrices.price_types[price_type] }} prices
+                  </h3>
+                  <div ng-repeat="(currency, cycles_idx) in currency_cycles">
+                    <plugins-domains-pricing-cycles price-cycles="$ctrl.domainAddonPrices.price_cycles_list[cycles_idx]"
+                                                    display-text="currency"
+                                                    set-relative_prices="$ctrl.setAddonRelativePrices(cycles_idx)"
+                                                    price-changed="$ctrl.addonPriceChanged(cycles_idx)">
+                    </plugins-domains-pricing-cycles>
+                  </div>
+                </div>
+              </div>
+              <md-button class="md-primary md-raised"
+                         ng-disabled="$ctrl.submitPending"
+                         type="submit">
+                <translate>Save addons prices</translate>
+              </md-button>
+            </form>
+          </md-tab>
+          <md-tab label="{{ 'Registrars' | translate }}">
+            <form name="registrar_config" ng-submit="$ctrl.saveRegistrars()">
+              <h4>Default registrar</h4>
+              <plugins-domains-input-registrar registrar-id="$ctrl.tld.default_registrar" flex="50">
+              </plugins-domains-input-registrar>
+              <md-input-container>
+                <md-checkbox class="md-primary"
+                             ng-model="$ctrl.tld.requires_epp_for_transfer"
+                             fl-tooltip="{{ 'Check this if an EPP code is required for domain transfer' | translate }}"
+                             fl-direction="right">
+                    <translate>EPP code required for transfer</translate>
+                </md-checkbox>
+              </md-input-container>
+              <br/>
+              <md-button class="md-primary md-raised"
+                         ng-disabled="$ctrl.submitPending"
+                         type="submit">
+                <translate>Save registrars</translate>
+              </md-button>
+            </form>
+          </md-tab>
+            <md-tab label="{{::'Cost pricing' | translate }}">
+                <table class="fl-table">
+                    <thead>
+                    <th translate>Connector</th>
+                    <th translate>Register</th>
+                    <th translate>Transfer</th>
+                    <th translate>Renew</th>
+                    <th translate>Updated at</th>
+                    <th></th>
+                    </thead>
+                    <tbody ng-repeat="registrarConnector in $ctrl.registrarsConnectorsPrices track by registrarConnector.id">
+                    <tr ng-repeat="registrarPrice in registrarConnector.prices track by registrarPrice.id">
+                        <td>{{::registrarConnector.name }}</td>
+                        <td ng-if="registrarPrice.promo_price">Promo {{::registrarPrice.promo_price }} {{::registrarPrice.currency }}</td>
+                        <td ng-if="!registrarPrice.promo_price">{{::registrarPrice.register_price }} {{::registrarPrice.currency }}</td>
+                        <td>{{::registrarPrice.transfer_price }} {{::registrarPrice.currency }}</td>
+                        <td>{{::registrarPrice.renew_price }} {{::registrarPrice.currency }}</td>
+                        <td>{{::registrarPrice.updated_at | date: 'medium' }}</td>
+                        <td class="fl-flex-right-align">
+                            <md-button class="md-primary"
+                                       ng-disabled="$ctrl.loadingRegistrarPrices"
+                                       ng-click="$ctrl.updateRegistrarPrices(registrarConnector.name)">
+                                       <translate>Update all prices</translate>
+                            </md-button>
+                        </td>
+                    </tr>
+                    <tr ng-if="!registrarConnector.prices.length">
+                        <td>{{::registrarConnector.name }}</td>
+                        <td colspan="4"><span translate>no prices available</span></td>
+                        <td class="fl-flex-right-align">
+                            <md-button class="md-primary"
+                                       ng-disabled="$ctrl.loadingRegistrarPrices"
+                                       ng-click="$ctrl.updateRegistrarPrices(registrarConnector.name)">
+                                       <translate>Update all prices</translate>
+                            </md-button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+          </md-tab>
+          <md-tab label="{{ 'Custom fields' | translate }}">
+            <table class="fl-table">
+              <thead>
+              <th translate>Label</th>
+              <th translate>Name</th>
+              <th translate>Required</th>
+              </thead>
+              <tbody>
+              <tr ng-repeat="(field_name, field_def) in $ctrl.tld.custom_fields track by field_name">
+                <td>{{ field_def.label }}</td>
+                <td>{{ field_name }}</td>
+                <td>{{ field_def.required?('Yes' | translate):('No' | translate) }}</td>
+              </tr>
+              </tbody>
+            </table>
+          </md-tab>
+        </md-tabs>
+      </md-content>
+    </md-card-content>
+  </md-card>
+</div>

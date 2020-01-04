@@ -1,0 +1,100 @@
+<fl-subheader ng-model="$ctrl.tlds" objects-name="'TLD' | translate" objects-name-plural="'TLDs'" cardview="cardview"></fl-subheader>
+<fl-back-drop ng-if="$ctrl.loading" class="list-backdrop"></fl-back-drop>
+<img class="fl-arrow" ng-if="$ctrl.tlds.totalItems == 0 && !$ctrl.hoverOn" src="images/arrow.png">
+<div class="alert-danger" ng-show="action_error"> {{ action_error }}</div>
+<div ng-if="cardview === true" class="stack stack-card" layout="column"
+     layout-align="center center" id="id_tlds_cards_container">
+    <fl-infinite-scroll ng-model="$ctrl.tlds" threshold="150" container-name="'id_tlds_cards_container'">
+        <div layout="row" class="cardlist-container">
+            <div ng-repeat="tld in $ctrl.tlds.objects track by tld.id">
+                <md-card class="fl-object-card">
+                    <div fl-sref="pluginsDomainsTldDetails({id:tld.id})">
+                        <md-card-title>
+                                <div title="{{ tld.name}}" class="fl-ellipsis-text md-headline">
+                                    {{ tld.name}}
+                                </div>
+                            </md-card-title-text>
+                        </md-card-title>
+                        <md-card-content class="fl-object-card-content">
+                            <div><translate>Created at</translate>:&nbsp;{{ tld.created_at | date:'medium' }}</div>
+                            <div>
+                                <translate>Premium domains available</translate>:
+                                <translate ng-if="tld.premium_domains_available">Yes</translate>
+                                <translate ng-if="!tld.premium_domains_available">No</translate>
+                            </div>
+                            <div>
+                                <translate>Whois server configured</translate>:
+                                <translate ng-if="tld.whois_server_configured">Yes</translate>
+                                <translate class="fl-message" ng-if="!tld.whois_server_configured">No</translate>
+                            </div>
+                        </md-card-content>
+                    </div>
+                    <span flex></span>
+                    <div class="card-actions">
+                        <div layout="row" layout-align="start center">
+                            <plugins-domains-tlds-actions on-tld-deleted="$ctrl.refreshTLDs()"
+                                                          on-tld-changed="$ctrl.refreshTLDs()"
+                                                          tld="tld" add-button="false">
+                            </plugins-domains-tlds-actions>
+                        </div>
+                    </div>
+                </md-card>
+            </div>
+        </div>
+    </fl-infinite-scroll>
+</div>
+<div layout-wrap layout="row" ng-if="cardview === false" class="stack stack-list"
+     layout-align="center center" id="id_tlds_table_container">
+    <table class="fl-table fl-card-fixed fl-list-view-table fl-table-shadow" ng-if="$ctrl.tlds.totalItems">
+        <tbody>
+        <fl-infinite-scroll ng-model="$ctrl.tlds" threshold="150" container-name="'id_tlds_table_container'">
+            <tr ng-repeat="tld in $ctrl.tlds.objects track by tld.id"
+                class="v-middle object-list-elem">
+                <td fl-sref="pluginsDomainsTldDetails({id:tld.id})">
+                    <div class="fl-ellipsis-text" layout="column" layout-wrap>{{ tld.name }}</div>
+                </td>
+                <td fl-sref="pluginsDomainsTldDetails({id:tld.id})" hide-xs hide-sm>
+                    <div layout="row" class="fl-ellipsis-text">
+                        <translate ng-if="tld.premium_domains_available">Yes</translate>
+                        <translate ng-if="!tld.premium_domains_available">No</translate>
+                    </div>
+                </td>
+                <td fl-sref="pluginsDomainsTldDetails({id:tld.id})" hide-xs hide-sm>
+                    <div layout="row" class="fl-ellipsis-text">{{ tld.created_at | date:'medium' }}</div>
+                </td>
+                <td fl-sref="pluginsDomainsTldDetails({id:tld.id})">
+                    {{ tld.updated_at | date:'medium' }}
+                </td>
+                <td hide-xs class="fl-flex-100 fl-flex-right-align no-overflow-hidden">
+                    <div class="list-actions">
+                        <div layout="row" layout-align="end center">
+                            <plugins-domains-tlds-actions on-tld-deleted="$ctrl.refreshTLDs()"
+                                                          on-tld-changed="$ctrl.refreshTLDs()"
+                                                          tld="tld" add-button="false">
+                            </plugins-domains-tlds-actions>
+                        </div>
+                    </div>
+                </td>
+                <td hide-gt-xs class="fl-flex-50 no-overflow-hidden">
+                    <plugins-domains-tlds-actions on-tld-deleted="$ctrl.refreshTLDs()"
+                                                  tld="tld">
+                    </plugins-domains-tlds-actions>
+                </td>
+            </tr>
+        </fl-infinite-scroll>
+        </tbody>
+    </table>
+    <div hide-gt-md class="fl-add-button-separator"></div>
+</div>
+
+<div class="fl-fab" layout="row" ng-cloak="">
+    <md-fab-speed-dial fl-tooltip="{{ 'Add TLD' | translate }}" fl-direction="left" md-direction="up" ng-class="'md-scale'" ng-mouseover="$ctrl.hoverOn = true"
+                       ng-mouseleave="$ctrl.hoverOn = false">
+        <md-fab-trigger>
+            <plugins-domains-tlds-actions on-tld-added="$ctrl.refreshTLDs()"
+                                          tld="tld"
+                                          add-button="true">
+            </plugins-domains-tlds-actions>
+        </md-fab-trigger>
+    </md-fab-speed-dial>
+</div>

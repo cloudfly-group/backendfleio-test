@@ -1,0 +1,33 @@
+<ng-form name="cpanel_product_settings" novalidate fl-messages="$ctrl.parentForm.$backendErrors.cpanel_product_settings[0]">
+    <div layout="row">
+        <div layout="column" flex="33">
+            <md-input-container>
+                <label translate>cPanel package ID</label>
+                <input name="cpanel_package_id"
+                       ng-model="$ctrl.data.cpanel_product_settings.cpanel_package_id"
+                       maxlength="128"
+                       type="number"
+                       min="1"
+                       required>
+                <fl-validate for="cpanel_package_id"></fl-validate>
+            </md-input-container>
+
+            <md-input-container>
+                <label translate>cPanel group ID</label>
+                <input name="cpanel_group_id"
+                       ng-model="$ctrl.data.cpanel_product_settings.cpanel_group_id"
+                       maxlength="128"
+                       type="number"
+                       min="1"
+                       required>
+                <fl-validate for="cpanel_group_id"></fl-validate>
+            </md-input-container>
+        </div>
+        <div class="fl-help-text">
+            <h3 translate>cPanel licensing package configuration</h3>
+            <p translate>The cPanel license Package ID and Group ID for licenses issued with this package are
+                configurable here.</p>
+            <p translate>Make sure CPANEL_USERNAME and CPANEL_PASSWORD are set in settings.py</p>
+        </div>
+    </div>
+</ng-form>

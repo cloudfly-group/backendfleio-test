@@ -1,0 +1,2 @@
+class AgreedTOSDestroyException(Exception):
+    pass

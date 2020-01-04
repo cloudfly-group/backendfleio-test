@@ -1,0 +1,112 @@
+<ng-form name="hypanel_product_settings" novalidate fl-messages="$ctrl.parentForm.$backendErrors.hypanel_product_settings[0]">
+    <div class="fl-margin-top" translate>
+        Hypanel module configuration
+    </div>
+    <div layout="row">
+        <div layout-gt-xs="column" class="fl-margin-top" flex="45">
+            <div ng-if="$ctrl.servers.objects.length === 0">
+                <p>No Hypanel servers to select from. Please add one from <a ui-sref="serverCreate()"
+                                                                             class="md-primary">here</a></p>
+            </div>
+            <md-input-container ng-if="$ctrl.servers.objects.length > 0" class="md-block">
+                <label translate>Hypanel server</label>
+                <md-select ng-model="$ctrl.data.hypanel_product_settings.hypanel_server" name="server">
+                    <md-option ng-repeat="server in $ctrl.servers.objects track by server.id"
+                               ng-value="server.id">
+                        {{::server.name }}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+            <md-input-container class="fl-required-group md-block fl-no-margin">
+                <label translate>Hostname</label>
+                <input name="hostname"
+                       ng-model="$ctrl.data.hypanel_product_settings.hostname"
+                       maxlength="255"
+                       type="text">
+            </md-input-container>
+            <md-input-container class="fl-required-group md-block fl-no-margin">
+                <label translate>Configuration</label>
+                <input name="configuration"
+                       ng-model="$ctrl.data.hypanel_product_settings.configuration"
+                       maxlength="255"
+                       type="text">
+            </md-input-container>
+            <md-input-container class="fl-required-group md-block fl-no-margin">
+                <label translate>Control panel</label>
+                <input name="control_panel"
+                       ng-disabled="true"
+                       placeholder="Control panel is a configurable option"
+                       ng-model="$ctrl.data.hypanel_product_settings.control_panel"
+                       maxlength="1024"
+                       type="text">
+            </md-input-container>
+            <md-input-container class="fl-required-group md-block fl-no-margin">
+                <label translate>IP count (configurable option can be added so users can change the value
+                    themselves)</label>
+                <input name="ip_count"
+                       ng-model="$ctrl.data.hypanel_product_settings.ip_count"
+                       max="100"
+                       type="number">
+            </md-input-container>
+            <md-input-container class="fl-required-group md-block fl-no-margin">
+                <label translate>Memory</label>
+                <input name="memory"
+                       ng-model="$ctrl.data.hypanel_product_settings.memory"
+                       type="number">
+            </md-input-container>
+            <md-input-container class="fl-required-group md-block fl-no-margin">
+                <label translate>OS</label>
+                <input name="os"
+                       disabled
+                       placeholder="OS is a configurable option"
+                       maxlength="255"
+                       type="text">
+            </md-input-container>
+            <md-input-container class="fl-required-group md-block fl-no-margin">
+                <label translate>Disk size</label>
+                <input name="disk_size"
+                       ng-model="$ctrl.data.hypanel_product_settings.disk_size"
+                       type="number">
+            </md-input-container>
+            <md-input-container class="fl-required-group md-block fl-no-margin">
+                <label translate>Traffic</label>
+                <input name="traffic"
+                       ng-model="$ctrl.data.hypanel_product_settings.traffic"
+                       type="number">
+            </md-input-container>
+            <md-input-container class="fl-required-group md-block fl-no-margin">
+                <label translate>Machine type</label>
+                <input name="machine_type"
+                       ng-model="$ctrl.data.hypanel_product_settings.machine_type"
+                       maxlength="10"
+                       type="text">
+            </md-input-container>
+            <md-input-container class="fl-required-group md-block fl-no-margin">
+                <label translate>Server group</label>
+                <input name="server_group"
+                       ng-model="$ctrl.data.hypanel_product_settings.server_group"
+                       maxlength="255"
+                       type="text">
+            </md-input-container>
+            <md-checkbox ng-model="$ctrl.data.hypanel_product_settings.send_welcome_email"
+                         aria-label="Send welcome email" class="fl-margin-top md-primary">
+                <span translate>Send welcome email</span>
+            </md-checkbox>
+        </div>
+        <div class="fl-help-text">
+            <h3 translate>Product configuration</h3>
+            <p translate><b>Hypanel server:</b> the server where Hypanel api is located. You can add the server <a
+                    ui-sref="serverCreate()" class="md-primary">here</a></p>
+            <p translate><b>IP count:</b> set a default value here. It is possible to add a configurable option so users
+                can change this value, make sure the configurable option internal name is 'hypanel_ip_count'.</p>
+            <p translate><b>OS:</b> you need to add a configurable option with the internal name of 'hypanel_os'. Use
+                the 'name' field from the OpenVZ Templates as input options.</p>
+            <p translate><b>Control panel:</b> you need to add a configurable option with the internal name of
+                'hypanel_control_panel'. Use a dropdown with 2 option values: either 'cpanel' or 'directadmin'.</p>
+            <p translate><b>Disk size:</b> value is expressed in GB.</p>
+            <p translate><b>Traffic:</b> value is expressed in GB.</p>
+            <p translate><b>Memory:</b> value is expressed in MB.</p>
+            <p translate><b>Machine type:</b> defaults to 'openvz'. You should leave the default value.</p>
+        </div>
+    </div>
+</ng-form>

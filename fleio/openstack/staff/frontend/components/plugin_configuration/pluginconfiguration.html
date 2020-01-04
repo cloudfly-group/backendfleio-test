@@ -1,0 +1,56 @@
+<fl-back-drop ng-if="$ctrl.loadingSettings"></fl-back-drop>
+<md-content class="min-height-content fl-content">
+    <form ng-submit="$ctrl.saveSettings()" name="$ctrl.openstackSettingsForm" novalidate
+          fl-messages="$ctrl.backendErrors">
+
+        <!-- Automatic image cleanup settings -->
+        <div class="fl-subheader fl-margin-bottom fl-margin-top" translate>Automatic images cleanup</div>
+        <div layout="row">
+          <div flex="33">
+            <md-input-container class="fl-required-group md-block fl-no-margin-bottom">
+                <md-checkbox md-no-ink name="auto_cleanup_images"
+                             ng-model="$ctrl.openstackSettings.auto_cleanup_images"
+                             ng-disabled="::!$ctrl.features['openstack.cleanup.images']"
+                             class="md-primary">{{'Automatically cleanup images' | translate}}
+                </md-checkbox>
+            </md-input-container>
+            <md-input-container class="fl-required-group md-block fl-no-margin-bottom">
+              <input name="auto_cleanup_number_of_days"
+                     type="number"
+                     min="1"
+                     max="10000"
+                     ng-disabled="!$ctrl.openstackSettings.auto_cleanup_images || !$ctrl.features['openstack.cleanup.images']"
+                     ng-model="$ctrl.openstackSettings.auto_cleanup_number_of_days"
+                     placeholder="{{'Number of days to keep images'|translate}}" required>
+              <fl-validate for="auto_cleanup_number_of_days"></fl-validate>
+            </md-input-container>
+            <md-input-container class="fl-required-group md-block fl-no-margin-bottom">
+              <input name="auto_cleanup_image_types"
+                     type="text"
+                     ng-disabled="!$ctrl.openstackSettings.auto_cleanup_images || !$ctrl.features['openstack.cleanup.images']"
+                     ng-model="$ctrl.openstackSettings.auto_cleanup_image_types"
+                     placeholder="{{'Image types to cleanup'|translate}}" required>
+              <fl-validate for="auto_cleanup_image_types"></fl-validate>
+            </md-input-container>
+          </div>
+          <div class="fl-help-text fl-no-padding-top">
+            <h3 translate>Automatically cleanup images</h3>
+            <p translate>
+                Enables automatic cleanup of images for client.<br/>
+                The number of days to keep images starts from creation date of the image.<br/>
+                Once the number of days is reached the image will be deleted.<br/>
+                Valid image types for cleanup are: ami, ari, aki, vhd, vmdk, raw, qcow2, vdi and iso.
+            </p>
+          </div>
+        </div>
+
+        <md-button ng-disabled="$ctrl.submitPending" type="submit" class="md-primary md-raised">
+            <translate>Save</translate>
+        </md-button>
+        <md-button type="button" md-no-ink ng-click="$ctrl.goBackOrToState('configurationsList')">
+            <translate>Cancel</translate>
+        </md-button>
+
+        <fl-form-errors ng-model="$ctrl.backendErrors" form="$ctrl.openstackSettingsForm"></fl-form-errors>
+    </form>
+</md-content>

@@ -1,0 +1,41 @@
+<md-dialog>
+    <fl-back-drop ng-if="$ctrl.submitPending"></fl-back-drop>
+    <h2 ng-if="$ctrl.isEdit" class="md-title ng-binding" translate>Edit {{::$ctrl.domain.name}}</h2>
+    <h2 ng-if="!$ctrl.isEdit" class="md-title ng-binding" translate>Add domain</h2>
+    <fl-form-errors ng-model="$ctrl.backendErrors" form="$ctrl.editDomain"></fl-form-errors>
+    <form ng-submit="$ctrl.saveDomain()" name="$ctrl.editDomain" novalidate fl-messages="$ctrl.backendErrors">
+        <md-dialog-content>
+            <md-content class="md-dialog-content">
+              <md-input-container class="fl-required-group md-block" flex>
+                  <label for="name" translate>Name</label>
+                  <input id="name" maxlength="64" name="name" type="text"
+                         ng-model="$ctrl.domain.name" required>
+                  <fl-validate for="name"></fl-validate>
+              </md-input-container>
+              <md-input-container>
+                  <label for="domain_status" translate>Status</label>
+                  <md-select ng-model="$ctrl.domain.status" id="domain_status">
+                    <md-option ng-repeat="status in $ctrl.statuses track by $index"
+                               ng-value="status.status">
+                      {{ status.status_display }}
+                    </md-option>
+                  </md-select>
+                  <fl-validate for="domain_status"></fl-validate>
+              </md-input-container>
+              <md-input-container class="fl-required-group md-block" flex>
+                  <label for="registration_period" translate>Registration period</label>
+                  <input id="registration_period" maxlength="64" name="registration_period" type="number"
+                         ng-model="$ctrl.domain.registration_period" required min="1" max="10">
+                  <fl-validate for="registration_period"></fl-validate>
+              </md-input-container>
+            </md-content>
+        </md-dialog-content>
+        <md-dialog-actions>
+            <md-button class="md-primary" ng-click="$ctrl.close()">
+                <translate>Cancel</translate>
+            </md-button>
+            <md-button ng-if="!$ctrl.isEdit" class="md-primary" type="submit"><translate>Add domain</translate></md-button>
+            <md-button ng-if="$ctrl.isEdit" class="md-primary" type="submit"><translate>Save domain</translate></md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

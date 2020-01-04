@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Refund</title>
+</head>
+<body>
+<form action="{% url 'fleiostaff:billing:gateway-action' gateway='stripe' action_name='refund' %}" method="post">
+    {% csrf_token %}
+    {{ refund_form }}
+    <input type="submit" value="Proceed">
+</form>
+</body>
+</html>

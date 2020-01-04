@@ -1,0 +1,41 @@
+<ng-form name="openstack_product_settings" novalidate fl-messages="$ctrl.parentForm.$backendErrors.openstack_product_settings[0]">
+    <div class="fl-margin-top" translate>
+        Openstack module configuration
+    </div>
+    <div layout="row">
+        <div layout-gt-xs="column" class="fl-margin-top" flex="45">
+            <md-checkbox ng-model="$ctrl.data.openstack_product_settings.run_get_me_a_network_on_auto_setup"
+                         ng-change="$ctrl.RunGetMeANetworkChanged()"
+                         aria-label="Create private network and router on auto setup" class="fl-margin-top md-primary">
+                <span translate>Run get me a network on auto setup</span>
+            </md-checkbox>
+            <md-input-container>
+                <label translate>Run in regions</label>
+                <md-select ng-model="$ctrl.data.openstack_product_settings.network_auto_allocated_topology_regions"
+                           ng-disabled="!$ctrl.data.openstack_product_settings.run_get_me_a_network_on_auto_setup"
+                           ng-required="$ctrl.data.openstack_product_settings.run_get_me_a_network_on_auto_setup"
+                           multiple
+                           name="network_auto_allocated_topology_region">
+                    <md-option ng-repeat="region in $ctrl.regions track by $index"
+                             ng-value="region.id">
+                    {{ region.id }}
+                    </md-option>
+                </md-select>
+                <fl-validate for="network_auto_allocated_topology_region"></fl-validate>
+            </md-input-container>
+        </div>
+        <div class="fl-help-text fl-margin-top">
+            <p translate><span class="bold">Run get me a network on auto setup</span><br>This will use the OpenStack
+                network auto allocated topology feature. You can find more information here: <a class="md-primary"
+                       href="http://docs.openstack.org/newton/networking-guide/config-auto-allocation.html">
+                    http://docs.openstack.org/newton/networking-guide/config-auto-allocation.html</a>.
+                You can also setup resources needed for the feature for each region on the <a
+                        class="md-primary" ui-sref="networkAutoCreateConfigure">configure get me a network</a> page.
+            </p>
+            <p translate><span class="bold">Run in regions</span><br>Select the regions for network auto
+                allocated topology feature. In case you don't find the region you want here, make sure you run sync.
+                Also make sure you set up auto allocated topology feature for each region as stated above.
+            </p>
+        </div>
+    </div>
+</ng-form>

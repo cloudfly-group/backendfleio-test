@@ -1,0 +1,24 @@
+<ng-form name="cpanelserver_product_settings" novalidate fl-messages="$ctrl.parentForm.$backendErrors.cpanelserver_product_settings[0]">
+    <div class="fl-margin-top" translate>
+        cPanel module configuration
+    </div>
+
+    <div layout-gt-xs="column">
+        <md-input-container class="md-block">
+            <label translate>Server group</label>
+            <md-select ng-model="$ctrl.data.cpanelserver_product_settings.server_group" name="group">
+                <md-option ng-repeat="group in $ctrl.groups.objects track by group.id"
+                           ng-value="group.id">
+                    {{::group.name }}
+                </md-option>
+            </md-select>
+        </md-input-container>
+        <md-input-container flex class="md-block">
+            <input name="default_plan"
+                   type="text"
+                   ng-model="$ctrl.data.cpanelserver_product_settings.default_plan" required
+                   placeholder="{{ 'cPanel plan'|translate }}">
+            <fl-validate for="default_plan"></fl-validate>
+        </md-input-container>
+    </div>
+</ng-form>

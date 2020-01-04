@@ -1,0 +1,108 @@
+<div layout="row" layout-align="center start">
+    <md-card class="fl-card-fixed-md fl-margin-bottom">
+        <md-card-title class="object-detail-title">
+            <div layout="row" layout-align="space-between center" flex>
+                <div layout="column" class="toolbar-title-container min-width-zero">
+                    <div class="toolbar-title-lg" translate>Open a new ticket</div>
+                </div>
+                <span flex></span>
+            </div>
+        </md-card-title>
+        <md-card-content class="fl-no-padding">
+            <md-content class="min-height-content fl-content">
+                <fl-back-drop ng-if="$ctrl.submitPending"><div ng-if="$ctrl.uploadInProgress" class="fl-upload-in-progress-msg" translate>Attachment upload in progress...</div>
+                </fl-back-drop>
+                <fl-form-errors ng-model="$ctrl.backendErrors" form="$ctrl.editTicket"></fl-form-errors>
+                <form ng-submit="$ctrl.saveTicket()" name="$ctrl.editTicket" novalidate fl-messages="$ctrl.backendErrors">
+                    <md-input-container class="fl-required-group md-block fl-no-margin-bottom" flex>
+                        <label for="ticket_title" translate>Title</label>
+                        <input fl-auto-focus="true" id="ticket_title" md-auto-focus maxlength="1024" name="title" type="text"
+                               ng-model="$ctrl.ticket.title" required>
+                        <fl-validate for="title"></fl-validate>
+                    </md-input-container>
+                    <md-autocomplete flex="100"
+                                     class="fl-margin-top"
+                                     md-search-text="$ctrl.departmentSearchText"
+                                     md-selected-item="$ctrl.selectedDepartment"
+                                     md-items="item in $ctrl.searchDepartment($ctrl.departmentSearchText)"
+                                     md-item-text="item.name"
+                                     md-selected-item-change="$ctrl.departmentChanged()"
+                                     md-min-length="0"
+                                     placeholder="{{ 'Select department' | translate }}">
+                        <md-item-template>
+                            <div layout="row" layout-align="start center">
+                                <span>{{item.name}}</span>
+                                <span flex></span>
+                                <img class="gravatar-rounded" gravatar-src="item.email" gravatar-default="identicon">
+                            </div>
+                        </md-item-template>
+                        <md-not-found>
+                            <translate>No departments matching "{{$ctrl.departmentSearchText}}" found</translate>
+                        </md-not-found>
+                    </md-autocomplete>
+                    <input type="hidden" name="department" ng-required ng-model="$ctrl.ticket.department"/>
+                    <fl-validate for="department" backend-name="department"></fl-validate>
+                    <span ng-if="$ctrl.noValidDepartment" class="fl-message" translate><br>No valid department was selected</span>
+                    <md-input-container class="md-block fl-margin-top fl-no-margin-bottom" flex>
+                        <label for="cc_recipients" translate>CC recipients (comma separated)</label>
+                        <input id="cc_recipients" maxlength="1024" name="cc_recipients" type="text"
+                               ng-model="$ctrl.ticket.cc_recipients">
+                        <fl-validate for="cc_recipients"></fl-validate>
+                    </md-input-container>
+                    <md-autocomplete flex="100"
+                                     class="fl-margin-bottom fl-margin-top"
+                                     md-search-text="$ctrl.clientSearchText"
+                                     md-selected-item="$ctrl.selectedClient"
+                                     md-selected-item-change="$ctrl.selectedClientChange()"
+                                     md-items="item in $ctrl.searchClient($ctrl.clientSearchText)"
+                                     md-item-text="item.name"
+                                     md-min-length="0"
+                                     placeholder="{{ 'Select client' | translate }}">
+                        <md-item-template>
+                            <div layout="row" layout-align="start center">
+                                <span>{{item.name}}</span>
+                                <span flex></span>
+                                <img class="gravatar-rounded" gravatar-src="item.email" gravatar-default="identicon">
+                            </div>
+                        </md-item-template>
+                        <md-not-found>
+                            <translate>No clients matching "{{$ctrl.clientSearchText}}" found</translate>
+                        </md-not-found>
+                    </md-autocomplete>
+
+                    <md-input-container class="md-block">
+                        <label translate>Related service</label>
+                        <md-select ng-model="$ctrl.ticket.service" name="service">
+                            <md-option ng-value="service.id" ng-repeat="service in $ctrl.createOptions.services">
+                                {{service.id ? 'Service: ' + service.display_name + ' (with id: ' + service.id + ')' : service.display_name}}
+                            </md-option>
+                        </md-select>
+                        <fl-validate for="service"></fl-validate>
+                    </md-input-container>
+
+                    <label class="fl-subheader-md fl-margin-bottom" translate>Description</label>
+                    <textarea ui-tinymce="$ctrl.tinymceOptions" ng-model="$ctrl.ticket.description"></textarea>
+
+                    <div>
+                        <label class="fl-subheader-md fl-margin-top fl-margin-bottom" translate>Add attachments</label>
+                        <fl-upload max-file-size="$ctrl.maxFileSizeReadable" class="fl-margin-top"
+                                   file-input-id="ticket_attachment"
+                                   upload-button-id="ticket_create_upload_button"
+                                   text-input-id="ticket_create_text_input"
+                                   allow-multiple-files="true">
+                        </fl-upload>
+                    </div>
+
+                    <md-card-actions>
+                        <div class="fl-margin-top-small">
+                            <md-button class="md-primary md-raised" type="submit"><translate>Open ticket</translate></md-button>
+                            <md-button class="fl-margin-left-small" type="button" md-no-ink ui-sref="pluginsTicketsTickets()">
+                                <translate>Cancel</translate>
+                            </md-button>
+                        </div>
+                    </md-card-actions>
+                </form>
+            </md-content>
+        </md-card-content>
+    </md-card>
+</div>

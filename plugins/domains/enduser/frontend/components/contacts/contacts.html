@@ -1,0 +1,105 @@
+<fl-subheader ng-model="$ctrl.contacts" objects-name="'Contact' | translate"
+              objects-name-plural="'Contacts'" cardview="cardview"></fl-subheader>
+<fl-back-drop ng-if="$ctrl.contacts.loading" class="list-backdrop"></fl-back-drop>
+<div class="alert-danger" ng-show="action_error"> {{ action_error }}</div>
+<div ng-if="cardview === true" class="stack stack-card" layout-align="center center" layout="column">
+  <div layout="row" class="cardlist-container" id="id_contact_container">
+    <fl-infinite-scroll ng-model="$ctrl.contacts" threshold="150" container-name="'id_contact_container'">
+      <div ng-repeat="contact in $ctrl.contacts.objects track by contact.id">
+        <md-card class="fl-object-card">
+          <md-card-title layout="row" layout-wrap>
+            <md-card-title-text flex="80">
+              <div title="{{ contact.name }}" class="fl-ellipsis-text md-headline">
+                {{ contact.name }}
+              </div>
+              <div class="fl-ellipsis-text md-subhead">{{ contact.company }}</div>
+            </md-card-title-text>
+            <md-card-title-media flex>
+              <div class="fl-media-xs card-media">
+                <img aria-label="{{::'Contact image'|translate }}" class="gravatar-lg"
+                     gravatar-src="contact.email" gravatar-default="identicon">
+              </div>
+            </md-card-title-media>
+          </md-card-title>
+          <md-card-content class="fl-object-card-content">
+            <p class="fl-ellipsis-text">
+              <translate>Email</translate>:&nbsp;{{ contact.email }}<br>
+            </p>
+            <p class="fl-ellipsis-text">
+              <translate>Address</translate>:&nbsp;{{ contact.address1 }}<br>
+            </p>
+          </md-card-content>
+          <span flex></span>
+          <div class="card-actions">
+            <plugins-domains-contacts-actions create-options="$ctrl.createOptions"
+                                              on-contact-changed="$ctrl.refreshContacts()"
+                                              on-contact-deleted="$ctrl.refreshContacts()"
+                                              contact="contact">
+            </plugins-domains-contacts-actions>
+          </div>
+        </md-card>
+      </div>
+    </fl-infinite-scroll>
+  </div>
+  <md-button ng-if="$ctrl.contacts.filters.page_size < $ctrl.contacts.totalItems" ng-click="$ctrl.contacts.loadMore();"
+             flex>
+    <translate>Load more</translate>
+  </md-button>
+</div>
+<div layout-wrap layout="row" ng-if="cardview === false" class="stack stack-list" layout-align="center center"
+     id="id_contact_container">
+  <table class="fl-table fl-card-fixed fl-list-view-table fl-table-shadow" ng-if="$ctrl.contacts.objects.length">
+    <tbody>
+    <fl-infinite-scroll ng-model="$ctrl.contacts" threshold="150" container-name="'id_contact_container'">
+      <tr ng-repeat="contact in $ctrl.contacts.objects track by contact.id" class="v-middle object-list-elem">
+        <td class="fl-small-image" fl-sref="contact({id: contact.id})">
+          <img aria-label="{{::'Contact image'|translate }}" class="gravatar-rounded"
+               gravatar-src="contact.email" gravatar-default="identicon">
+        </td>
+        <td fl-sref="contact({id: contact.id})">
+          <span>{{ contact.id }}</span>
+        </td>
+        <td class="fl-flex-double" fl-sref="contact({id: contact.id})">
+          <div class="fl-ellipsis-text">{{ contact.name }}</div>
+        </td>
+        <td hide-xs hide-sm fl-sref="contact({id: contact.id})">
+          <div class="fl-ellipsis-text text-middle">{{ contact.company }}</div>
+        </td>
+        <td hide-xs hide-sm class="fl-flex-double" fl-sref="contact({id: contact.id})">
+        </td>
+        <td class="fl-flex-150 no-overflow-hidden">
+          <div class="list-actions">
+            <div layout="row" layout-align="end center">
+            <plugins-domains-contacts-actions create-options="$ctrl.createOptions"
+                                              on-contact-changed="$ctrl.refreshContacts()"
+                                              on-contact-deleted="$ctrl.refreshContacts()"
+                                              contact="contact">
+            </plugins-domains-contacts-actions>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </fl-infinite-scroll>
+    </tbody>
+  </table>
+  <div class="fl-add-button-separator"></div>
+</div>
+<div layout="row" layout-align="center center">
+  <md-button ng-click="$ctrl.contacts.loadMore()"
+             ng-if="cardview === false && $ctrl.contacts.filters.page_size < $ctrl.contacts.totalItems">
+    <translate>Load more</translate>
+  </md-button>
+</div>
+
+<div class="fl-fab" layout="row" ng-cloak="">
+  <md-fab-speed-dial fl-tooltip="{{ 'Add contact' | translate }}"
+                     fl-direction="left" md-direction="up" ng-class="'md-scale'"
+                     ng-mouseover="$ctrl.hoverOn = true"
+                     ng-mouseleave="$ctrl.hoverOn = false">
+    <md-fab-trigger>
+        <plugins-domains-contacts-actions on-contact-added="$ctrl.refreshContacts()"
+                                          create-options="$ctrl.createOptions" add-button="true">
+        </plugins-domains-contacts-actions>
+    </md-fab-trigger>
+  </md-fab-speed-dial>
+</div>

@@ -1,0 +1,13 @@
+<md-button fl-tooltip="{{ 'Edit' | translate }}" fl-direction="down"
+           ng-click="$ctrl.editRegistrar($event, true)" class="md-icon-button" ng-if="!$ctrl.addButton">
+    <md-icon class="fl-icons fl-icon-grey">edit</md-icon>
+</md-button>
+<md-button fl-tooltip="{{ 'Delete' | translate }}" fl-direction="down"
+           ng-click="$ctrl.deleteRegistrar()" class="md-icon-button" ng-if="!$ctrl.addButton">
+    <md-icon class="fl-icons fl-icon-grey">delete</md-icon>
+</md-button>
+<md-button aria-label="{{'Add registrar'|translate}}" class="md-fab md-accent fl-fab-rotate"
+           ng-click="$ctrl.editRegistrar($event, false)"
+           id="registrar_button_add" ng-if="$ctrl.addButton">
+    <md-icon class="material-icons">add</md-icon>
+</md-button>

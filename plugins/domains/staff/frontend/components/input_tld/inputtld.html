@@ -1,0 +1,21 @@
+<md-autocomplete flex
+    md-input-name="tld"
+    md-input-minlength="0"
+    md-input-maxlength="64"
+    md-selected-item-change="$ctrl.selectedTLDChanged(tld)"
+    md-selected-item="$ctrl.tld"
+    md-search-text="$ctrl.tldSearchText"
+    md-select-on-match="true"
+    md-match-case-insensitive="true"
+    md-items="tld in $ctrl.searchTLD($ctrl.tldSearchText)"
+    md-item-text="tld.name"
+    md-min-length="0"
+    md-require-match
+    md-floating-label="{{'TLD'|translate}}">
+    <md-item-template>
+        <span md-highlight-text="$ctrl.tldSearchText">{{tld.name }}</span>
+    </md-item-template>
+    <md-not-found>
+        <translate>A valid TLD is required</translate>
+    </md-not-found>
+</md-autocomplete>

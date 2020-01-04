@@ -1,0 +1,112 @@
+<div layout="row" layout-align="center start">
+  <md-card class="fl-card-fixed fl-margin-bottom">
+    <hr class="status-line-horizontal fl-light-green" ng-if="$ctrl.todo.status == 'in progress'">
+    <hr class="status-line-horizontal fl-yellow" ng-if="$ctrl.todo.status == 'open'">
+    <hr class="status-line-horizontal fl-gray" ng-if="$ctrl.todo.status == 'done'">
+    <md-card-title class="object-detail-title">
+      <md-card-title-text>
+        <div layout="row" layout-align="space-between center" flex>
+          <div layout="column" class="toolbar-title-container">
+            <span class="toolbar-title-lg">{{ $ctrl.todo.title }}</span>
+            <span class="toolbar-title-sm">
+              {{ $ctrl.todo.status_display }}&nbsp;-&nbsp;
+              <span ng-if="$ctrl.todo.assigned_to">
+                <translate>assigned to</translate>&nbsp;
+                <a class="md-primary" fl-sref="user({id:$ctrl.todo.assigned_to})">
+                  {{$ctrl.todo.assigned_to_display}}
+                </a>
+              </span>
+              <span ng-if="!$ctrl.todo.assigned_to">
+                <translate>unassigned</translate>
+              </span>
+            </span>
+          </div>
+          <span flex></span>
+          <div layout="row" layout-align="start center">
+            <plugins-todo-todo-actions on-todo-deleted="$ctrl.onTODODeleted()" on-todo-changed="$ctrl.refreshTODO()"
+                                       todo="$ctrl.todo" create-options="$ctrl.createOptions">
+            </plugins-todo-todo-actions>
+          </div>
+        </div>
+      </md-card-title-text>
+    </md-card-title>
+    <md-divider></md-divider>
+    <md-card-content class="min-height-content fl-content">
+      <div layout="row" layout-align="space-between start">
+        <div class="detail-block fl-row">
+          <div class="fl-col">
+            <p>
+              <translate>Description</translate>:
+            </p>
+            <pre>{{$ctrl.todo.description}}</pre>
+            <p class="fl-detail>">
+              <translate>Created by</translate>&nbsp;{{$ctrl.todo.created_by_display}}&nbsp;
+              <translate>on</translate>&nbsp;{{$ctrl.todo.created_at | date:'medium'}}
+            </p>
+            <hr/>
+            <p>
+              <translate>Activity</translate>:
+            </p>
+            <div ng-repeat="comment in $ctrl.todo.comments">
+              <div ng-if="comment.comment_text">
+                <p class="fl-detail">
+                  <a class="md-primary" fl-sref="user({id:comment.created_by})">{{comment.created_by_display}}</a>
+                  &nbsp;<translate>commented on</translate>&nbsp;{{comment.created_at | date:'medium'}}
+                </p>
+                <p ng-if="comment.comment_text" class="fl-margin-left">
+                  {{comment.comment_text}}
+                </p>
+              </div>
+              <div ng-if="comment.new_assignee">
+                <p class="fl-detail">
+                  <a class="md-primary" fl-sref="user({id:comment.created_by})">{{comment.created_by_display}}</a>
+                  &nbsp;<translate>assigned this TODO to</translate>&nbsp;
+                  <a class="md-primary" fl-sref="user({id:comment.new_assignee})">{{comment.new_assignee_display}}</a>
+                  &nbsp;<translate>on</translate>&nbsp;
+                  {{comment.created_at | date:'medium'}}
+                </p>
+              </div>
+              <div ng-if="comment.new_status">
+                <p class="fl-detail">
+                  <a class="md-primary" fl-sref="user({id:comment.created_by})">{{comment.created_by_display}}</a>
+                  &nbsp;<translate>changed status to</translate>&nbsp;
+                  {{comment.new_status_display}}&nbsp;<translate>on</translate>&nbsp;
+                  {{comment.created_at | date:'medium'}}
+                </p>
+              </div>
+              <div ng-if="comment.description_changed">
+                <p class="fl-detail">
+                  <a class="md-primary" fl-sref="user({id:comment.created_by})">{{comment.created_by_display}}</a>
+                  &nbsp;<translate>changed description on</translate>&nbsp;
+                  {{comment.created_at | date:'medium'}}
+                </p>
+              </div>
+              <div ng-if="comment.title_changed">
+                <p class="fl-detail">
+                  <a class="md-primary" fl-sref="user({id:comment.created_by})">{{comment.created_by_display}}</a>
+                  &nbsp;<translate>changed title on</translate>&nbsp;
+                  {{comment.created_at | date:'medium'}}
+                </p>
+              </div>
+            </div>
+            <div flex="100" flex-sm="100" flex-xs="100">
+              <md-input-container class="md-block fl-required-group" flex>
+                <textarea id="comment_text" ng-model="$ctrl.commentText"
+                          rows="5" aria-label="{{'Add new comment' | translate}}"></textarea>
+                <label for="comment_text" translate>Add new comment</label>
+              </md-input-container>
+            </div>
+            <md-button type="button" ng-click="$ctrl.comment(false)" ng-disabled="$ctrl.todo.status==='done' || $ctrl.commentText.length < 1"
+                       class="fl-margin-top md-raised md-primary">
+              <translate>Comment</translate>
+            </md-button>
+            <md-button type="button" ng-click="$ctrl.comment(true)" ng-disabled="$ctrl.todo.status==='done'"
+                       class="fl-margin-top ">
+              <translate>Comment & Close</translate>
+            </md-button>
+          </div>
+        </div>
+      </div>
+    </md-card-content>
+  </md-card>
+</div>

@@ -1,0 +1,23 @@
+<fl-back-drop ng-if="$ctrl.loadingSettings"></fl-back-drop>
+<md-content class="min-height-content fl-content">
+    <form ng-submit="$ctrl.saveSettings()" name="$ctrl.settingsForm" novalidate
+          fl-messages="$ctrl.backendErrors">
+
+      <div class="fl-subheader fl-margin-bottom fl-margin-top" translate>CPanel plugin configurations</div>
+      <div layout="row">
+        <div layout="column" flex="33">
+        </div>
+        <div class="fl-help-text">
+        </div>
+      </div>
+
+      <md-button ng-disabled="$ctrl.submitPending" type="submit" class="md-primary md-raised">
+        <translate>Save</translate>
+      </md-button>
+      <md-button type="button" md-no-ink ng-click="$ctrl.goBackOrToState('configurationsList')">
+        <translate>Cancel</translate>
+      </md-button>
+
+      <fl-form-errors ng-model="$ctrl.backendErrors" form="$ctrl.settingsForm"></fl-form-errors>
+    </form>
+</md-content>

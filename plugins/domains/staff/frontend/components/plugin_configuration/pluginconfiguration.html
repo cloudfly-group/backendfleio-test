@@ -1,0 +1,122 @@
+<fl-back-drop ng-if="$ctrl.loadingSettings"></fl-back-drop>
+<md-content class="min-height-content fl-content">
+    <form ng-submit="$ctrl.saveSettings()" name="$ctrl.domainsSettingsForm" novalidate
+          fl-messages="$ctrl.backendErrors">
+
+        <!-- Domain options -->
+        <div class="fl-subheader fl-margin-bottom fl-margin-top" translate>Domain options</div>
+        <div layout="row">
+          <div flex="33">
+            <md-input-container class="fl-required-group md-block fl-no-margin-bottom">
+                <md-checkbox md-no-ink name="allow_domain_registration"
+                             ng-model="$ctrl.domainsSettings.allow_domain_registration"
+                             class="md-primary">{{'Allow domain registration' | translate}}
+                </md-checkbox>
+            </md-input-container>
+            <md-input-container class="fl-required-group md-block fl-no-margin-bottom">
+                <md-checkbox md-no-ink name="allow_domain_transfer"
+                             ng-model="$ctrl.domainsSettings.allow_domain_transfer"
+                             class="md-primary">{{'Allow domain transfer' | translate}}
+                </md-checkbox>
+            </md-input-container>
+          </div>
+          <div class="fl-help-text fl-no-padding-top">
+            <h3 translate>Allow domain registration</h3>
+            <p translate>
+                If this is checked new internet domain registration is allowed for the clients with this configuration.
+            </p>
+            <h3 translate>Allow domain transfer</h3>
+            <p translate>
+                If this is checked transfer of internet domains is allowed for the clients with this configuration.
+            </p>
+          </div>
+        </div>
+
+        <!-- Default TLD settings -->
+        <div class="fl-subheader fl-margin-bottom fl-margin-top" translate>Default TLD</div>
+        <div layout="row">
+          <div flex="33">
+            <md-input-container class="fl-required-group md-block fl-no-margin-bottom">
+                <md-checkbox md-no-ink name="enable_default_tld"
+                             ng-model="$ctrl.domainsSettings.enable_default_tld"
+                             class="md-primary">{{'Enable default TLD' | translate}}
+                </md-checkbox>
+            </md-input-container>
+            <md-input-container class="fl-required-group md-block fl-no-margin-bottom">
+              <input name="default_tld"
+                     type="text"
+                     ng-disabled="!$ctrl.domainsSettings.enable_default_tld"
+                     ng-model="$ctrl.domainsSettings.default_tld"
+                     placeholder="{{'Default TLD'|translate}}">
+              <fl-validate for="default_tld"></fl-validate>
+            </md-input-container>
+          </div>
+          <div class="fl-help-text fl-no-padding-top">
+            <h3 translate>Enable default TLD</h3>
+            <p translate>
+                Default TLD will be used when client checks if a domain is available without specifying a TLD.
+            </p>
+          </div>
+        </div>
+
+        <!-- Default nameservers settings -->
+        <div class="fl-subheader fl-margin-bottom fl-margin-top" translate>Default nameservers</div>
+        <div layout="row">
+          <div flex="33">
+            <md-input-container class="fl-required-group md-block fl-no-margin-bottom">
+                <md-checkbox md-no-ink name="enable_default_nameservers"
+                             ng-model="$ctrl.domainsSettings.enable_default_nameservers"
+                             class="md-primary">{{'Enable default nameservers' | translate}}
+                </md-checkbox>
+            </md-input-container>
+            <md-input-container class="fl-required-group md-block fl-no-margin-bottom">
+              <input name="default_nameserver1"
+                     type="text"
+                     ng-disabled="!$ctrl.domainsSettings.enable_default_nameservers"
+                     ng-model="$ctrl.domainsSettings.default_nameserver1"
+                     placeholder="{{'Default nameserver 1'|translate}}">
+              <fl-validate for="default_nameserver1"></fl-validate>
+            </md-input-container>
+            <md-input-container class="fl-required-group md-block fl-no-margin-bottom">
+              <input name="default_nameserver2"
+                     type="text"
+                     ng-disabled="!$ctrl.domainsSettings.enable_default_nameservers"
+                     ng-model="$ctrl.domainsSettings.default_nameserver2"
+                     placeholder="{{'Default nameserver 2'|translate}}">
+              <fl-validate for="default_nameserver2"></fl-validate>
+            </md-input-container>
+            <md-input-container class="fl-required-group md-block fl-no-margin-bottom">
+              <input name="default_nameserver3"
+                     type="text"
+                     ng-disabled="!$ctrl.domainsSettings.enable_default_nameservers"
+                     ng-model="$ctrl.domainsSettings.default_nameserver3"
+                     placeholder="{{'Default nameserver 3'|translate}}">
+              <fl-validate for="default_nameserver3"></fl-validate>
+            </md-input-container>
+            <md-input-container class="fl-required-group md-block fl-no-margin-bottom">
+              <input name="default_nameserver4"
+                     type="text"
+                     ng-disabled="!$ctrl.domainsSettings.enable_default_nameservers"
+                     ng-model="$ctrl.domainsSettings.default_nameserver4"
+                     placeholder="{{'Default nameserver 4'|translate}}">
+              <fl-validate for="default_nameserver4"></fl-validate>
+            </md-input-container>
+          </div>
+          <div class="fl-help-text fl-no-padding-top">
+            <h3 translate>Enable default nameservers</h3>
+            <p translate>
+                Default nameservers will be used when client orders a domain without specifying nameservers.
+            </p>
+          </div>
+        </div>
+
+        <md-button ng-disabled="$ctrl.submitPending" type="submit" class="md-primary md-raised">
+            <translate>Save</translate>
+        </md-button>
+        <md-button type="button" md-no-ink ng-click="$ctrl.goBackOrToState('configurationsList')">
+            <translate>Cancel</translate>
+        </md-button>
+
+        <fl-form-errors ng-model="$ctrl.backendErrors" form="$ctrl.settingsForm"></fl-form-errors>
+    </form>
+</md-content>

@@ -1,0 +1,47 @@
+<md-button fl-tooltip="{{ 'Edit' | translate }}" fl-direction="down"
+           ng-click="$ctrl.editTicket()" class="md-icon-button" ng-if="!$ctrl.addButton">
+    <md-icon class="fl-icons fl-icon-grey">edit</md-icon>
+</md-button>
+<div class="fl-float-right" ng-if="!$ctrl.addButton">
+    <md-menu>
+        <md-button fl-tooltip="{{'Quick actions' | translate}}" fl-direction="down" class="md-icon-button" ng-click="$mdMenu.open($event);">
+            <md-icon class="fl-icons fl-icon-grey">more</md-icon>
+        </md-button>
+        <md-menu-content class="fl-menu-content fl-max-height">
+            <md-menu-item ng-if="$ctrl.ticket.status!=='done'">
+                <md-button ng-click="$ctrl.closeTicket()">
+                    <md-icon class="material-icons fl-icon-grey">lock</md-icon>
+                    <translate>Close ticket</translate>
+                </md-button>
+            </md-menu-item>
+            <md-menu-item ng-if="$ctrl.ticket.status==='done'">
+                <md-button ng-click="$ctrl.reopenTicket()">
+                    <md-icon class="material-icons fl-icon-grey">lock_open</md-icon>
+                    <translate>Reopen ticket</translate>
+                </md-button>
+            </md-menu-item>
+            <md-menu-item>
+                <md-button ng-click="$ctrl.addLinking()">
+                    <md-icon class="material-icons fl-icon-grey">playlist_add</md-icon>
+                    <translate>Link a ticket</translate>
+                </md-button>
+            </md-menu-item>
+            <md-menu-item>
+                <md-button ng-click="$ctrl.deleteTicket()">
+                    <md-icon class="material-icons fl-icon-grey">delete</md-icon>
+                    <translate>Delete ticket</translate>
+                </md-button>
+            </md-menu-item>
+        </md-menu-content>
+    </md-menu>
+</div>
+<md-fab-speed-dial ng-if="$ctrl.addButton" fl-tooltip="{{ 'Open new ticket' | translate }}" fl-direction="left" md-direction="up" ng-class="'md-scale'" ng-mouseover="$ctrl.hoverOn = true"
+                       ng-mouseleave="$ctrl.hoverOn = false">
+    <md-fab-trigger>
+        <md-button aria-label="{{'Open new ticket' | translate}}" class="md-fab md-accent fl-fab-rotate"
+                   ui-sref="pluginsTicketsTicketsCreate()"
+                   id="ticket_button_add">
+            <md-icon class="material-icons">add</md-icon>
+        </md-button>
+     </md-fab-trigger>
+</md-fab-speed-dial>

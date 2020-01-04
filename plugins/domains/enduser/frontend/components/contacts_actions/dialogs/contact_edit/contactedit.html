@@ -1,0 +1,118 @@
+<md-dialog class="fl-dialog fl-dialog-large">
+  <fl-back-drop ng-if="$ctrl.submitPending"></fl-back-drop>
+  <h2 ng-if="$ctrl.isEdit" class="md-title ng-binding" translate>Edit {{::$ctrl.contact.first_name}}</h2>
+  <h2 ng-if="!$ctrl.isEdit" class="md-title ng-binding" translate>Add Contact</h2>
+  <fl-form-errors ng-model="$ctrl.backendErrors" form="$ctrl.editContactForm"></fl-form-errors>
+  <form ng-submit="$ctrl.saveContact()" name="$ctrl.editContactForm" novalidate fl-messages="$ctrl.backendErrors">
+    <md-dialog-content>
+      <md-content class="md-dialog-content">
+        <md-input-container class="fl-required-group md-block">
+          <input name="first_name"
+                 fl-auto-focus="true"
+                 ng-model="$ctrl.contact.first_name" required
+                 placeholder="{{::'First Name'|translate}}">
+          <fl-validate for="first_name"></fl-validate>
+        </md-input-container>
+        <md-input-container class="fl-required-group md-block">
+          <input name="last_name"
+                 ng-model="$ctrl.contact.last_name" required
+                 placeholder="{{::'Last Name'|translate}}">
+          <fl-validate for="last_name"></fl-validate>
+        </md-input-container>
+        <md-input-container class="fl-required-group md-block">
+          <input name="email"
+                 type="email"
+                 ng-model="$ctrl.contact.email" required
+                 placeholder="{{::'Account e-mail address'|translate}}">
+          <fl-validate for="email"></fl-validate>
+        </md-input-container>
+
+        <md-autocomplete flex required
+                         md-input-name="country"
+                         md-input-minlength="0"
+                         md-input-maxlength="64"
+                         md-selected-item-change="$ctrl.selectedCountryChange(item)"
+                         md-selected-item="$ctrl.selectedCountry"
+                         md-search-text="$ctrl.searchText"
+                         md-select-on-match="true"
+                         md-match-case-insensitive="true"
+                         md-items="item in $ctrl.querySearch($ctrl.searchText)"
+                         md-item-text="item.label"
+                         md-min-length="0"
+                         md-require-match
+                         placeholder="{{ 'Country' | translate}}">
+          <md-item-template>
+            <span md-highlight-text="$ctrl.searchText">{{item.label}}</span>
+          </md-item-template>
+          <md-not-found>
+            <translate>A valid country is required</translate>
+          </md-not-found>
+          <fl-validate for="country"></fl-validate>
+        </md-autocomplete>
+
+        <md-input-container class="md-block">
+          <input name="company"
+                 ng-model="$ctrl.contact.company"
+                 placeholder="{{::'Company'|translate}}">
+          <fl-validate for="company"></fl-validate>
+        </md-input-container>
+
+        <md-input-container class="md-block">
+          <input name="vat_id"
+                 ng-model="$ctrl.contact.vat_id"
+                 placeholder="{{::'VAT ID'|translate}}">
+          <fl-validate for="vat_id"></fl-validate>
+        </md-input-container>
+        <md-input-container class="fl-required-group md-block">
+          <input name="address1"
+                 ng-model="$ctrl.contact.address1" required
+                 placeholder="{{::'Address line 1'|translate}}">
+          <fl-validate for="address1"></fl-validate>
+        </md-input-container>
+        <md-input-container class="md-block">
+          <input name="address2"
+                 ng-model="$ctrl.contact.address2"
+                 placeholder="{{::'Address line 2'|translate}}">
+          <fl-validate for="address2"></fl-validate>
+        </md-input-container>
+        <div layout-gt-sm="row">
+          <md-input-container class="fl-required-group md-block" flex-gt-sm>
+            <input name="state"
+                   ng-model="$ctrl.contact.state" required
+                   placeholder="{{::'Country / state'|translate}}">
+            <fl-validate for="state"></fl-validate>
+          </md-input-container>
+          <md-input-container class="fl-required-group md-block" flex-gt-sm>
+            <input name="city"
+                   ng-model="$ctrl.contact.city" required
+                   placeholder="{{::'City'|translate}}">
+            <fl-validate for="city"></fl-validate>
+          </md-input-container>
+          <md-input-container class="fl-required-group md-block" flex-gt-sm>
+            <input name="zip_code"
+                   ng-model="$ctrl.contact.zip_code" required
+                   placeholder="{{::'Zip code'|translate}}">
+            <fl-validate for="zip_code"></fl-validate>
+          </md-input-container>
+        </div>
+        <md-input-container class="fl-required-group md-block">
+          <input name="phone"
+                 ng-model="$ctrl.contact.phone" required
+                 placeholder="{{::'Phone'|translate}}">
+          <fl-validate for="phone"></fl-validate>
+        </md-input-container>
+        <h3>Custom fields</h3>
+        <fl-custom-fields form-model="$ctrl.contact" custom-fields-definition="$ctrl.customFieldsDefinition"
+                          expand-category="$ctrl.tldName">
+        </fl-custom-fields>
+      </md-content>
+    </md-dialog-content>
+    <md-dialog-actions>
+      <md-button class="md-primary" ng-click="$ctrl.close()">
+        <translate>Cancel</translate>
+      </md-button>
+      <md-button ng-if="!$ctrl.isEdit" class="md-primary" type="submit"><translate>Add Contact</translate></md-button>
+      <md-button ng-if="$ctrl.isEdit" class="md-primary" type="submit"><translate>Save Contact</translate></md-button>
+    </md-dialog-actions>
+  </form>
+</md-dialog>

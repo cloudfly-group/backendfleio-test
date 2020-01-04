@@ -1,0 +1,47 @@
+<form ng-submit="$ctrl.transferDomain()" name="$ctrl.transferDomainForm">
+    <md-input-container class="fl-no-margin-bottom"
+                        flex="25" flex-xs="60" flex-sm="50">
+        <input type="text" ng-model="$ctrl.domain.name"
+               placeholder="{{'Domain name'|translate}}" size="50">
+        <fl-validate for="name"></fl-validate>
+    </md-input-container>
+    <md-input-container class="fl-no-margin-bottom"
+                        flex="25">
+        <md-button class="md-primary"
+                   ng-disabled="$ctrl.checkAvailabilityInProgress"
+                   fl-tooltip="{{ 'Check if domain is available' | translate }}"
+                   ng-click="$ctrl.checkIfDomainIsAvailable()">
+            <translate>Check</translate>
+        </md-button>
+    </md-input-container>
+    <div ng-if="!$ctrl.checkResults.available" class="fl-message">
+      <p>{{ $ctrl.checkResults.error }}</p>
+    </div>
+    <div ng-if="$ctrl.checkResults.available">
+      <p translate>Domain is available for transfer</p>
+      <md-input-container class="fl-no-margin-bottom"
+                          flex="25">
+        <input type="text" ng-model="$ctrl.domain.epp"
+               ng-if="$ctrl.checkResults.tld.requires_epp_for_transfer"
+               placeholder="{{'EPP code'|translate}}" size="50" required>
+        <fl-validate for="name"></fl-validate>
+      </md-input-container>
+      <br/>
+      <translate>Select period</translate>:
+      <md-input-container>
+        <md-select ng-model="$ctrl.domain.years" name="period">
+          <md-option ng-repeat="year_price in $ctrl.checkResults.prices.prices_per_years track by $index"
+                     ng-init="$ctrl.domain.years=0"
+                     ng-if="year_price"
+                     value="{{ $index }}">
+            {{ $ctrl.getYearsText($index) }} - {{ year_price }} {{ $ctrl.checkResults.prices.currency.code }}
+          </md-option>
+        </md-select>
+        <fl-validate for="period"></fl-validate>
+      </md-input-container>
+      <br/>
+      <md-button class="md-primary" type="submit">
+        <translate>Add to cart</translate>
+      </md-button>
+    </div>
+</form>

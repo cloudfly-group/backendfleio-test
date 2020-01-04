@@ -1,0 +1,47 @@
+<div layout="row">
+    <div layout="column" flex="33">
+
+        <!-- Always use form name="settings" since plugin-ui expects it
+        And always use $ctrl.data.field_name since data is 2-way bound
+
+        <fl-form-errors ng-model="$ctrl.backendErrors" form="settings"></fl-form-errors>
+        -->
+        <ng-form name="settings" fl-messages="$ctrl.backendErrors">
+
+            <md-input-container class="fl-required-group md-block">
+                <label translate>Url</label>
+                <input name="url"
+                       ng-model="$ctrl.data.url"
+                       maxlength="255"
+                       type="text"
+                       required>
+                <fl-validate for="url"></fl-validate>
+            </md-input-container>
+
+            <md-input-container class="fl-required-group md-block">
+                <label translate>Username</label>
+                <input name="username"
+                       ng-model="$ctrl.data.username"
+                       maxlength="255"
+                       type="text"
+                       required>
+                <fl-validate for="username"></fl-validate>
+            </md-input-container>
+
+            <md-input-container class="fl-required-group md-block">
+                <label translate>Password</label>
+                <input name="password"
+                       ng-model="$ctrl.data.password"
+                       maxlength="1024"
+                       type="text"
+                       required>
+                <fl-validate for="password"></fl-validate>
+            </md-input-container>
+
+       </ng-form>
+    </div>
+    <div class="fl-help-text">
+        <h3 translate>Hypanel server configuration</h3>
+        <p translate>Enter Hypanel server details.</p>
+    </div>
+</div>

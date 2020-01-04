@@ -1,0 +1,58 @@
+<ng-form name="todo_product_settings" novalidate fl-messages="$ctrl.parentForm.$backendErrors.todo_product_settings[0]">
+    <div class="fl-margin-top" translate>
+        TODO module configuration
+    </div>
+    <div flex="50">
+        <fl-autocomplete-user staff-only="true"
+                              user-id="$ctrl.data.todo_product_settings.todo_user_id">
+        </fl-autocomplete-user>
+    </div>
+    <div layout-gt-xs="row" flex="100">
+        <md-input-container flex class="md-block">
+            <md-checkbox name="add_todo_on_create" ng-checked
+                         ng-model="$ctrl.data.todo_product_settings.add_todo_on_create" class="md-primary"
+                         aria-label="{{ 'Add todo on create'|translate }}" flex="50">
+                <span translate>Add todo on create</span>
+            </md-checkbox>
+        </md-input-container>
+        <md-input-container flex class="md-block">
+            <md-checkbox name="add_todo_on_destroy" ng-checked
+                         ng-model="$ctrl.data.todo_product_settings.add_todo_on_destroy" class="md-primary"
+                         aria-label="{{ 'Add todo on destroy'|translate }}" flex="50">
+                <span translate>Add todo on destroy</span>
+            </md-checkbox>
+        </md-input-container>
+    </div>
+    <div layout-gt-xs="row" flex="100">
+        <md-input-container flex class="md-block">
+            <md-checkbox name="add_todo_on_suspend" ng-checked
+                         ng-model="$ctrl.data.todo_product_settings.add_todo_on_suspend" class="md-primary"
+                         aria-label="{{ 'Add todo on suspend'|translate }}" flex="50">
+                <span translate>Add todo on suspend</span>
+            </md-checkbox>
+        </md-input-container>
+        <md-input-container flex class="md-block">
+            <md-checkbox name="add_todo_on_resume" ng-checked
+                         ng-model="$ctrl.data.todo_product_settings.add_todo_on_resume" class="md-primary"
+                         aria-label="{{ 'Add todo on resume'|translate }}" flex="50">
+                <span translate>Add todo on resume</span>
+            </md-checkbox>
+        </md-input-container>
+    </div>
+    <div layout-gt-xs="row" flex="100">
+        <md-input-container flex class="md-block">
+            <md-checkbox name="add_todo_on_renew" ng-checked
+                         ng-model="$ctrl.data.todo_product_settings.add_todo_on_renew" class="md-primary"
+                         aria-label="{{ 'Add todo on renew'|translate }}" flex="50">
+                <span translate>Add todo on renew</span>
+            </md-checkbox>
+        </md-input-container>
+        <md-input-container flex class="md-block">
+            <md-checkbox name="add_todo_on_change_cycle" ng-checked
+                         ng-model="$ctrl.data.todo_product_settings.add_todo_on_change_cycle"
+                         class="md-primary" aria-label="{{ 'Add todo on change cycle'|translate }}" flex="50">
+                <span translate>Add todo on change cycle</span>
+            </md-checkbox>
+        </md-input-container>
+    </div>
+</ng-form>

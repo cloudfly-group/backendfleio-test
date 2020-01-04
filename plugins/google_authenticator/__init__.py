@@ -1,0 +1,1 @@
+default_app_config = 'plugins.google_authenticator.apps.GoogleAuthenticatorPluginConfig'

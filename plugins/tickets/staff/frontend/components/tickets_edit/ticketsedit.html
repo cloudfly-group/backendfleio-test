@@ -1,0 +1,129 @@
+<div layout="row" layout-align="center start">
+    <md-card class="fl-card-fixed-md fl-margin-bottom">
+        <md-card-title class="object-detail-title">
+            <div layout="row" layout-align="space-between center" flex>
+                <div layout="column" class="toolbar-title-container min-width-zero">
+                    <div class="toolbar-title-lg" translate>Edit ticket {{$ctrl.ticket.id}}</div>
+                </div>
+                <span flex></span>
+            </div>
+        </md-card-title>
+        <md-card-content class="fl-no-padding">
+            <md-content class="min-height-content fl-content">
+                <fl-back-drop ng-if="$ctrl.submitPending"><div ng-if="$ctrl.uploadInProgress" class="fl-upload-in-progress-msg" translate>Attachment upload in progress...</div>
+                </fl-back-drop>
+                <fl-form-errors ng-model="$ctrl.backendErrors" form="$ctrl.editTicket"></fl-form-errors>
+                <form ng-submit="$ctrl.saveTicket()" name="$ctrl.editTicket" novalidate fl-messages="$ctrl.backendErrors">
+                    <md-input-container class="fl-required-group md-block" flex>
+                        <label for="ticket_title" translate>Title</label>
+                        <input id="ticket_title" fl-auto-focus="true" maxlength="1024" name="title" type="text"
+                               ng-model="$ctrl.ticket.title" required>
+                        <fl-validate for="title"></fl-validate>
+                    </md-input-container>
+                    <md-input-container class="md-block">
+                        <label translate>Priority</label>
+                        <md-select ng-model="$ctrl.ticket.priority" name="priority" required>
+                            <md-option ng-value="priority" ng-repeat="priority in $ctrl.prioritiesKeys">
+                                {{$ctrl.createOptions.priorities[priority]}}
+                            </md-option>
+                        </md-select>
+                        <fl-validate for="priority"></fl-validate>
+                    </md-input-container>
+                    <md-autocomplete flex="100"
+                                     class="fl-margin-top"
+                                     md-search-text="$ctrl.departmentSearchText"
+                                     md-selected-item="$ctrl.selectedDepartment"
+                                     md-items="item in $ctrl.searchDepartment($ctrl.departmentSearchText)"
+                                     md-item-text="item.name"
+                                     md-selected-item-change="$ctrl.departmentChanged()"
+                                     md-min-length="0"
+                                     placeholder="{{ 'Select department' | translate }}">
+                        <md-item-template>
+                            <div layout="row" layout-align="start center">
+                                <span>{{item.name}}</span>
+                                <span flex></span>
+                                <img class="gravatar-rounded" gravatar-src="item.email" gravatar-default="identicon">
+                            </div>
+                        </md-item-template>
+                        <md-not-found>
+                            <translate>No departments matching "{{$ctrl.departmentSearchText}}" found</translate>
+                        </md-not-found>
+                    </md-autocomplete>
+                    <input type="hidden" name="department" ng-required ng-model="$ctrl.ticket.department"/>
+                    <fl-validate for="department" backend-name="department"></fl-validate>
+                    <span ng-if="$ctrl.noValidDepartment" class="fl-message" translate><br>No valid department was selected</span>
+
+                    <div class="fl-margin-top" layout="row" flex>
+                        <div layout="column" flex>
+                            <md-input-container class="md-block">
+                                <label translate>Status</label>
+                                <md-select ng-model="$ctrl.ticket.status" name="status" required>
+                                    <md-option ng-value="status" ng-repeat="status in $ctrl.statusesKeys">
+                                        {{$ctrl.createOptions.statuses[status]}}
+                                    </md-option>
+                                </md-select>
+                                <fl-validate for="status"></fl-validate>
+                            </md-input-container>
+                        </div>
+                        <div layout="column" flex>
+                            <md-input-container class="md-block">
+                                <label translate>Internal status</label>
+                                <md-select ng-model="$ctrl.ticket.internal_status" name="internal_status" required>
+                                    <md-option ng-value="null">
+                                        <span translate>
+                                            <span id="no_internal_status_option_text">None</span>
+                                        </span>
+                                    </md-option>
+                                    <md-option ng-value="internal_status"
+                                               ng-repeat="internal_status in $ctrl.internalStatusesKeys">
+                                        {{$ctrl.createOptions.internal_statuses[internal_status]}}
+                                    </md-option>
+                                </md-select>
+                                <fl-validate for="internal_status"></fl-validate>
+                            </md-input-container>
+                        </div>
+                    </div>
+                    <md-input-container class="md-block fl-no-margin" flex>
+                        <label for="cc_recipients" translate>CC recipients (comma separated)</label>
+                        <input id="cc_recipients" maxlength="1024" name="cc_recipients" type="text"
+                               ng-model="$ctrl.ticket.cc_recipients">
+                        <fl-validate for="cc_recipients"></fl-validate>
+                    </md-input-container>
+                    <md-autocomplete flex="100"
+                                     class="fl-margin-bottom"
+                                     md-search-text="$ctrl.clientSearchText"
+                                     md-selected-item="$ctrl.selectedClient"
+                                     md-items="item in $ctrl.searchClient($ctrl.clientSearchText)"
+                                     md-item-text="item.name"
+                                     md-min-length="0"
+                                     placeholder="{{ 'Select client' | translate }}">
+                        <md-item-template>
+                            <div layout="row" layout-align="start center">
+                                <span>{{item.name}}</span>
+                                <span flex></span>
+                                <img class="gravatar-rounded" gravatar-src="item.email" gravatar-default="identicon">
+                            </div>
+                        </md-item-template>
+                        <md-not-found>
+                            <translate>No clients matching "{{$ctrl.clientSearchText}}" found</translate>
+                        </md-not-found>
+                    </md-autocomplete>
+                    <fl-autocomplete-user staff-only="true" placeholder="{{ 'Assigned to' | translate }}"
+                                          user-id="$ctrl.ticket.assigned_to">
+                    </fl-autocomplete-user>
+                    <label class="fl-subheader-md fl-margin-bottom fl-margin-top" translate>Description</label>
+                    <textarea ui-tinymce="$ctrl.tinymceOptions" ng-model="$ctrl.ticket.description"></textarea>
+
+                    <md-card-actions>
+                        <div class="fl-margin-top">
+                            <md-button class="md-primary md-raised" type="submit"><translate>Update ticket</translate></md-button>
+                            <md-button class="fl-margin-left-small" type="button" md-no-ink ng-click="$ctrl.goBackOrToState('pluginsTicketsTickets')">
+                                <translate>Cancel</translate>
+                            </md-button>
+                        </div>
+                    </md-card-actions>
+                </form>
+            </md-content>
+        </md-card-content>
+    </md-card>
+</div>

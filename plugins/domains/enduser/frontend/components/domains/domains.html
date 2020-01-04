@@ -1,0 +1,76 @@
+<fl-subheader ng-model="$ctrl.domains" objects-name="'Domain' | translate"
+              objects-name-plural="'Domains'" cardview="cardview"></fl-subheader>
+<fl-back-drop ng-if="$ctrl.loading" class="list-backdrop"></fl-back-drop>
+<div class="alert-danger" ng-show="action_error"> {{ action_error }}</div>
+<div ng-if="cardview === true" class="stack stack-card" layout="column"
+     layout-align="center center" id="id_domains_cards_container">
+    <fl-infinite-scroll ng-model="$ctrl.domains" threshold="150" container-name="'id_domains_cards_container'">
+        <div layout="row" class="cardlist-container">
+            <div ng-repeat="domain in $ctrl.domains.objects track by domain.id">
+                <md-card class="fl-object-card">
+                    <div fl-sref="pluginsDomainsDomainDetails({id:domain.id})">
+                        <md-card-title>
+                                <div title="{{ domain.name}}" class="fl-ellipsis-text md-headline">
+                                    {{ domain.name}}
+                                </div>
+                            </md-card-title-text>
+                        </md-card-title>
+                        <md-card-content class="fl-object-card-content">
+                            <div>
+                                <translate>Created at</translate>:&nbsp;{{ domain.created_at | date:'medium' }}
+                            </div>
+                            <div>
+                                <translate>Status</translate>:&nbsp;{{ domain.status_display }}
+                            </div>
+                        </md-card-content>
+                    </div>
+                    <span flex></span>
+                    <div class="card-actions">
+                        <div layout="row" layout-align="start center">
+                            <plugins-domains-domains-actions on-domain-deleted="$ctrl.refreshDomains()"
+                                                          on-domain-changed="$ctrl.refreshDomains()"
+                                                          domain="domain" add-button="false">
+                            </plugins-domains-domains-actions>
+                        </div>
+                    </div>
+                </md-card>
+            </div>
+        </div>
+    </fl-infinite-scroll>
+</div>
+<div layout-wrap layout="row" ng-if="cardview === false" class="stack stack-list"
+     layout-align="center center" id="id_domains_table_container">
+    <table class="fl-table fl-card-fixed fl-list-view-table fl-table-shadow" ng-if="$ctrl.domains.totalItems">
+        <tbody>
+        <fl-infinite-scroll ng-model="$ctrl.domains" threshold="150" container-name="'id_domains_table_container'">
+            <tr ng-repeat="domain in $ctrl.domains.objects track by domain.id"
+                class="v-middle object-list-elem">
+                <td fl-sref="pluginsDomainsDomainDetails({id:domain.id})">
+                    <div class="fl-ellipsis-text" layout="column" layout-wrap>{{ domain.name }}</div>
+                </td>
+                <td fl-sref="pluginsDomainsDomainDetails({id:domain.id})" hide-xs hide-sm>
+                    <div layout="row" class="fl-ellipsis-text">{{ domain.created_at | date:'medium' }}</div>
+                </td>
+                <td fl-sref="pluginsDomainsDomainDetails({id:domain.id})">
+                    {{ domain.status_display }}
+                </td>
+                <td hide-xs class="fl-flex-100 fl-flex-right-align no-overflow-hidden">
+                    <div class="list-actions">
+                        <div layout="row" layout-align="end center">
+                            <plugins-domains-domains-actions on-domain-deleted="$ctrl.refreshDomains()"
+                                                          on-domain-changed="$ctrl.refreshDomains()"
+                                                          domain="domain" add-button="false">
+                            </plugins-domains-domains-actions>
+                        </div>
+                    </div>
+                </td>
+                <td hide-gt-xs class="fl-flex-50 no-overflow-hidden">
+                    <plugins-domains-domains-actions on-domain-deleted="$ctrl.refreshDomains()"
+                                                  domain="domain">
+                    </plugins-domains-domains-actions>
+                </td>
+            </tr>
+        </fl-infinite-scroll>
+        </tbody>
+    </table>
+</div>
