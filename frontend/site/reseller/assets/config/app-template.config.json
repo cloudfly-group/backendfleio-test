@@ -1,0 +1,7 @@
+{
+  "panels": {
+    "reseller": {
+      "configFile": "reseller.config.json"
+    }
+  }
+}

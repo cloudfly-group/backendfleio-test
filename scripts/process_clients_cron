@@ -1,0 +1,7 @@
+#!/bin/bash
+if [ -e /opt/rh/rh-python35/enable ] ; then
+        . /opt/rh/rh-python35/enable
+fi
+
+source /var/webapps/fleio/env/bin/activate
+python /var/webapps/fleio/project/fleio/billing/bin/process_clients_cron.py

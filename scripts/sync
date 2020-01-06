@@ -1,0 +1,14 @@
+#!/bin/bash
+# run this as the fleio user!
+
+WDIR=/var/webapps/fleio/project
+VIRTUALENV_DIR=/var/webapps/fleio/env
+
+if [ -e /opt/rh/rh-python35/enable ] ; then
+        . /opt/rh/rh-python35/enable
+fi
+
+source $VIRTUALENV_DIR/bin/activate
+
+cd $WDIR
+python fleio/openstack/bin/sync.py

@@ -1,0 +1,25 @@
+<html>
+  <head>
+    <title>lxc Console</title>
+    <script type="text/javascript">
+        var urlParams = new URLSearchParams(window.location.search);
+        var id = urlParams.get('id');
+        var os_token = urlParams.get('auth');
+        var compute_node = urlParams.get('compute_node');
+        var endpoint = urlParams.get('endpoint');
+        var instance_id = urlParams.get('uuid');
+        var tenant_id = urlParams.get('tenant_id');
+    </script>
+    <link href="css/lxc-console.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="js/term.js"></script>
+    <script src="js/console.js"></script>
+  </head>
+  <body>
+    <div class="p-notification" id="lxc_console_panel" >
+        <div>
+            <div id="lxc_console" style="background-color:black; margin-top: 20vh; width: 50%;"></div>
+        </div>
+    </div>
+  </body>
+</html>

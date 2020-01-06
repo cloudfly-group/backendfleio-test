@@ -1,0 +1,50 @@
+@import '~@angular/material/theming';
+$spring-primary: mat-palette($mat-green, 500);
+$spring-accent: mat-palette($mat-blue, 600);
+$spring-warn: mat-palette($mat-red, 500);
+$spring-theme: mat-light-theme($spring-primary, $spring-accent, $spring-warn);
+@include angular-material-theme($spring-theme);
+.app-theme-spring {
+  $spring-primary-color: #4caf50;
+  .topbar-items-container > div,
+  .mat-toolbar, .mat-toolbar .mat-icon,
+  .mat-raised-button[ng-reflect-color="primary"] > span, .mat-fab mat-icon {
+    color: #fff;
+  }
+  .sidenav-container, .sub-header {
+    background: #f1f1f1;
+  }
+  .fl-card-fixed,
+  .fl-card-fixed-md,
+  .fl-card-fixed-sm {
+    @include mat-elevation(2);
+  }
+  mat-icon {
+    color: grey;
+  }
+  button[disabled] .mat-icon {
+    color: lightgrey;
+  }
+  .mat-button-base {
+    text-transform: uppercase;
+  }
+  .active-link, .active-link mat-icon {
+    color: $spring-primary-color !important;
+  }
+  .object-card-content {
+    margin-left: 15px;
+    font-size: 14px;
+    line-height: 20px;
+    word-break: break-all;
+    color: #616161;
+  }
+  .fl-tag {
+    background-color: #878787;
+    color: white;
+    padding: 2px 8px 2px 8px;
+    border-radius: 2px;
+  }
+  .mat-form-field-appearance-legacy .mat-form-field-underline {
+    background-color: rgba(0, 0, 0, 0.12);
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "urls": {
+    "backendApiUrl": "//localhost:8000/resellerapi/",
+    "baseUrl": "/",
+    "homeUrl": ""
+  },
+  "settings": {
+    "defaultLanguage": "en",
+    "imagesPath": "assets/img/reseller/",
+    "instanceForm": {
+      "hideNetworksIfOnlyOneAvailable": true,
+      "preselectPublicNetworks": true,
+      "showUserData": true,
+      "flavorsAsCards": false,
+      "showRootPasswordField": true,
+      "rootPasswordFieldMandatory": false,
+      "localComputeStorageEnabled": true
+    }
+  }
+}

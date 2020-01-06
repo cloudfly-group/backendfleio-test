@@ -1,0 +1,3 @@
+#!/bin/bash
+. /var/webapps/fleio/env/bin/activate
+python /var/webapps/fleio/project/plugins/tickets/bin/incoming_mail.py "$@"

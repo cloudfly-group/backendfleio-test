@@ -1,0 +1,364 @@
+#!/bin/bash
+
+SECRET_KEY=$(< /dev/urandom tr -dc '_A-Z-a-z-0-9(_=+)!@*$%^@!' | head -c${1:-50};echo;)
+SSO_SALT=$(< /dev/urandom tr -dc '_A-Z-a-z-0-9(_=+)!@*$%^@!' | head -c${1:-10};echo;)
+TIMESTAMP=$(date +"%Y-%m-%d-%H-%M-%S")
+FLEIO_PATH="/var/webapps/fleio/project"
+FLEIO_ENV="/var/webapps/fleio/env"
+FLEIO_CONFIG="${FLEIO_PATH}/fleio/settings.py"
+FLEIO_CONFIG_TMP="${FLEIO_PATH}/fleio/settings.py.tmp"
+FLEIO_CONFIG_BACKUP="${FLEIO_PATH}/fleio/backup-settings-$TIMESTAMP.bak"
+
+INTERFACE=$(ip r | grep default | awk {'print $5'})
+IP=$(ip addr show $INTERFACE | grep 'inet ' | cut -d: -f2 | awk '{print $2}' | cut -d/ -f1 | head -n1)
+
+NGINX_PATH_CONF="/etc/nginx/conf.d"
+if [ -e /etc/os-release ]; then
+    . /etc/os-release
+    if [ $VERSION_ID = '16.04' ] || [ $VERSION_ID = '18.04' ]; then
+        NGINX_PATH_CONF="/etc/nginx/sites-enabled"
+        if [ ! -L /etc/uwsgi/apps-enabled/fleio.ini ]; then
+            ln -s /etc/uwsgi/apps-available/fleio.ini /etc/uwsgi/apps-enabled/fleio.ini
+        fi
+    fi
+fi
+
+if [ -e /opt/rh/rh-python35/enable ] ; then
+    . /opt/rh/rh-python35/enable
+fi
+
+green='\e[0;32m'
+red='\e[0;31m'
+nc='\e[0m' # No Color
+
+function message_green {
+    echo -e -n " ${green}* $1${nc}"
+}
+
+function message_error {
+    echo -e "${red}$1${nc}"
+}
+
+function message_info {
+    echo -e "$1${nc}"
+}
+
+function replace_in_file {
+    sed -i "s/$(echo $1 | sed -e 's/\([[\/.*]\|\]\)/\\&/g')/$(echo $2 | sed -e 's/[\/&]/\\&/g')/g" $3
+}
+
+function init_config() {
+    awk -v key2="SECRET_KEY = '$SECRET_KEY'" -v key3="SSO_SALT = '$SSO_SALT'"  '{sub("SECRET_KEY = '\'''\''", key2); sub("SSO_SALT = '\'''\''", key3); print $0}' < ${FLEIO_PATH}/fleio/settings.template > $FLEIO_CONFIG_TMP
+
+    message_green "MySQL server IP [localhost]: "
+    read SERVER
+    [ -z $SERVER ] && SERVER="localhost"
+    message_green "MySQL database name for fleio [fleio]: "
+    read DB
+    [ -z $DB ] && DB="fleio"
+
+    HAS_TABLES=$(check_database $DB)
+    if [ $HAS_TABLES -eq 0 ]; then
+        message_error "\nDatabase $DB has tables. This script only runs on an empty database.\nIf you don't need the data, drop the database, re-create it and run the script again."
+        message_info "\nExiting ...\n"
+        exit -1
+    fi
+
+    message_green "MySQL username [fleio]: "
+    read USER_FLEIO
+    [ -z $USER_FLEIO ] && USER_FLEIO="fleio"
+    message_info "\nConfigure MySQL password for user $USER_FLEIO"
+    unset PASSWORD;
+    unset password;
+    unset password2;
+
+    while true; do
+        read -s -p " * Password: " password
+        echo
+        read -s -p " * Password (again): " password2
+        echo
+        if [ "$password" = "$password2" ]; then
+            PASSWORD=$password
+            break
+        else
+            message_error "Passwords don't match, try again"
+        fi
+    done
+    replace_in_file "'NAME': 'fleio'" "'NAME': '$DB'" $FLEIO_CONFIG_TMP || exit 1
+    replace_in_file "'USER': 'root'" "'USER': '$USER_FLEIO'" $FLEIO_CONFIG_TMP || exit 1
+    replace_in_file "'PASSWORD': ''" "'PASSWORD': '$PASSWORD'" $FLEIO_CONFIG_TMP || exit 1
+    replace_in_file "'HOST': 'localhost'" "'HOST': '$SERVER'" $FLEIO_CONFIG_TMP || exit 1
+    replace_in_file "TIME_ZONE = 'Europe/Bucharest'" "TIME_ZONE = '$TIMEZONE'" $FLEIO_CONFIG_TMP || exit 1
+    replace_in_file "ALLOWED_HOSTS = []" "ALLOWED_HOSTS = ['$host']" $FLEIO_CONFIG_TMP || exit 1
+    replace_in_file "FRONTEND_URL = 'http://localhost:9000'" "FRONTEND_URL = '$DOMAIN'" $FLEIO_CONFIG_TMP || exit 1
+}
+
+function init_database() {
+    stty igncr
+    message_info "\nCreating database ..."
+
+    . ${FLEIO_ENV}/bin/activate
+    cd $FLEIO_PATH
+
+    django migrate >/dev/null
+
+    if [ $? -ne 0 ]; then
+        message_error "\n\nFailed running database migrations. Possible reason: invalid MySQL username and password."
+        message_info "\nExiting ...\n"
+        stty -igncr
+        exit 10
+    fi
+
+    django createcachetable > /dev/null
+    deactivate
+    message_green "Done\n"
+    stty -igncr
+}
+
+function check_database() {
+    db=$1
+    mysql -D ${db} --execute="SELECT CASE COUNT(*) WHEN '0' THEN 'empty database' ELSE 'has tables' END AS contents FROM information_schema.tables WHERE table_type = 'BASE TABLE' AND table_schema = '${db}';" | grep 'has tables' >/dev/null
+    echo $?
+}
+
+function create_superuser () {
+    message_info "\nCreate super user"
+    . ${FLEIO_ENV}/bin/activate
+    cd $FLEIO_PATH
+    while [ -z $FIRST_NAME ]; do
+        message_green "First name: "
+        read FIRST_NAME;
+    done
+    while [ -z $LAST_NAME ]; do
+        message_green "Last name: "
+        read LAST_NAME;
+    done
+    while [ -z $SUPERUSER ]; do
+        message_green "Username: "
+        read SUPERUSER;
+    done
+    while [ -z $SUPEREMAIL ]; do
+        message_green "Email: "
+        read SUPEREMAIL;
+    done
+
+    message_info "\nChoose new password for user $SUPERUSER"
+    unset SUPERPASS;
+    unset password;
+    unset password2;
+
+    while true; do
+        read -s -p "Password: " password
+        echo
+        read -s -p "Password (again): " password2
+        echo
+        if [ "$password" = "$password2" ]; then
+            SUPERPASS=$password
+            break
+        else
+            message_error "Passwords don't match, try again"
+        fi
+    done
+
+    echo "from fleio.core.models import AppUser; user = AppUser.objects.create_superuser('${SUPERUSER}', '${SUPEREMAIL}', '${SUPERPASS}'); user.first_name='${FIRST_NAME}'; user.save(); user.last_name='${LAST_NAME}'; user.save();" | python manage.py shell >/dev/null 2>&1
+
+    sed "s/# ('Your Name', 'your_email@example.com'),/('${FIRST_NAME} ${LAST_NAME}','$SUPEREMAIL'),/" -i ${FLEIO_CONFIG}|| exit 1
+}
+
+function install_packages() {
+    PACKAGES="nginx"
+    if [ -e /etc/os-release ]; then
+        . /etc/os-release
+        if [ $VERSION_ID = '16.04' ] || [ $VERSION_ID = '18.04' ]; then
+            apt-get install $PACKAGES -y >/dev/null
+        else
+            yum install -y $PACKAGES >/dev/null
+        fi
+    else
+        yum install -y $PACKAGES >/dev/null
+    fi
+}
+
+function setup_backend_frontend() {
+    install_packages
+
+    cp /var/webapps/fleio/docs/nginx-example ${NGINX_PATH_CONF}/${host}.conf
+    sed "s/MYDOMAIN/$host/" -i ${NGINX_PATH_CONF}/${host}.conf
+
+    if [ -e /var/webapps/fleio/frontend/site/template_constants.js ]; then
+            cp /var/webapps/fleio/frontend/site/template_constants.js /var/webapps/fleio/frontend/site/constants.js
+            sed "s|api_url: 'http://localhost:8000/api'|api_url: 'http://$host/backend/api'|" -i /var/webapps/fleio/frontend/site/constants.js
+            cp /var/webapps/fleio/frontend/site/staff/template_constants.js /var/webapps/fleio/frontend/site/staff/constants.js
+            sed "s|api_url: 'http://localhost:8000/staffapi'|api_url: 'http://$host/backend/staffapi'|" -i /var/webapps/fleio/frontend/site/staff/constants.js
+            cp /var/webapps/fleio/frontend/site/reseller/assets/config/app-template.config.json /var/webapps/fleio/frontend/site/reseller/assets/config/app.config.json
+            cp /var/webapps/fleio/frontend/site/reseller/assets/config/reseller-template.config.json /var/webapps/fleio/frontend/site/reseller/assets/config/reseller.config.json
+            sed 's|"backendApiUrl": "//localhost:8000/resellerapi|"backendApiUrl": "//$host/backend/resellerapi|' -i /var/webapps/fleio/frontend/site/reseller/assets/config/reseller.config.json
+            sed 's|<base href="/">|<base href="/reseller/">|' -i  /var/webapps/fleio/frontend/site/reseller/index.html
+    fi
+
+    if [ -e /etc/os-release ]; then
+        . /etc/os-release
+        if  [ $VERSION_ID = '18.04' ]; then
+            sed "s|python3.5|python3.6|" -i ${NGINX_PATH_CONF}/${host}.conf
+        fi
+    fi
+}
+
+function get_current_timezone() {
+    if [ -f /etc/timezone ]; then
+        DETECTZ=$(cat /etc/timezone)
+    elif [ -h  /etc/localtime ]; then
+        DETECTZ=$(readlink /etc/localtime | sed "s/\/usr\/share\/zoneinfo\///")
+        DETECTZ=${DETECTZ/..}
+    else
+        checksum=$(md5sum /etc/localtime | cut -d' ' -f1)
+        DETECTZ=$(find /usr/share/zoneinfo/ -type f -exec md5sum {} \; | grep "^$checksum" | sed "s/.*\/usr\/share\/zoneinfo\///" | head -n 1)
+    fi
+    if [[ $DETECTZ == 'Etc/UTC' ]]; then
+        DETECTZ=UTC
+    fi
+    echo $DETECTZ
+}
+
+function setup_smtp() {
+    message_info "\nConfigure SMTP"
+    message_green "SMTP server [localhost]: "
+    read SMTP_SERVER
+    [ -z $SMTP_SERVER ] && SMTP_SERVER="localhost"
+    sed "s/EMAIL_HOST = 'localhost'/EMAIL_HOST = '$SMTP_SERVER'/" -i $FLEIO_CONFIG_TMP || exit 1
+    message_green "Email default From [webmaster@localhost]: "
+    read DEFAULT_FROM_EMAIL
+    [ -z $DEFAULT_FROM_EMAIL ] && DEFAULT_FROM_EMAIL="webmaster@localhost"
+    sed "s/DEFAULT_FROM_EMAIL = 'webmaster@localhost'/DEFAULT_FROM_EMAIL = '$DEFAULT_FROM_EMAIL'/" -i $FLEIO_CONFIG_TMP || exit 1
+    message_green "SMTP requires authentication ? y/[n]: "
+    read SMTP_AUTH
+    if [[ $SMTP_AUTH = 'y' || $SMTP_AUTH = 'Y' ]]; then
+        while [ -z $SMTP_USER ]; do
+            message_green "SMTP username: "
+            read SMTP_USER
+        done
+        sed "/EMAIL_HOST = '$SMTP_SERVER'/a EMAIL_HOST_USER = '$SMTP_USER'" -i $FLEIO_CONFIG_TMP || exit 1
+        message_info "\nConfigure SMTP password"
+        unset SMTP_PASS;
+        unset password;
+        unset password2;
+
+        while true; do
+            read -s -p "Password: " password
+            echo
+            read -s -p "Password (again): " password2
+            echo
+            if [ "$password" = "$password2" ]; then
+                SMTP_PASS=$password
+                break
+            else
+                echo "Passwords don't match, try again"
+            fi
+        done
+
+        sed "/EMAIL_HOST_USER = '$SMTP_USER'/a EMAIL_HOST_PASSWORD = '$SMTP_PASS'" -i $FLEIO_CONFIG_TMP || exit 1
+    fi
+}
+
+
+message_info "\n   This script creates ${FLEIO_CONFIG} based on your answers\n\n"
+
+if [ -f ${FLEIO_CONFIG} ]; then
+    message_error "File ${FLEIO_CONFIG} already exists. \n"
+    message_green "Are you sure you want to overwrite it? (a backup will be created) Y/[n]"
+    read CONF_OVERWRITE
+    if [[ ${CONF_OVERWRITE} = 'y' || ${CONF_OVERWRITE} = 'Y' ]]; then
+        mv ${FLEIO_CONFIG} ${FLEIO_CONFIG_BACKUP}
+    else
+        message_info "\nExiting ...\n"
+        exit 1
+    fi
+fi
+
+DETECTED_HOST=$IP
+[ -z $IP ] && DETECTED_HOST=$HOSTNAME
+
+message_green "Install Fleio at URL [http://$DETECTED_HOST]:"
+read DOMAIN
+[ -z $DOMAIN ] && DOMAIN=$DETECTED_HOST
+
+#parse variable for splitting into hostname and path
+proto=$(echo $DOMAIN | grep :// | sed -e's,^\(.*://\).*,\1,g')
+url="$(echo ${DOMAIN/$proto/})"
+host=$(echo $url | cut -d/ -f1)
+path=$(echo $url | cut -d/ -f2-)
+
+[ -z $TZ ] && TZ=$(get_current_timezone)
+message_green "Timezone [$TZ]: "
+read TIMEZONE
+if [ -z $TIMEZONE ]; then
+    TIMEZONE=$TZ
+else
+    if [ ! -e /usr/share/zoneinfo/$TIMEZONE ]; then
+        message_error "Unknown timezone, defaulting to UTC. You can later change it from $FLEIO_PATH/fleio/settings.py"
+        TIMEZONE=UTC
+    fi
+fi
+
+init_config
+
+setup_smtp
+
+if [ -f $FLEIO_CONFIG_TMP ]; then
+    mv $FLEIO_CONFIG_TMP $FLEIO_CONFIG
+else
+    message_error "Fatal error: $FLEIO_CONFIG_TMP is missing \n"
+    message_info "\nExiting ...\n"
+    exit 1
+fi
+
+init_database
+
+create_superuser
+
+setup_backend_frontend
+
+if [ -e /etc/os-release ]; then
+    . /etc/os-release
+    message_info "\nRestarting services ...\n"
+    if [ $VERSION_ID = '16.04' ]; then
+        systemctl restart uwsgi >/dev/null 2>&1
+        systemctl restart nginx >/dev/null 2>&1
+        systemctl restart celery >/dev/null 2>&1
+        systemctl restart fleio >/dev/null 2>&1
+        systemctl enable fleio >/dev/null 2>&1
+    fi
+
+    if [ $VERSION_ID = '18.04' ]; then
+        systemctl restart uwsgi >/dev/null 2>&1
+        systemctl restart nginx >/dev/null 2>&1
+        systemctl restart celery >/dev/null 2>&1
+        systemctl restart fleio >/dev/null 2>&1
+        systemctl enable fleio >/dev/null 2>&1
+    fi
+
+    if [ $VERSION_ID = '7' ]; then
+        systemctl restart uwsgi-fleio >/dev/null 2>&1
+        systemctl restart nginx >/dev/null 2>&1
+        systemctl enable nginx >/dev/null 2>&1
+        systemctl restart redis >/dev/null 2>&1
+        systemctl enable redis >/dev/null 2>&1
+        systemctl restart celery >/dev/null 2>&1
+        systemctl enable celery >/dev/null 2>&1
+        systemctl restart fleio >/dev/null 2>&1
+        systemctl enable fleio >/dev/null 2>&1
+    fi
+fi
+
+
+message_green "Done\n"
+
+echo ""
+echo -e "Fleio initial configuration has completed ${green}successfully${nc}."
+echo ""
+echo ""
+echo "Next steps for you:"
+echo " - Go to staff panel at http://$host/staff and log in with user $SUPERUSER, then add your license key."
+echo " - If you don't have a license key, sign up for a Fleio trial license at https://fleio.com/client/signup"
+echo " - Perform the next configuration steps as described at https://fleio.com/docs/configuring.html"
+echo ""

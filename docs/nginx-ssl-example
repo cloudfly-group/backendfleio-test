@@ -1,0 +1,92 @@
+upstream django {
+    server unix:///run/uwsgi/app/fleio/fleio.sock;
+}
+
+server {
+    listen      80;
+    client_max_body_size 5000m;
+    #EDIT HERE
+    server_name MYDOMAIN;
+    return 301 https://$server_name$request_uri;
+}
+
+server {
+    listen      443;
+    server_name MYDOMAIN;
+    charset     utf-8;
+
+    # max upload size
+    client_max_body_size 75M;   # adjust to taste
+
+    ssl on;
+
+    #EDIT HERE
+    ssl_certificate /path/to/certificate.pem;
+    ssl_certificate_key /path/to/privatekey.pem;
+    ####
+
+    ##ssl tweaks
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
+    ssl_prefer_server_ciphers on;
+    ssl_session_cache shared:SSL:10m;
+
+    location /static {
+        alias /var/webapps/fleio//env/lib/python3.5/site-packages/django/contrib/admin/static;
+    }
+
+    location /static/stripe {
+        alias /var/webapps/fleio/project/fleio/billing/gateways/stripe/static/stripe;
+    }
+
+    location /static/rest_framework {
+	alias /var/webapps/fleio/env/lib/python3.5/site-packages/rest_framework/static/rest_framework/;
+    }
+
+    # Finally, send all non-media requests to the Django server.
+    location /backend/ {
+        uwsgi_pass  django;
+        include uwsgi_params;
+    }
+
+    location /images {
+        alias /var/webapps/fleio/frontend/site/images/;
+        break;
+    }
+
+    location /js {
+        alias /var/webapps/fleio/frontend/site/js/;
+        expires max;
+        break;
+    }
+
+    location /vendor {
+        alias /var/webapps/fleio/frontend/site/vendor/;
+        expires max;
+        break;
+    }
+
+    location /styles {
+        alias /var/webapps/fleio/frontend/site/styles/;
+        expires max;
+        break;
+    }
+
+    # location /reseller {
+    #     root /var/webapps/fleio/frontend/site/;
+    #     expires -1;
+    #     try_files $uri $uri/ /reseller/index.html;
+    # }
+
+    location / {
+        alias /var/webapps/fleio/frontend/site/;
+        expires -1;
+        try_files $uri $uri/ /index.html;
+   }
+
+    location /staff {
+        alias /var/webapps/fleio/frontend/site/staff/;
+        expires -1;
+        try_files $uri $uri/ /staff/index.html;
+    }
+}

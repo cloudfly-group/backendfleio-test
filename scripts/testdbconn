@@ -1,0 +1,8 @@
+#!/bin/bash
+
+PROJECT_PATH="/var/webapps/fleio/project"
+ENV_PATH="/var/webapps/fleio/env"
+
+${ENV_PATH}/bin/python ${PROJECT_PATH}/manage.py testdbconn "$@"
+
+exit $?

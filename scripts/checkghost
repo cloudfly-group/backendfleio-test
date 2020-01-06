@@ -1,0 +1,43 @@
+#!/bin/bash
+if [ -e /opt/rh/rh-python35/enable ] ; then
+    . /opt/rh/rh-python35/enable
+fi
+
+source /var/webapps/fleio/env/bin/activate
+
+display_help() {
+    echo ""
+    echo "Usage: $0 [option...]"
+    echo "-h, --help        show this message"
+    echo "-i, --instance          checks for instance ghost resources"
+    echo "-I, --image             checks for image ghost resources"
+    echo "-v, --volume            checks for instance ghost resources"
+    echo ""
+    echo "If no argument is provided, the script will check ghost resources for instances, images and volumes"
+    echo ""
+}
+
+if [ "$#" -eq 0 ]
+then
+    sh -c 'cd /var/webapps/fleio/project && python fleio/openstack/bin/check_ghosts.py'
+else
+    case "$1" in
+        "-i" | "--instance")
+        sh -c 'cd /var/webapps/fleio/project && python fleio/openstack/bin/check_ghosts.py instance'
+        ;;
+        "-I" | "--image")
+        sh -c 'cd /var/webapps/fleio/project && python fleio/openstack/bin/check_ghosts.py image'
+        ;;
+        "-v" | "--volume")
+        sh -c 'cd /var/webapps/fleio/project && python fleio/openstack/bin/check_ghosts.py volume'
+        ;;
+        *)
+        echo ""
+        echo "Please specify a valid argument"
+        display_help
+        ;;
+        *-h | --help)
+        display_help
+        ;;
+    esac
+fi

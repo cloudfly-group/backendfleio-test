@@ -1,0 +1,15 @@
+LXC console will attempt to connect to LXC console proxy. Fleio is currently able to work with one LXC console proxy per region and expects an endpoint to be defined for each region with LXD container capabilities.
+
+
+In order to enable LXC console support in Fleio you should edit settings.py file and set the following variables:
+ENABLE_LXC_CONSOLE = True
+LXC_CONSOLE_PROXY_PORT = 8999
+LXC_CONSOLE_PROXY_SERVICE_TYPE = 'console'
+
+
+The LXC_CONSOLE_PROXY_SERVICE_TYPE value will be used to query openstack for LXC console proxy endpoints. E.g. if LXC_CONSOLE_PROXY_SERVICE_TYPE is set to 'console' then the following comand should list all LXC console proxy endpoints:
+
+openstack endpoint list --service console
+
+
+If an endpoint is not found for a region and user attempts to open LXC console for an LXD instance then Fleio will assume that an LXC console proxy is installed on the compute node and will construct an LXC console proxy url based on compute node IP and LXC_CONSOLE_PROXY_PORT and will attempt to launch the LXC console using this url as endpoint.

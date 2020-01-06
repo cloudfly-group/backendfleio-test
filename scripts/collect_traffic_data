@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [ -e /opt/rh/rh-python35/enable ] ; then
+        . /opt/rh/rh-python35/enable
+fi
+
+. /var/webapps/fleio/env/bin/activate
+python /var/webapps/fleio/project/fleio/openstack/bin/collect_traffic_data.py
