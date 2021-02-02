@@ -7,7 +7,7 @@ mysqlclient==1.4.5
 celery==4.3.0
 kombu==4.6.6
 
-bleach==3.1.0
+bleach==3.3.0
 
 # botocore 1.13 does not work with python-dateutil 2.8.1 and boto3 1.10 does not work with botocore 1.12. update them
 # only when botocore 1.13 will work with python-dateutil 2.8.1
