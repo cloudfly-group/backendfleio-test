@@ -28,7 +28,7 @@ isfreemail==0.1.5
 iso8601==0.1.12
 jsonfield==2.0.2
 keystoneauth1==3.18.0
-lxml==4.4.1
+lxml==4.6.3
 minfraud==1.7.0
 oslo.config==6.11.1
 oslo.context==2.23.0
