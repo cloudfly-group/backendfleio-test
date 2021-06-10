@@ -1,4 +1,4 @@
-Django==2.2.7
+Django==2.2.24
 mysqlclient==1.4.5
 # Python MySQL
 # Use mysqlclient if you want a binary (C) driver for mysql.
