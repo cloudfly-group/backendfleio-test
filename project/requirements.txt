@@ -4,7 +4,7 @@ mysqlclient==1.4.5
 # Use mysqlclient if you want a binary (C) driver for mysql.
 # But speed advantages should be really unimportant compared to the pure-python sql client
 
-celery==4.3.0
+celery==5.2.2
 kombu==4.6.6
 
 bleach==3.1.0
